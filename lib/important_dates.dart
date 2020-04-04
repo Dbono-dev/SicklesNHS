@@ -54,7 +54,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                           ),
                           onPressed: () {
                             showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                              return SetClubDates("new", "");
+                              return SetClubDates("new", "clubDates", "");
                             });
                           },
                         )
@@ -71,6 +71,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
+                     if(snapshot.data[index].data['type'].toString() == "clubDates") {
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -91,7 +92,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                                 ),
                                 onPressed: () {
                                   showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                                    return SetClubDates("edit", snapshot.data[index].data['date'].toString());
+                                    return SetClubDates("edit", "clubDates", snapshot.data[index].data['date'].toString());
                                   });
                                 }
                               ),
@@ -110,7 +111,11 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                         ),
                       );
                     }
-                  );
+                    else {
+                      return Container();
+                    }
+                    }
+                  ); 
                   },
                 ),
               ),
@@ -137,37 +142,71 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                       ),
                       onPressed: () {
                         showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                          return Container(
-                            height: SizeConfig.blockSizeVertical * 41,
-                            child: Column(
-                              children: <Widget>[
-                                FlatButton(
-                                  onPressed: () {
-
-                                  },
-                                  child: Text("DONE"),
-                                ),
-                                Container(
-                                  height: SizeConfig.blockSizeVertical * 33,
-                                  child: CupertinoDatePicker(
-                                    initialDateTime: DateTime.now(),
-                                    onDateTimeChanged: (DateTime newDate) {
-                                      _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
-                                    },
-                                    mode: CupertinoDatePickerMode.date,
-                                    maximumDate: new DateTime(2030, 12, 30)
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
+                          return SetClubDates("new", "endOfQuarter", "");
                         });
                       },
                     )
                   ),
-                )
+                ),
               ]
             ),
+            Container(
+                height: SizeConfig.blockSizeVertical * 27.5,
+                width: SizeConfig.blockSizeHorizontal * 75,
+                child: FutureBuilder(
+                  future: getPosts(),
+                  builder: (_, snapshot) {
+                  return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (_, index) {
+                      if(snapshot.data[index].data['type'].toString() == "endOfQuarter") {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),                        
+                        child: Card(
+                          elevation: 8,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                snapshot.data[index].data['date'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                ),
+                                onPressed: () {
+                                  showModalBottomSheet(context: context, builder: (BuildContext builder) {
+                                    return SetClubDates("edit", "endOfQuarter" ,snapshot.data[index].data['date'].toString());
+                                  });
+                                }
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    deleteDateToDatabase(snapshot.data[index].data['type'].toString(), snapshot.data[index].data['inital date'].toString());
+                                  });
+                                }
+                              )
+                            ],
+                          )
+                        ),
+                      );
+                      }
+                      else {
+                        return Container();
+                      }
+                      }
+                  );
+                      },
+                  ),
+                ),
               ],
             ),
           )
@@ -188,7 +227,8 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
     await DatabaseImportantDates().deleteImportantDates(type, date);
   }
 
-  Widget SetClubDates(String editOrNew, String oldDate) {
+
+  Widget SetClubDates(String editOrNew, String type, String oldDate) {
     return Container(
       height: SizeConfig.blockSizeVertical * 41,
       child: Column(
@@ -196,8 +236,14 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
           FlatButton(
             onPressed: () {
               setState(() {
-                if(editOrNew == "new") {
+                if(type == "clubDates" && editOrNew == "new") {
                   sendDateToDatabase("clubDates", _date);
+                }
+                else if(type == "endOfQuarter" && editOrNew == "new") {
+                  sendDateToDatabase("endOfQuarter", _date);
+                }
+                else if(type == "endOfQuarter" && editOrNew == "edit") {
+                  editDateToDatabase("endOfQuarter", oldDate, _date);
                 }
                 else {
                   editDateToDatabase("clubDates", oldDate, _date);

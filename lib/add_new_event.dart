@@ -368,27 +368,31 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       if(serviceEventValue == true) {
                         _type = "Service Event";
                       }
-                          final form = _thirdformKey.currentState;
-                          form.save();
-                          if(form.validate()) {
-                            try {
-                              dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
-                              if(result == null) {
-                                print("Fill in all the forms.");
-                              }
-                              if(result != null) {
-                                _thirdformKey.currentState.reset();
-                                _title = "";
-                                _description = "";
-                                _address = "";
-                                _max = "";
-                                
-                              }
-                            }
-                            catch (e) {
-                              return CircularProgressIndicator();
-                            }
-                      } else {
+                      final form = _thirdformKey.currentState;
+                      form.save();
+                      if(form.validate()) {
+                        try {
+                          dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
+                          if(result == null) {
+                            print("Fill in all the forms.");
+                          }
+                          if(result != null) {
+                            setState(() {
+                              _thirdformKey.currentState.reset();
+                              _title = "";
+                              _description = "";
+                              _address = "";
+                              _max = "";
+                              communityServiceEventValue = false;
+                              serviceEventValue = false;
+                            });
+                          }
+                        }
+                        catch (e) {
+                          return CircularProgressIndicator();
+                        }
+                      } 
+                      else {
                         return Container();
                       }}
                   ),

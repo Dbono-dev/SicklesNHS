@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:sickles_nhs_app/database.dart';
 import 'package:sickles_nhs_app/user.dart';
@@ -24,15 +30,51 @@ class AuthService {
     }
   }
 
-  Future loginUser({String email, String password}) async {
+  Future loginUser({String email, String password, BuildContext context}) async {
     try {
       var result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       return user;
     }
     catch(error) {
-      print(error.toString());
-      return null;
+      return ErrorMessage(error.message.toString(), context);
+    }
+  }
+
+  Future<void> ErrorMessage(String body, BuildContext context) async {
+    if(Platform.isAndroid) {
+      return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error Message"),
+              content: Text(body),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+    }
+    else {
+      return CupertinoAlertDialog(
+        title: Text("Error Message"),
+        content: Text(body),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Ok")
+          )
+        ],
+      );
     }
   }
 

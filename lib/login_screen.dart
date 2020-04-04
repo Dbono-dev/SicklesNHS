@@ -185,6 +185,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                         dynamic result = await _auth.loginUser(
                           email: _email,
                           password: _password,
+                          context: context
                         );
                     if(result == null) {
                       print("Could not sign in with those credentials");
