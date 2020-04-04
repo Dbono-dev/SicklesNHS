@@ -189,161 +189,111 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
             ),
           ),
           Padding(padding: EdgeInsets.all(5)),
-          Container(
-            child: FutureBuilder(
-              future: getPosts(),
-              builder: (_, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.green)
-                  )
-                );
-              }
-              else {
-                return Material(
-                  child: Container(
-                    height: SizeConfig.blockSizeVertical * 59,
-                    child: ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (_, index) {
-                        if(search != "") {
-                          if(snapshot.data[index].data['first name'].toString().contains(search) || snapshot.data[index].data['last name'].toString().contains(search)) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin")
-                                ));
-                              },
-                                child: Container(
-                                width: SizeConfig.blockSizeHorizontal * 75,
-                                  child: Card(
-                                    elevation: 8,
-                                    child: Row(
-                                      children: <Widget> [
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"], style: TextStyle(
-                                                color: Colors.green,
-                                                fontSize: 25
-                                              ),),
-                                              Text("Hours: " + snapshot.data[index].data["hours"] + "\t Grade: " + snapshot.data[index].data["grade"])
-                                          ],  
-                                        ),
-                                        Spacer(),
-                                        IconButton(
-                                              icon: Icon(Icons.arrow_forward),
-                                              iconSize: 35,
-                                              onPressed: () {
-                                                Navigator.push(context, 
-                                                  MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin",)
-                                                ));
-                                              },
-                                            )
-                                      ]
-                                    )
-                                )),
-                            );
+          Expanded(
+            child: Container(
+              child: FutureBuilder(
+                future: getPosts(),
+                builder: (_, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.green)
+                    )
+                  );
+                }
+                else {
+                  return Material(
+                    child: Container(
+                      height: SizeConfig.blockSizeVertical * 59,
+                      child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (_, index) {
+                          if(search != "") {
+                            if(snapshot.data[index].data['first name'].toString().contains(search) || snapshot.data[index].data['last name'].toString().contains(search) || (snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"]).toString().contains(search)) {
+                              return TheViewStudents(snapshot.data[index]);
+                            }
+                            else {
+                              return Container();
+                            }
+                          }
+                          else if(firstCheck == true) {
+                            if(int.parse(snapshot.data[index].data['grade']) == 10) {
+                              return TheViewStudents(snapshot.data[index]);
+                            }
+                            else {
+                              return Container();
+                            } 
+                          }
+                          else if(secondCheck == true) {
+                            if(int.parse(snapshot.data[index].data["grade"]) == 11) {
+                              return TheViewStudents(snapshot.data[index]);
+                            }
+                            else {
+                              return Container();
+                            }
+                          }
+                          else if(thirdCheck == true) {
+                            if(int.parse(snapshot.data[index].data['grade']) == 12) {
+                              return TheViewStudents(snapshot.data[index]);
+                            }
+                            else {
+                              return Container();
+                            }
                           }
                           else {
-                            return Container();
+                            return TheViewStudents(snapshot.data[index]);
                           }
-                        }
-                        if(firstCheck = true) {
-                          if(snapshot.data[index].data['grade'] == 10) {
-                          return GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin")
-                            ));
-                          },
-                            child: Container(
-                            width: SizeConfig.blockSizeHorizontal * 75,
-                              child: Card(
-                                elevation: 8,
-                                child: Row(
-                                  children: <Widget> [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"], style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 25
-                                          ),),
-                                          Text("Hours: " + snapshot.data[index].data["hours"] + "\t Grade: " + snapshot.data[index].data["grade"])
-                                      ],  
-                                    ),
-                                    Spacer(),
-                                    IconButton(
-                                          icon: Icon(Icons.arrow_forward),
-                                          iconSize: 35,
-                                          onPressed: () {
-                                            Navigator.push(context, 
-                                              MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin",)
-                                            ));
-                                          },
-                                        )
-                                  ]
-                                )
-                            )),
-                        );
-                          }
-                          else {
-                            return Container();
-                          }
-                        }
-                        else {
-                          return GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin")
-                            ));
-                          },
-                            child: Container(
-                            width: SizeConfig.blockSizeHorizontal * 75,
-                              child: Card(
-                                elevation: 8,
-                                child: Row(
-                                  children: <Widget> [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"], style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 25
-                                          ),),
-                                          Text("Hours: " + snapshot.data[index].data["hours"] + "\t Grade: " + snapshot.data[index].data["grade"])
-                                      ],  
-                                    ),
-                                    Spacer(),
-                                    IconButton(
-                                          icon: Icon(Icons.arrow_forward),
-                                          iconSize: 35,
-                                          onPressed: () {
-                                            Navigator.push(context, 
-                                              MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin",)
-                                            ));
-                                          },
-                                        )
-                                  ]
-                                )
-                            )),
-                        );
-                        }
-                      },
+                        },
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               }
-            }
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget TheViewStudents(DocumentSnapshot snapshot) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, 
+        MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot, type: "admin")
+        ));
+      },
+        child: Container(
+        width: SizeConfig.blockSizeHorizontal * 75,
+          child: Card(
+            elevation: 8,
+            child: Row(
+              children: <Widget> [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(snapshot.data["first name"] + " " + snapshot.data["last name"], style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 25
+                      ),),
+                      Text("Hours: " + snapshot.data["hours"] + "\t Grade: " + snapshot.data["grade"])
+                  ],  
+                ),
+                Spacer(),
+                IconButton(
+                      icon: Icon(Icons.arrow_forward),
+                      iconSize: 35,
+                      onPressed: () {
+                        Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot, type: "admin",)
+                        ));
+                      },
+                    )
+              ]
+            )
+        )),
     );
   }
 }

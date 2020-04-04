@@ -54,21 +54,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                           ),
                           onPressed: () {
                             showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                                child: Container(
-                                  height: MediaQuery.of(context).copyWith().size.height / 3,
-                                  child: CupertinoDatePicker(
-                                    initialDateTime: DateTime.now(),
-                                    onDateTimeChanged: (DateTime newDate) {
-                                      _date = newDate.toString().substring(5, 7) + "-" + newDate.toString().substring(8, 10) + "-" + newDate.toString().substring(0, 4);
-                                      sendDateToDatabase("clubDates", _date);
-                                    },
-                                    mode: CupertinoDatePickerMode.date,
-                                    maximumDate: new DateTime(2030, 12, 30)
-                                  ),
-                                ),
-                              );
+                              return SetClubDates("new", "");
                             });
                           },
                         )
@@ -78,6 +64,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                 ),
               Container(
                 height: SizeConfig.blockSizeVertical * 27.5,
+                width: SizeConfig.blockSizeHorizontal * 75,
                 child: FutureBuilder(
                   future: getPosts(),
                   builder: (_, snapshot) {
@@ -85,11 +72,13 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
                       return Container(
-                        width: SizeConfig.blockSizeHorizontal * 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),                        
                         child: Card(
                           elevation: 8,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text(
@@ -101,7 +90,9 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                                   Icons.edit
                                 ),
                                 onPressed: () {
-
+                                  showModalBottomSheet(context: context, builder: (BuildContext builder) {
+                                    return SetClubDates("edit", snapshot.data[index].data['date'].toString());
+                                  });
                                 }
                               ),
                               IconButton(
@@ -109,7 +100,9 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                                   Icons.delete
                                 ),
                                 onPressed: () {
-
+                                  setState(() {
+                                    deleteDateToDatabase(snapshot.data[index].data['type'].toString(), snapshot.data[index].data['inital date'].toString());
+                                  });
                                 }
                               )
                             ],
@@ -145,14 +138,27 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                       onPressed: () {
                         showModalBottomSheet(context: context, builder: (BuildContext builder) {
                           return Container(
-                            height: MediaQuery.of(context).copyWith().size.height / 3,
-                            child: CupertinoDatePicker(
-                              initialDateTime: DateTime.now(),
-                              onDateTimeChanged: (DateTime newDate) {
-                                _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
-                              },
-                              mode: CupertinoDatePickerMode.date,
-                              maximumDate: new DateTime(2030, 12, 30)
+                            height: SizeConfig.blockSizeVertical * 41,
+                            child: Column(
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+
+                                  },
+                                  child: Text("DONE"),
+                                ),
+                                Container(
+                                  height: SizeConfig.blockSizeVertical * 33,
+                                  child: CupertinoDatePicker(
+                                    initialDateTime: DateTime.now(),
+                                    onDateTimeChanged: (DateTime newDate) {
+                                      _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
+                                    },
+                                    mode: CupertinoDatePickerMode.date,
+                                    maximumDate: new DateTime(2030, 12, 30)
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         });
@@ -171,6 +177,48 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
   }
 
   Future sendDateToDatabase(String type, String date) async {
-    await DatabaseImportantDates().updateImportantDates(type, date);
+    await DatabaseImportantDates().setImportantDates(type, date);
+  }
+
+  Future editDateToDatabase(String type, String oldDate, String newDate) async {
+    await DatabaseImportantDates().updateImportantDates(type, oldDate, newDate);
+  }
+
+  Future deleteDateToDatabase(String type, String date) async {
+    await DatabaseImportantDates().deleteImportantDates(type, date);
+  }
+
+  Widget SetClubDates(String editOrNew, String oldDate) {
+    return Container(
+      height: SizeConfig.blockSizeVertical * 41,
+      child: Column(
+        children: <Widget>[
+          FlatButton(
+            onPressed: () {
+              setState(() {
+                if(editOrNew == "new") {
+                  sendDateToDatabase("clubDates", _date);
+                }
+                else {
+                  editDateToDatabase("clubDates", oldDate, _date);
+                }
+              });
+            },
+            child: Text("DONE", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+          ),
+          Container(
+            height: MediaQuery.of(context).copyWith().size.height / 3,
+            child: CupertinoDatePicker(
+              initialDateTime: DateTime.now(),
+              onDateTimeChanged: (DateTime newDate) {
+                _date = newDate.toString().substring(5, 7) + "-" + newDate.toString().substring(8, 10) + "-" + newDate.toString().substring(0, 4);
+              },
+              mode: CupertinoDatePickerMode.date,
+              maximumDate: new DateTime(2030, 12, 30)
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

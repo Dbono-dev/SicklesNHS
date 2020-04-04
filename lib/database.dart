@@ -114,10 +114,21 @@ class DatabaseImportantDates {
 
   final CollectionReference submitHours = Firestore.instance.collection('Important Dates');
 
- Future updateImportantDates(String type, String date) async {
+ Future setImportantDates(String type, String date) async {
     return await submitHours.document(type + date).setData({
       'type': type,
-      'date': date
+      'date': date,
+      'inital date': date
     });
+  }
+
+  Future updateImportantDates(String type, String oldDate, String newDate) async {
+    return await submitHours.document(type + oldDate).updateData({
+      'date': newDate
+    });
+  }
+
+  Future deleteImportantDates(String type, String date) async {
+    return await submitHours.document(type + date).delete();
   }
 }
