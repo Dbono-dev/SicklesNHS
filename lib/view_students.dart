@@ -1,0 +1,349 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/size_config.dart';
+import 'package:sickles_nhs_app/account_profile.dart';
+import 'package:provider/provider.dart';
+import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/database.dart';
+
+class ViewStudents extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: <Widget> [
+            TopHalfViewStudentsPage(),
+            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+            MiddleViewStudentsPage(),
+          ]
+        )
+    );
+  }
+}
+
+class TopHalfViewStudentsPage extends StatelessWidget {
+  TopHalfViewStudentsPage({Key key}) : super (key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+
+    return StreamBuilder<UserData>(
+      stream: DatabaseService(uid: user.uid).userData,
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          UserData userData = snapshot.data;
+
+            return Material(
+              child: Container(
+              height: SizeConfig.blockSizeVertical * 20,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30)
+                ),
+                boxShadow: [BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0,
+                  offset: Offset(0, 5.0)
+                  )
+                ],
+                color: Colors.green,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.white,
+                    iconSize: 60,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 30),
+                  ),
+                  Container(
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.grey,
+                      elevation: 8,
+                      onPressed: () {
+                        Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) => AccountProfile(type: "student",)
+                          ));
+                      },
+                      child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
+                        color: Colors.white,
+                        fontSize: SizeConfig.blockSizeVertical * 5.5
+                      ),),
+                    ),
+                  )
+                ],
+              ),
+            ),
+      );
+        }
+        else {
+          return Container();
+        }
+      });
+  }
+}
+
+class MiddleViewStudentsPage extends StatefulWidget {
+
+  @override
+  _MiddleViewStudentsPageState createState() => _MiddleViewStudentsPageState();
+}
+
+class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
+  Future getPosts() async {
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("members").getDocuments();
+    return qn.documents;
+  }
+
+  String search = "";
+  bool firstCheck = false;
+  bool secondCheck = false;
+  bool thirdCheck = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.blockSizeVertical * 78,
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: TextFormField(
+              initialValue: search,
+              decoration: InputDecoration(
+                hintText: "Search",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide(color: Colors.green)),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green), borderRadius: BorderRadius.circular(30)),
+                prefixIcon: Icon(Icons.search, color: Colors.green,),
+              ),
+              onChanged: (text) {
+                setState(() {
+                  search = text;
+                });
+              },
+            ),
+          ),
+          Container(
+            child: Card(
+              elevation: 8,
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30)
+              ),
+              child: ExpansionTile(
+                title: Text("Filter"),
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text("Grade:"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget> [
+                          Text("10th Grade:"),
+                          Checkbox(
+                            activeColor: Colors.green,
+                            value: firstCheck,
+                            onChanged: (newValue) {
+                              setState(() {
+                                firstCheck = newValue;
+                              });
+                            },
+                          ),
+                          Text("11th Grade:"),
+                          Checkbox(
+                            activeColor: Colors.green,
+                            value: secondCheck,
+                            onChanged: (theNewValue) {
+                              setState(() {
+                                secondCheck = theNewValue;
+                              });
+                            },
+                          ),
+                          Text("12th Grade:"),
+                          Checkbox(
+                            activeColor: Colors.green,
+                            value: thirdCheck,
+                            onChanged: (theNewValue2) {
+                              setState(() {
+                                thirdCheck = theNewValue2;
+                              });
+                            },
+                          )
+                        ]
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ),
+          ),
+          Padding(padding: EdgeInsets.all(5)),
+          Container(
+            child: FutureBuilder(
+              future: getPosts(),
+              builder: (_, snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.green)
+                  )
+                );
+              }
+              else {
+                return Material(
+                  child: Container(
+                    height: SizeConfig.blockSizeVertical * 59,
+                    child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (_, index) {
+                        if(search != "") {
+                          if(snapshot.data[index].data['first name'].toString().contains(search) || snapshot.data[index].data['last name'].toString().contains(search)) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin")
+                                ));
+                              },
+                                child: Container(
+                                width: SizeConfig.blockSizeHorizontal * 75,
+                                  child: Card(
+                                    elevation: 8,
+                                    child: Row(
+                                      children: <Widget> [
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"], style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 25
+                                              ),),
+                                              Text("Hours: " + snapshot.data[index].data["hours"] + "\t Grade: " + snapshot.data[index].data["grade"])
+                                          ],  
+                                        ),
+                                        Spacer(),
+                                        IconButton(
+                                              icon: Icon(Icons.arrow_forward),
+                                              iconSize: 35,
+                                              onPressed: () {
+                                                Navigator.push(context, 
+                                                  MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin",)
+                                                ));
+                                              },
+                                            )
+                                      ]
+                                    )
+                                )),
+                            );
+                          }
+                          else {
+                            return Container();
+                          }
+                        }
+                        if(firstCheck = true) {
+                          if(snapshot.data[index].data['grade'] == 10) {
+                          return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin")
+                            ));
+                          },
+                            child: Container(
+                            width: SizeConfig.blockSizeHorizontal * 75,
+                              child: Card(
+                                elevation: 8,
+                                child: Row(
+                                  children: <Widget> [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"], style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 25
+                                          ),),
+                                          Text("Hours: " + snapshot.data[index].data["hours"] + "\t Grade: " + snapshot.data[index].data["grade"])
+                                      ],  
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                          icon: Icon(Icons.arrow_forward),
+                                          iconSize: 35,
+                                          onPressed: () {
+                                            Navigator.push(context, 
+                                              MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin",)
+                                            ));
+                                          },
+                                        )
+                                  ]
+                                )
+                            )),
+                        );
+                          }
+                          else {
+                            return Container();
+                          }
+                        }
+                        else {
+                          return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin")
+                            ));
+                          },
+                            child: Container(
+                            width: SizeConfig.blockSizeHorizontal * 75,
+                              child: Card(
+                                elevation: 8,
+                                child: Row(
+                                  children: <Widget> [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"], style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 25
+                                          ),),
+                                          Text("Hours: " + snapshot.data[index].data["hours"] + "\t Grade: " + snapshot.data[index].data["grade"])
+                                      ],  
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                          icon: Icon(Icons.arrow_forward),
+                                          iconSize: 35,
+                                          onPressed: () {
+                                            Navigator.push(context, 
+                                              MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot.data[index], type: "admin",)
+                                            ));
+                                          },
+                                        )
+                                  ]
+                                )
+                            )),
+                        );
+                        }
+                      },
+                    ),
+                  ),
+                );
+              }
+            }
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

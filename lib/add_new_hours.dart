@@ -1,0 +1,313 @@
+import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/view_students.dart';
+import 'package:sickles_nhs_app/size_config.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:signature/signature.dart';
+import 'package:sickles_nhs_app/database.dart';
+
+class AddNewHours extends StatelessWidget {
+  AddNewHours({Key key, this.name}) : super (key: key);
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold( 
+      backgroundColor: Colors.white,
+      body: Container(
+        height: SizeConfig.blockSizeVertical * 100,
+        width: SizeConfig.blockSizeHorizontal * 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget> [
+            TopHalfViewStudentsPage(),
+            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+            AddNewHoursMiddle(name: name),
+          ]
+        ),
+      ),
+    );
+  }
+}
+
+class AddNewHoursMiddle extends StatefulWidget {
+  AddNewHoursMiddle({Key key, this.name}) : super (key: key);
+
+  final String name;
+
+  @override
+  _AddNewHoursMiddleState createState() => _AddNewHoursMiddleState();
+}
+
+class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
+  DateTime newDateTime () {
+    int theCurrentTime = DateTime.now().minute;
+    DateTime theNewDateTime = DateTime.now();
+
+    while(theCurrentTime % 10 != 0) {
+      theCurrentTime += 1;
+    }
+
+    DateTime thenewDate = new DateTime(theNewDateTime.year, theNewDateTime.month, theNewDateTime.day, theNewDateTime.hour, theCurrentTime, theNewDateTime.second);
+    return thenewDate;
+  }
+
+  final SignatureController _controller = SignatureController(penStrokeWidth: 3, penColor: Colors.green);
+
+  String _typeOfActivity;
+
+  String _location;
+
+  String _hours;
+
+  String _nameOfSup;
+
+  String _supPhone;
+
+  String _emailSup;
+
+  String _date;
+
+  final _fourthformKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.blockSizeVertical * 78,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Material(
+          child: Form(
+            key: _fourthformKey,
+            child: ListView(
+              children: <Widget>[
+                Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                        hintText: 'Type of Activity',
+                      ),
+                        onChanged: (val) => _typeOfActivity = (val),
+                        initialValue: _typeOfActivity,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                        hintText: 'Location',
+                      ),
+                        onChanged: (val) => _location = (val),
+                        initialValue: _location,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: SizeConfig.blockSizeHorizontal * 30,
+                        child: OutlineButton(
+                        hoverColor: Colors.green,
+                        highlightColor: Colors.green,
+                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                        child: Text("Date"),
+                        onPressed: () {
+                          showModalBottomSheet(context: context, builder: (BuildContext builder) {
+                            return Container(
+                              height: MediaQuery.of(context).copyWith().size.height / 3,
+                              child: CupertinoDatePicker(
+                                initialDateTime: newDateTime(),
+                                onDateTimeChanged: (DateTime newDate) {
+                                  _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
+                                },
+                                mode: CupertinoDatePickerMode.date,
+                                maximumDate: new DateTime(2030, 12, 30)
+                              ),
+                            );
+                          });
+                        },
+                    ),
+                      ),
+                      Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                      Material(
+                        child: Container(
+                          width: SizeConfig.blockSizeHorizontal * 35,
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                            hintText: 'Hours',
+                          ),
+                            onChanged: (val) => _hours = (val),
+                            initialValue: _hours,
+                          ),
+                        )
+                      ),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Container(
+                    width: SizeConfig.blockSizeHorizontal * 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.green,
+                        width: 1
+                      )
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text("Supervisor Signature", style: TextStyle(
+                              color: Colors.green,
+                              fontSize: SizeConfig.blockSizeHorizontal * 5
+                            ),),
+                            IconButton(
+                              icon: Icon(Icons.refresh),
+                              color: Colors.green,
+                              onPressed: () {
+                                setState(() {
+                                  _controller.clear();
+                                });
+                              },
+                            )
+                          ],
+                        ),
+                        Signature(
+                          controller: _controller,
+                          height: SizeConfig.blockSizeVertical * 20,
+                          width: SizeConfig.blockSizeHorizontal * 90,
+                          backgroundColor: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                        hintText: 'Name Of Supervisor',
+                      ),
+                        onChanged: (val) => _nameOfSup = (val),
+                        initialValue: _nameOfSup,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                        hintText: 'Supervisor Phone Number',
+                      ),
+                        onChanged: (val) => _supPhone = (val),
+                        initialValue: _supPhone,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                        hintText: 'Contact Email of Supervisor',
+                      ),
+                        onChanged: (val) => _emailSup = (val),
+                        initialValue: _emailSup,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
+                Material(
+                    type: MaterialType.transparency,
+                    child: Container(
+                    height: 49.0,
+                    width: SizeConfig.blockSizeHorizontal * 100,
+                    decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 25.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0, -5.0)
+                        )
+                      ],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)
+                      ),
+                      color: Colors.green,
+                    ),
+                    child: GestureDetector(
+                          onTap: () async {
+                          print("clicked");
+                          final form = _fourthformKey.currentState;
+                          form.save();
+                          if(form.validate()) {
+                            try {
+                              dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name);
+                              if(result == null) {
+                                print("Fill in all the forms.");
+                              }
+                              if(result != null) {
+                                _fourthformKey.currentState.reset();
+                                _typeOfActivity = "";
+                                _location = "";
+                                _hours = "";
+                                _nameOfSup = "";
+                                _supPhone = "";
+                                _emailSup = "";
+                                _date = "";
+                                setState(() {
+                                  _controller.clear();
+                                });
+                              }
+                            }
+                            catch (e) {
+                              return CircularProgressIndicator();
+                            }
+                      } else {
+                        return Container();
+                      }
+                          },
+                        child: Center(
+                          child: Text("Submit", style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                          )),
+                              ),
+                            ),
+                    ))
+              ],
+             ),
+          )
+        ),
+      ),
+    );
+  }
+
+  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name) async {
+    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false);
+  }
+}
