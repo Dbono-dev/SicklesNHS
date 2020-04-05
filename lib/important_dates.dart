@@ -68,6 +68,13 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                 child: FutureBuilder(
                   future: getPosts(),
                   builder: (_, snapshot) {
+                    if(snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                        ),
+                      );
+                    }
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
@@ -156,7 +163,15 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                 child: FutureBuilder(
                   future: getPosts(),
                   builder: (_, snapshot) {
-                  return ListView.builder(
+                    if(snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                        ),
+                      );
+                    }
+                    else {
+                      return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
                       if(snapshot.data[index].data['type'].toString() == "endOfQuarter") {
@@ -204,6 +219,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                       }
                       }
                   );
+                    }
                       },
                   ),
                 ),
