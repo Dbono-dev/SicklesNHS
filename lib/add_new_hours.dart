@@ -53,21 +53,13 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
   }
 
   final SignatureController _controller = SignatureController(penStrokeWidth: 3, penColor: Colors.green);
-
   String _typeOfActivity;
-
   String _location;
-
   String _hours;
-
   String _nameOfSup;
-
   String _supPhone;
-
   String _emailSup;
-
   String _date;
-
   final _fourthformKey = GlobalKey<FormState>();
 
   @override
@@ -91,6 +83,12 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                         onChanged: (val) => _typeOfActivity = (val),
                         initialValue: _typeOfActivity,
+                        validator: (value) {
+                          if(value.isEmpty) {
+                            return 'Enter text';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -105,6 +103,12 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                         onChanged: (val) => _location = (val),
                         initialValue: _location,
+                        validator: (value) {
+                          if(value.isEmpty) {
+                            return 'Enter text';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -151,6 +155,12 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                           ),
                             onChanged: (val) => _hours = (val),
                             initialValue: _hours,
+                            validator: (value) {
+                              if(value.isEmpty) {
+                                return 'Enter number';
+                              }
+                              return null;
+                            },
                           ),
                         )
                       ),
@@ -206,6 +216,12 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                         onChanged: (val) => _nameOfSup = (val),
                         initialValue: _nameOfSup,
+                        validator: (value) {
+                          if(value.isEmpty) {
+                            return 'Enter text';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -221,6 +237,12 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                         onChanged: (val) => _supPhone = (val),
                         initialValue: _supPhone,
+                        validator: (value) {
+                          if(value.isEmpty) {
+                            return 'Enter Phone Number';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -235,70 +257,80 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                         onChanged: (val) => _emailSup = (val),
                         initialValue: _emailSup,
+                        validator: (value) {
+                          if(value.isEmpty) {
+                            return 'Enter email';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
-                Material(
-                    type: MaterialType.transparency,
-                    child: Container(
-                    height: 49.0,
-                    width: SizeConfig.blockSizeHorizontal * 100,
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 25.0,
-                        spreadRadius: 2.0,
-                        offset: Offset(0, -5.0)
-                        )
-                      ],
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)
+                  Builder(
+                    builder: (context) {
+                      return Material(
+                      type: MaterialType.transparency,
+                      child: Container(
+                      height: 49.0,
+                      width: SizeConfig.blockSizeHorizontal * 100,
+                      decoration: BoxDecoration(
+                        boxShadow: [BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 25.0,
+                          spreadRadius: 2.0,
+                          offset: Offset(0, -5.0)
+                          )
+                        ],
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30)
+                        ),
+                        color: Colors.green,
                       ),
-                      color: Colors.green,
-                    ),
-                    child: GestureDetector(
-                          onTap: () async {
-                          print("clicked");
-                          final form = _fourthformKey.currentState;
-                          form.save();
-                          if(form.validate()) {
-                            try {
-                              dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name);
-                              if(result == null) {
-                                print("Fill in all the forms.");
+                      child: GestureDetector(
+                            onTap: () async {
+                            final form = _fourthformKey.currentState;
+                            form.save();
+                            if(form.validate() && _controller.isNotEmpty) {
+                              try {
+                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name);
+                                //_controller.toPngBytes();
+                                if(result == null) {
+                                  print("Fill in all the forms.");
+                                }
+                                if(result != null) {
+                                  _fourthformKey.currentState.reset();
+                                  setState(() {
+                                    _controller.clear();
+                                  });
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Submitted Request"),
+                                      backgroundColor: Colors.green,
+                                      duration: Duration(seconds: 3),
+                                    )
+                                  );
+                                }
                               }
-                              if(result != null) {
-                                _fourthformKey.currentState.reset();
-                                _typeOfActivity = "";
-                                _location = "";
-                                _hours = "";
-                                _nameOfSup = "";
-                                _supPhone = "";
-                                _emailSup = "";
-                                _date = "";
-                                setState(() {
-                                  _controller.clear();
-                                });
+                              catch (e) {
+                                return CircularProgressIndicator();
                               }
-                            }
-                            catch (e) {
-                              return CircularProgressIndicator();
-                            }
-                      } else {
-                        return Container();
-                      }
-                          },
-                        child: Center(
-                          child: Text("Submit", style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                          )),
+                        } else {
+                          return Container();
+                        }
+                            },
+                          child: Center(
+                            child: Text("Submit", style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            )),
+                                ),
                               ),
-                            ),
-                    ))
+                      ));
+                    },
+                  )
               ],
              ),
           )

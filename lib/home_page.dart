@@ -172,16 +172,26 @@ class TopHalfHomePage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5.5),
                     ),
-                    Container(
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.grey,
-                        elevation: 8,
-                        onPressed: () {
-                          Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName)
-                            ));
-                        },
-                        child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
+                    Material(
+                      color: Colors.transparent,
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black45, width: 1),
+                          shape: BoxShape.circle
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(1000),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.green,
+                            elevation: 8,
+                            onPressed: () {
+                              Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName)
+                                ));
+                            },
+                            child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
+                          ),
+                        ),
                       ),
                     )
                   ],

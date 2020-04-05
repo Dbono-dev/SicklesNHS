@@ -97,7 +97,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   Widget build(BuildContext context) {
     final _thirdformKey = GlobalKey<FormState>();
     Options selectedOption;
-    String value = "Select";
+    String select = "Select";
+    String theDate = "Date";
 
     List<Options> users = <Options> [
       Options(0, "Weekly"),
@@ -109,299 +110,314 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     return Container(
       color: Colors.transparent,
       height: SizeConfig.blockSizeVertical * 77.8,
-      child: Form(
-        key: _thirdformKey,
-        child: ListView(
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget> [
-                Material(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Title',
-                    ),
-                      onChanged: (val) => _title = (val),
-                      initialValue: _title,
-                    ),
-                  )
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
-                Material(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Description",
-                        border: OutlineInputBorder()
+      child: Scaffold(
+        body: Form(
+          key: _thirdformKey,
+          child: ListView(
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget> [
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Title',
                       ),
-                      minLines: 3,
-                      maxLines: 6,
-                      onChanged: (val) => _description = (val),
-                      initialValue: _description,
-                    ),
-                  )
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0.0, 00)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget> [
-                    OutlineButton(
-                      hoverColor: Colors.green,
-                      highlightColor: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
-                      borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                      child: Text("Date"),
-                      onPressed: () {
-                        showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                          return Container(
-                            height: MediaQuery.of(context).copyWith().size.height / 3,
-                            child: CupertinoDatePicker(
-                              initialDateTime: newDateTime(),
-                              onDateTimeChanged: (DateTime newDate) {
-                                _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
-                              },
-                              mode: CupertinoDatePickerMode.date,
-                              maximumDate: new DateTime(2030, 12, 30)
-                            ),
-                          );
-                        });
-                      },
-                    ),
-                    OutlineButton(
-                      hoverColor: Colors.green,
-                      highlightColor: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
-                      borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                  child: Text("Start Time"),
-                  onPressed: () {
-                    showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext builder) {
-                            return Container(
-                                height: MediaQuery.of(context).copyWith().size.height / 3,
-                                child: CupertinoDatePicker(
-                                  initialDateTime: newDateTime(),
-                                  onDateTimeChanged: (DateTime newdate) {
-                                    _startTime = newdate.hour;
-                                    _startTimeMinutes = newdate.minute;
-                                  },
-                                  use24hFormat: false,
-                                  maximumDate: new DateTime(2030, 12, 30),
-                                  minimumYear: 2020,
-                                  maximumYear: 2030,
-                                  minuteInterval: 15,
-                                  mode: CupertinoDatePickerMode.time,
-                            ));
-                          });
-                  },
-                ),
-                    OutlineButton(
-                      color: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
-                      borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                      child: Text("End Time"),
-                      onPressed: () {
-                        showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext builder) {
-                                return Container(
-                                    height: MediaQuery.of(context).copyWith().size.height / 3,
-                                    child: CupertinoDatePicker(
-                                      initialDateTime: newDateTime() ,
-                                      onDateTimeChanged: (DateTime newdate) {
-                                        print(newdate);
-                                        _endTime = newdate.hour;
-                                        _endTimeMinutes = newdate.minute;
-                                      },
-                                      use24hFormat: false,
-                                      maximumDate: new DateTime(2030, 12, 30),
-                                      minimumYear: 2020,
-                                      maximumYear: 2030,
-                                      minuteInterval: 15,
-                                      mode: CupertinoDatePickerMode.time,
-                                ));
-                              });
-                      },
-                    ),
-                  ]
-                ),
-                Material(
-                  child: Row(
+                        onChanged: (val) => _title = (val),
+                        initialValue: _title,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Description",
+                          border: OutlineInputBorder()
+                        ),
+                        minLines: 3,
+                        maxLines: 6,
+                        onChanged: (val) => _description = (val),
+                        initialValue: _description,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0.0, 00)),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text("If a repetetive event: "),
-                      DropdownButton<Options>(
-                        hint: Text(value),
-                        value: selectedOption,
-                        onChanged: (Options value) {
-                          setState(() {
-                            selectedOption = value;
+                    children: <Widget> [
+                      OutlineButton(
+                        hoverColor: Colors.green,
+                        highlightColor: Colors.green,
+                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                        child: Text(theDate),
+                        onPressed: () {
+                          showModalBottomSheet(context: context, builder: (BuildContext builder) {
+                            return Container(
+                              height: MediaQuery.of(context).copyWith().size.height / 3,
+                              child: CupertinoDatePicker(
+                                initialDateTime: newDateTime(),
+                                onDateTimeChanged: (DateTime newDate) {
+                                  _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
+                                },
+                                mode: CupertinoDatePickerMode.date,
+                                maximumDate: new DateTime(2030, 12, 30)
+                              ),
+                            );
                           });
                         },
-                        items: users.map((Options user) {
-                          return DropdownMenuItem<Options>(
-                            value: user,
-                            child: Text(user.name)
-                          );
-                        }
-                        
-                        ).toList(),
+                      ),
+                      OutlineButton(
+                        hoverColor: Colors.green,
+                        highlightColor: Colors.green,
+                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                    child: Text("Start Time"),
+                    onPressed: () {
+                      showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext builder) {
+                              return Container(
+                                  height: MediaQuery.of(context).copyWith().size.height / 3,
+                                  child: CupertinoDatePicker(
+                                    initialDateTime: newDateTime(),
+                                    onDateTimeChanged: (DateTime newdate) {
+                                      _startTime = newdate.hour;
+                                      _startTimeMinutes = newdate.minute;
+                                    },
+                                    use24hFormat: false,
+                                    maximumDate: new DateTime(2030, 12, 30),
+                                    minimumYear: 2020,
+                                    maximumYear: 2030,
+                                    minuteInterval: 15,
+                                    mode: CupertinoDatePickerMode.time,
+                              ));
+                            });
+                    },
+                  ),
+                      OutlineButton(
+                        color: Colors.green,
+                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                        child: Text("End Time"),
+                        onPressed: () {
+                          showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext builder) {
+                                  return Container(
+                                      height: MediaQuery.of(context).copyWith().size.height / 3,
+                                      child: CupertinoDatePicker(
+                                        initialDateTime: newDateTime() ,
+                                        onDateTimeChanged: (DateTime newdate) {
+                                          print(newdate);
+                                          _endTime = newdate.hour;
+                                          _endTimeMinutes = newdate.minute;
+                                        },
+                                        use24hFormat: false,
+                                        maximumDate: new DateTime(2030, 12, 30),
+                                        minimumYear: 2020,
+                                        maximumYear: 2030,
+                                        minuteInterval: 15,
+                                        mode: CupertinoDatePickerMode.time,
+                                  ));
+                                });
+                        },
+                      ),
+                    ]
+                  ),
+                  Material(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text("If a repetetive event: "),
+                        DropdownButton<Options>(
+                          hint: Text(select),
+                          value: selectedOption,
+                          onChanged: (Options value) {
+                            setState(() {
+                              selectedOption = value;
+                              select = value.toString();
+                            });
+                          },
+                          items: users.map((Options user) {
+                            return DropdownMenuItem<Options>(
+                              value: user,
+                              child: Text(user.name)
+                            );
+                          }
+                          
+                          ).toList(),
+                          )
+                      ],
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0.0, 0.0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Address/Location",
+                          border: OutlineInputBorder()
+                      ),
+                        onChanged: (val) => _address = val,
+                        initialValue: _address,
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0, 0)),
+                  Material(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                        onChanged: (val) => _max = val,
+                        initialValue: _max,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: "Max Number Of Participants",
+                          border: OutlineInputBorder()
+                      ),                      
+                      ),
+                    )
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      FloatingActionButton(
+                        backgroundColor: Colors.green,
+                        elevation: 8,
+                        onPressed: () {
+                          getImage(_title);
+                        },
+                        child: Icon(
+                          Icons.photo_library,
+                          size: 25,
                         )
+                      ),
+                      Material(child: Text(fileSelect, style: TextStyle(fontSize: 20),))
                     ],
                   ),
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0.0, 0.0)),
-                Material(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Address/Location",
-                        border: OutlineInputBorder()
-                    ),
-                      onChanged: (val) => _address = val,
-                      initialValue: _address,
-                    ),
-                  )
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0, 0)),
-                Material(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextFormField(
-                      onChanged: (val) => _max = val,
-                      initialValue: _max,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: "Max Number Of Participants",
-                        border: OutlineInputBorder()
-                    ),                      
-                    ),
-                  )
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    FloatingActionButton(
-                      backgroundColor: Colors.green,
-                      elevation: 8,
-                      onPressed: () {
-                        getImage(_title);
-                      },
-                      child: Icon(
-                        Icons.photo_library,
-                        size: 25,
-                      )
-                    ),
-                    Material(child: Text(fileSelect, style: TextStyle(fontSize: 20),))
-                  ],
-                ),
-              ]
-            ),
-            Material(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget> [
-                  Checkbox(
-                    value: serviceEventValue,
-                    activeColor: Colors.green,
-                    checkColor: Colors.white,
-                    onChanged: (newValue) {
-                      setState(() {
-                        serviceEventValue = newValue;                        
-                      });
-                    }
-                  ),
-                  Text("Service Event"),
-                  Checkbox(
-                    value: communityServiceEventValue,
-                    activeColor: Colors.green,
-                    checkColor: Colors.white,
-                    onChanged: (theNewValue) {
-                      setState(() {
-                        communityServiceEventValue = theNewValue;
-                      });
-                    }
-                  ),
-                  Text("Community Service Project")
                 ]
               ),
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            Material(
-              type: MaterialType.transparency,
-              child: Container(
-              height: SizeConfig.blockSizeVertical * 7,
-              decoration: BoxDecoration(
-                boxShadow: [BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 15.0,
-                  spreadRadius: 2.0,
-                  offset: Offset(0, 10.0)
-                  )
-                ],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30)
+              Material(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget> [
+                    Checkbox(
+                      value: serviceEventValue,
+                      activeColor: Colors.green,
+                      checkColor: Colors.white,
+                      onChanged: (newValue) {
+                        setState(() {
+                          serviceEventValue = newValue;                        
+                        });
+                      }
+                    ),
+                    Text("Service Event"),
+                    Checkbox(
+                      value: communityServiceEventValue,
+                      activeColor: Colors.green,
+                      checkColor: Colors.white,
+                      onChanged: (theNewValue) {
+                        setState(() {
+                          communityServiceEventValue = theNewValue;
+                        });
+                      }
+                    ),
+                    Text("Community Service Project")
+                  ]
                 ),
-                color: Colors.green,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("Create Event", style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    )),
-                    onPressed: () async {
-                      print("clicked");
-                      if(communityServiceEventValue == true) {
-                        _type = "Community Service Project";
-                      }
-                      if(serviceEventValue == true) {
-                        _type = "Service Event";
-                      }
-                      final form = _thirdformKey.currentState;
-                      form.save();
-                      if(form.validate()) {
-                        try {
-                          dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
-                          if(result == null) {
-                            print("Fill in all the forms.");
-                          }
-                          if(result != null) {
-                            setState(() {
-                              _thirdformKey.currentState.reset();
-                              _title = "";
-                              _description = "";
-                              _address = "";
-                              _max = "";
-                              communityServiceEventValue = false;
-                              serviceEventValue = false;
-                            });
-                          }
-                        }
-                        catch (e) {
-                          return CircularProgressIndicator();
-                        }
-                      } 
-                      else {
-                        return Container();
-                      }}
+              Padding(padding: EdgeInsets.all(5),),
+              Material(
+                type: MaterialType.transparency,
+                child: Container(
+                height: SizeConfig.blockSizeVertical * 7,
+                decoration: BoxDecoration(
+                  boxShadow: [BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 15.0,
+                    spreadRadius: 2.0,
+                    offset: Offset(0, 10.0)
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)
                   ),
-                ],
+                  color: Colors.green,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Builder(
+                      builder: (context) {
+                        return FlatButton(
+                          child: Text("Create Event", style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                          )),
+                          onPressed: () async {
+                            print("clicked");
+                            if(communityServiceEventValue == true) {
+                              _type = "Community Service Project";
+                            }
+                            if(serviceEventValue == true) {
+                              _type = "Service Event";
+                            }
+                            final form = _thirdformKey.currentState;
+                            form.save();
+                            if(form.validate()) {
+                              try {
+                                dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
+                                if(result == null) {
+                                  print("Fill in all the forms.");
+                                }
+                                if(result != null) {
+                                  setState(() {
+                                    _thirdformKey.currentState.reset();
+                                    _title = "";
+                                    _description = "";
+                                    _address = "";
+                                    _max = "";
+                                    communityServiceEventValue = false;
+                                    serviceEventValue = false;
+                                  });
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Testing"),
+                                      backgroundColor: Colors.green,
+                                      elevation: 8,
+                                      duration: Duration(seconds: 3),
+                                    )
+                                  );
+                                }
+                              }
+                              catch (e) {
+                                return CircularProgressIndicator();
+                              }
+                            } 
+                            else {
+                              return Container();
+                            }}
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            )
-          ],
-        )
+              )
+            ],
+          )
+        ),
       ),
     );
   }
