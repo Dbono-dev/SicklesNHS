@@ -4,6 +4,7 @@ import 'package:sickles_nhs_app/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:signature/signature.dart';
 import 'package:sickles_nhs_app/database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewHours extends StatelessWidget {
   AddNewHours({Key key, this.name}) : super (key: key);
@@ -294,15 +295,20 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                             form.save();
                             if(form.validate() && _controller.isNotEmpty) {
                               try {
-                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name);
-                                //_controller.toPngBytes();
+                                var signture = await _controller.toPngBytes();
+                                final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
+                                final StorageUploadTask task = firebaseStorageRef.putData(signture);
+                                var url = await firebaseStorageRef.getDownloadURL();
+
+                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url);
+
                                 if(result == null) {
                                   print("Fill in all the forms.");
                                 }
                                 if(result != null) {
-                                  _fourthformKey.currentState.reset();
                                   setState(() {
                                     _controller.clear();
+                                    _fourthformKey.currentState.reset();
                                   });
                                   Scaffold.of(context).showSnackBar(
                                     SnackBar(
@@ -339,7 +345,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
     );
   }
 
-  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name) async {
-    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false);
+  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, var url) async {
+    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false, url);
   }
 }

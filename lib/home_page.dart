@@ -174,24 +174,15 @@ class TopHalfHomePage extends StatelessWidget {
                     ),
                     Material(
                       color: Colors.transparent,
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black45, width: 1),
-                          shape: BoxShape.circle
-                        ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(1000),
-                          child: FloatingActionButton(
-                            backgroundColor: Colors.green,
-                            elevation: 8,
-                            onPressed: () {
-                              Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName)
-                                ));
-                            },
-                            child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
-                          ),
-                        ),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.grey,
+                        elevation: 8,
+                        onPressed: () {
+                          Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName)
+                            ));
+                        },
+                        child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
                       ),
                     )
                   ],
@@ -270,11 +261,7 @@ class MiddleHomePageCards extends StatelessWidget {
                             Container(
                               height: 125,
                               width: 160,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                border: Border.all(width: 3),
-                                borderRadius: BorderRadius.all(Radius.circular(30))
-                              ),
+                              child: Image.asset("SicklesNHS.jpg"),
                             ),
                             Text(post.data["title"], style: TextStyle(
                               fontSize: SizeConfig.blockSizeHorizontal * 6.5,

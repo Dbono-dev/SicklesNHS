@@ -139,7 +139,9 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                 Text("Location: " + snapshot.data[index].data['location']),
                                 Text("Name of Supervisor: " + snapshot.data[index].data['name of supervisor']),
                                 Text("Supervisor Email: " + snapshot.data[index].data['supervisor email']),
-                                Text("Supervisor Phone Number: " + snapshot.data[index].data['supervisor phone number'])
+                                Text("Supervisor Phone Number: " + snapshot.data[index].data['supervisor phone number']),
+                                
+                                Image.network(snapshot.data[index].data['url'])
                               ],
                             )
                           ],

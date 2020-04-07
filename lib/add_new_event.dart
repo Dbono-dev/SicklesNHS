@@ -66,7 +66,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   File image;
 
   Future getImage(String eventTitle) async {
-    print("got here");
     var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
@@ -393,7 +392,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                   });
                                   Scaffold.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("Testing"),
+                                      content: Text("Event Created"),
                                       backgroundColor: Colors.green,
                                       elevation: 8,
                                       duration: Duration(seconds: 3),
