@@ -4,11 +4,12 @@ import 'package:sickles_nhs_app/user.dart';
 class DatabaseService {
 
   final String uid;
-  DatabaseService({ this.uid });
+  
+  DatabaseService({this.uid});
 
   final CollectionReference memberCollection = Firestore.instance.collection('members');
 
-  Future updateUserData(String firstName, String lastName, String hours, String studentNum, String grade) async {
+  Future updateUserData(String firstName, String lastName, String hours, String studentNum, String grade, String uid) async {
     return await memberCollection.document(uid).setData({
       'first name': firstName,
       'last name': lastName,
@@ -16,7 +17,8 @@ class DatabaseService {
       'student number': studentNum,
       'grade': grade,
       'permissions': 2,
-      'date': "5/20/21"
+      'date': "5/20/21",
+      'uid': uid
     });
   }
 
@@ -35,7 +37,6 @@ class DatabaseService {
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-      uid: uid,
       firstName: snapshot.data['first name'],
       lastName: snapshot.data['last name'],
       grade: snapshot.data['grade'],
@@ -84,7 +85,7 @@ class DatabaseSubmitHours {
 
   final CollectionReference submitHours = Firestore.instance.collection('Approving Hours');
 
- Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url) async {
+ Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid) async {
     return await submitHours.document(type).setData({
       'type': type,
       'location': location,
@@ -95,7 +96,8 @@ class DatabaseSubmitHours {
       'date': date,
       'name': name, 
       'complete': complete,
-      'url': url
+      'url': url,
+      'uid': uid
     });
   }
 

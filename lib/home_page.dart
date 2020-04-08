@@ -258,10 +258,16 @@ class MiddleHomePageCards extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
-                              height: 125,
-                              width: 160,
-                              child: Image.asset("SicklesNHS.jpg"),
+                            SizedBox(
+                              height: SizeConfig.blockSizeVertical * 16,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 1, 0, SizeConfig.blockSizeHorizontal * 1, 0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Image.asset("SicklesNHS.jpg")
+                                ),
+                              ),
                             ),
                             Text(post.data["title"], style: TextStyle(
                               fontSize: SizeConfig.blockSizeHorizontal * 6.5,

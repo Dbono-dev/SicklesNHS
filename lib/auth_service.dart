@@ -2,9 +2,7 @@ import 'dart:io';
 
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:sickles_nhs_app/database.dart';
 import 'package:sickles_nhs_app/user.dart';
@@ -82,7 +80,7 @@ class AuthService {
     var r = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
     var u = r.user;
 
-    await DatabaseService(uid: u.uid).updateUserData(firstName, lastName, "0", studentNum, grade);
+    await DatabaseService(uid: u.uid).updateUserData(firstName, lastName, "0", studentNum, grade, u.uid);
     UserUpdateInfo info = UserUpdateInfo();
     info.displayName = '$firstName $lastName';
     return await u.updateProfile(info);

@@ -4,6 +4,7 @@ import 'package:sickles_nhs_app/push_notification.dart';
 import 'package:sickles_nhs_app/view_students.dart';
 import 'package:sickles_nhs_app/size_config.dart';
 import 'package:sickles_nhs_app/database.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ApproveHoursPage extends StatelessWidget {
   @override
@@ -140,8 +141,12 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                 Text("Name of Supervisor: " + snapshot.data[index].data['name of supervisor']),
                                 Text("Supervisor Email: " + snapshot.data[index].data['supervisor email']),
                                 Text("Supervisor Phone Number: " + snapshot.data[index].data['supervisor phone number']),
-                                
-                                Image.network(snapshot.data[index].data['url'])
+                                Center(
+                                  child: FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: snapshot.data[index].data['url'].toString()
+                                  ),
+                                ),
                               ],
                             )
                           ],
@@ -158,7 +163,8 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
       ),
     );
   }
-    Future sendEventToDatabase(String type, bool complete) async {
+  
+  Future sendEventToDatabase(String type, bool complete) async {
     await DatabaseSubmitHours().updateCompleteness(type, complete);
   }
 

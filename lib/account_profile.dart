@@ -90,7 +90,7 @@ class TopHalfAccountProfile extends StatelessWidget {
             iconSize: 60,
             onPressed: () {
               Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewHours(name: name)));
+              MaterialPageRoute(builder: (context) => AddNewHours(name: name, post: posts)));
             }
           ),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
