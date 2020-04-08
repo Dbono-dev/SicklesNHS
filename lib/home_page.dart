@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:sickles_nhs_app/account_profile.dart';
 import 'package:sickles_nhs_app/add_new_event.dart';
 import 'package:sickles_nhs_app/approve_hours.dart';
@@ -43,6 +44,12 @@ class MiddleHomePage extends StatelessWidget {
     Future getPosts() async {
       var firestore = Firestore.instance;
       QuerySnapshot qn = await firestore.collection("events").getDocuments();
+      return qn.documents;
+    }
+
+    Future getClubDates() async {
+      var firestore = Firestore.instance;
+      QuerySnapshot qn = await firestore.collection("Important Dates").getDocuments();
       return qn.documents;
     }
 
@@ -406,11 +413,19 @@ class BottomPageCards extends StatelessWidget {
   BottomPageCards ({Key key, this.post}) : super (key: key);
 
   DocumentSnapshot post;
+  String title;
 
   Widget build(BuildContext context) {
-    navigateToDetail(DocumentSnapshot post) {
+  navigateToDetail(DocumentSnapshot post) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post,)));
-    }
+  }
+
+  if(post.data["type"].toString() == "clubDates") {
+    title = "Club Meeting " + post.data["date"].toString().substring(0, 5);
+  }
+  else {
+    title = post.data['title'];
+  }
 
     return GestureDetector(
       onTap: () {
@@ -435,7 +450,7 @@ class BottomPageCards extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Text(post.data["title"], overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                  Text(title, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                   const SizedBox(height: 2,),
                   Text("View Event", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 17, decoration: TextDecoration.underline, color: Colors.green), textAlign: TextAlign.center,),
                   Row()
@@ -462,6 +477,12 @@ class _StudentMyEvents extends State<StudentMyEvents> {
     final AuthService _auth = AuthService();
 
     final user = Provider.of<User>(context);
+
+    int _whithin10Days(DocumentSnapshot snapshot) {
+      int _date = Jiffy(DateTime.now()).dayOfYear;
+      print(_date);
+      return _date;
+    }
 
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
@@ -507,44 +528,83 @@ class _StudentMyEvents extends State<StudentMyEvents> {
               Container(
               height: SizeConfig.blockSizeVertical * 27,
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: FutureBuilder(
-                future: MiddleHomePage().getPosts(),
-                builder: (_, snapshot) {
-                  if(snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  }
-                  else if (snapshot.data.length == 0) {
-                    return Material(
-                        child: Center(
-                        child: Text("NO EVENTS", style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 45
-                        )),
-                      ),
-                    );
-                  }
-                  else {
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (_, index) {
-                        if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
-                          return BottomPageCards(post: snapshot.data[index]);
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: FutureBuilder(
+                      future: MiddleHomePage().getClubDates(),
+                      builder: (_, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                            )
+                          );
                         }
                         else {
-                          return Container(
-                            height: 0,
-                            width: 0,
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (_, index) {
+                              if(snapshot.data[index].data['type'] == "clubDates") {
+                                if(Jiffy(DateTime(int.parse(snapshot.data[index].data['date'].substring(6)), int.parse(snapshot.data[index].data['date'].substring(0, 2)), int.parse(snapshot.data[index].data['date'].substring(3, 5)))).dayOfYear - _whithin10Days(snapshot.data[index]) <= 10) {
+                                  return BottomPageCards(post: snapshot.data[index]);
+                                }
+                                else {
+                                  return Container(height: 0,);
+                                }
+                              }
+                              else {
+                                return Container(height: 0,);
+                              }
+                            }
                           );
                         }
                       }
-                    );
-                  }
-                }
+                    ),
+                  ),
+                  Expanded(
+                    child: FutureBuilder(
+                      future: MiddleHomePage().getPosts(),
+                      builder: (_, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        }
+                        else if (snapshot.data.length == 0) {
+                          return Material(
+                              child: Center(
+                              child: Text("NO EVENTS", style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 45
+                              )),
+                            ),
+                          );
+                        }
+                        else {
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (_, index) {
+                              if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+                                return BottomPageCards(post: snapshot.data[index]);
+                              }
+                              else {
+                                return Container(
+                                  height: 0,
+                                  width: 0,
+                                );
+                              }
+                            }
+                          );
+                        }
+                      }
+                    ),
+                  ),
+                ],
               )
           ),
               ],
