@@ -109,14 +109,10 @@ class TopHalfHomePage extends StatelessWidget {
   SizeConfig().init(context);
 
   DateTime now = DateTime.now();
-  String time = formatDate(now, [HH, ':', nn, ':', ss]);
-  time = time.substring(0, 2);
+  String time = formatDate(now, [HH]);
   String theTime = time.substring(0);
-  if(int.parse(theTime) == 0)
-  {
-    theTiming = int.parse(time.substring(1));
-  }
   theTiming = int.parse(time);
+  print(theTiming);
   if(4 < theTiming && theTiming < 12)
   {
     timeOfDay = "Good Morning ";

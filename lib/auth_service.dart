@@ -39,6 +39,16 @@ class AuthService {
     }
   }
 
+  Future resetPassword(String email) async {
+    try {
+      var result = await _auth.sendPasswordResetEmail(email: email);
+      
+    }
+    catch(e) {
+      print(e);
+    }
+  }
+
   Future<void> ErrorMessage(String body, BuildContext context) async {
     if(Platform.isAndroid) {
       return showDialog<void>(

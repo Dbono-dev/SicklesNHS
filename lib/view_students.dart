@@ -278,7 +278,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                         color: Colors.green,
                         fontSize: 25
                       ),),
-                      Text("Hours: " + snapshot.data["hours"] + "\t Grade: " + snapshot.data["grade"])
+                      Text("Hours: " + snapshot.data["hours"].toString() + "\t Grade: " + snapshot.data["grade"])
                   ],  
                 ),
                 Spacer(),

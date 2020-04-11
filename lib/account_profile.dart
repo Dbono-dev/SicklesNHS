@@ -194,11 +194,16 @@ class MiddleAccountProfile extends StatelessWidget {
 
   final String type;
   DocumentSnapshot post;
+  List completedEvents = new List();
+  String _events;
 
-  Future getCompletedHours() async {
+  Future getCompletedHours(String uid) async {
     var firestone = Firestore.instance;
     QuerySnapshot qn = await firestone.collection("members").getDocuments();
-    return qn.documents;
+    DocumentReference docRef = Firestore.instance.collection('members').document(uid);
+    DocumentSnapshot docSnap = await docRef.get();
+    completedEvents = docSnap.data['completed events'];
+    return completedEvents;
   }
 
   Widget build(BuildContext context) {
@@ -210,27 +215,63 @@ class MiddleAccountProfile extends StatelessWidget {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
           if(type == "admin") {
-            return Container(
-              child: Column(
+            return recentActivity(post.data['first name'], post.data['last name'], post.data['grade'], post.data['uid'], post.data['hours'].toString());
+          }
+          if(type == "student") {
+            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString());
+          }
+          else {
+            return CircularProgressIndicator();
+          }
+        }
+        else {
+          return Container();
+        }
+      }
+    );
+  }
+
+  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: SizeConfig.blockSizeHorizontal * 25,
+            height: 100,
+            child: FloatingActionButton(
+            backgroundColor: Colors.green,
+            elevation: 8,
+            onPressed: () {},
+            child: Text(firstName.substring(0, 1) + lastName.substring(0, 1), style: TextStyle(
+              color: Colors.white,
+              fontSize: SizeConfig.blockSizeHorizontal * 15
+            ),),
+          ),
+          ),
+          Padding(padding: EdgeInsets.all(4),),
+          Material(child: Text(firstName + " " + lastName, style: TextStyle(fontSize: 35),)),
+          Padding(padding: EdgeInsets.all(1),),
+          Material(child: Text(grade + "th Grade", style: TextStyle(fontSize: 20),)),
+          Padding(padding: EdgeInsets.all(7),),
+
+          FutureBuilder(
+            future: getCompletedHours(uid),
+            builder: (_, snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.green),
+                );
+              }
+              else {
+                double events = snapshot.data.length / 3;
+                if(events > 9) {
+                  _events = events.toString().substring(0, 2);
+                }
+                else {
+                  _events = events.toString().substring(0, 1);
+                }
+                return Column(
                 children: <Widget>[
-                  Container(
-                    width: SizeConfig.blockSizeHorizontal * 25,
-                    height: 100,
-                    child: FloatingActionButton(
-                    backgroundColor: Colors.green,
-                    elevation: 8,
-                    onPressed: () {},
-                    child: Text(post.data["first name"].substring(0, 1) + post.data['last name'].substring(0, 1), style: TextStyle(
-                      color: Colors.white,
-                      fontSize: SizeConfig.blockSizeHorizontal * 15
-                    ),),
-                  ),
-                  ),
-                  Padding(padding: EdgeInsets.all(4),),
-                  Material(child: Text(post.data["first name"] + " " + post.data["last name"], style: TextStyle(fontSize: 35),)),
-                  Padding(padding: EdgeInsets.all(1),),
-                  Material(child: Text(post.data["grade"] + "th Grade", style: TextStyle(fontSize: 20),)),
-                  Padding(padding: EdgeInsets.all(7),),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,7 +282,7 @@ class MiddleAccountProfile extends StatelessWidget {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
-                            child: Align(alignment: Alignment.center, child: Text(post.data["hours"] + " Hours", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                            child: Align(alignment: Alignment.center, child: Text(hours.toString() + " Hours", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
                       ),
@@ -251,7 +292,7 @@ class MiddleAccountProfile extends StatelessWidget {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
-                            child: Align(alignment: Alignment.center, child: Text("3 Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                            child: Align(alignment: Alignment.center, child: Text(_events + " Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
                       ),
@@ -261,166 +302,59 @@ class MiddleAccountProfile extends StatelessWidget {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
-                            child: Align(alignment: Alignment.center, child: Text("2 Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                            child: Align(alignment: Alignment.center, child: Text("0 Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
                       )
                     ],
                     ),
-                    Padding(padding: EdgeInsets.all(5),),
-                    Material(child: Text("Recent Activity", style: TextStyle(fontSize: 20),),),
-                    Container(
-                      height: SizeConfig.blockSizeVertical * 33.4,
-                        child: FutureBuilder(
-                          future: getCompletedHours(),
-                          builder: (_, snapshot) {
-                            if(snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            if(snapshot.data.length == 0) {
-                              return Material(
-                                child: Center(
-                                  child: Text("NO EVENTS", style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 45
-                                  )),
-                                ),
-                              );
-                            }
-                            else {
-                             return ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (_, index) {
-                              if(snapshot.data[index].data['name'].toString().contains(post.data['first name'].toString() + post.data['last name'].toString()) && snapshot.data[index].data['complete'] == true) {
-                                return AccountProfileCards(
-                                  title: snapshot.data[index].data['type'],
-                                  date: snapshot.data[index].data['date'],
-                                  hours: snapshot.data[index].data['hours']
-                                );
-                              }
-                              },
-                            ); 
-                            }
-                          },      
-                        ) 
-                    )
-                ],
-              ),
-            );
-          }
-          if(type == "student") {
-          return Container(
-          child: Column(
-            children: <Widget>[
+              Padding(padding: EdgeInsets.all(5),),
+              Material(child: Text("Recent Activity", style: TextStyle(fontSize: 20),),),
               Container(
-                width: SizeConfig.blockSizeHorizontal * 25,
-                height: 100,
-                child: FloatingActionButton(
-                backgroundColor: Colors.green,
-                elevation: 8,
-                onPressed: () {},
-                child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
-                  color: Colors.white,
-                  fontSize: SizeConfig.blockSizeHorizontal * 15
-                ),),
-              ),
-              ),
-              Padding(padding: EdgeInsets.all(4),),
-              Material(child: Text(userData.firstName + " " + userData.lastName, style: TextStyle(fontSize: 35),)),
-              Padding(padding: EdgeInsets.all(1),),
-              Material(child: Text(userData.grade + "th Grade", style: TextStyle(fontSize: 20),)),
-              Padding(padding: EdgeInsets.all(7),),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Card(
-                    elevation: 8,
-                    child: Container(
-                      height: SizeConfig.blockSizeVertical * 7,
-                      width: SizeConfig.blockSizeHorizontal * 25,
-                        child: Material(
-                        child: Align(alignment: Alignment.center, child: Text(userData.hours.toString() + " Hours", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    elevation: 8,
-                    child: Container(
-                      height: SizeConfig.blockSizeVertical * 7,
-                      width: SizeConfig.blockSizeHorizontal * 25,
-                        child: Material(
-                        child: Align(alignment: Alignment.center, child: Text("3 Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    elevation: 8,
-                    child: Container(
-                      height: SizeConfig.blockSizeVertical * 7,
-                      width: SizeConfig.blockSizeHorizontal * 25,
-                        child: Material(
-                        child: Align(alignment: Alignment.center, child: Text("2 Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
-                      ),
-                    ),
+                    height: SizeConfig.blockSizeVertical * 33.4,
+                      child: FutureBuilder(
+                        future: getCompletedHours(uid),
+                        builder: (_, snapshot) {
+                          if(snapshot.connectionState == ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if(snapshot.data.length == 0) {
+                            return Material(
+                              child: Center(
+                                child: Text("NO EVENTS", style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 45
+                                )),
+                              ),
+                            );
+                          }
+                          else {
+                            return Container(
+                              width: SizeConfig.blockSizeHorizontal * 92.5,
+                              child: ListView.builder(
+                                itemCount: 1,
+                                itemBuilder: (_, index) {
+                                    return AccountProfileCards(
+                                      title: completedEvents[0].toString(),
+                                      date: completedEvents[1].toString(),
+                                      hours: completedEvents[2].toString()
+                                    );
+                                }
+                              ),
+                            );
+                          }
+                        },      
+                      ) 
                   )
                 ],
-                ),
-                Padding(padding: EdgeInsets.all(5),),
-                Material(child: Text("Recent Activity", style: TextStyle(fontSize: 20),),),
-                Container(
-                      height: SizeConfig.blockSizeVertical * 33.4,
-                        child: FutureBuilder(
-                          future: getCompletedHours(),
-                          builder: (_, snapshot) {
-                            if(snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            if(snapshot.data.length == 0) {
-                              return Material(
-                                child: Center(
-                                  child: Text("NO EVENTS", style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 45
-                                  )),
-                                ),
-                              );
-                            }
-                            else {
-                             return ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (_, index) {
-                                if(userData.firstName.toString().contains("TheAdmin")) {
-                                  print("got here");
-                                  List<String> completedEvents = List.from(snapshot.data[index].data['completed events']);
-                                  return AccountProfileCards(
-                                    title: completedEvents[0].toString(),
-                                    date: completedEvents[1],
-                                    hours: completedEvents[2]
-                                  );
-                                }
-                              },
-                            ); 
-                            }
-                          },      
-                        ) 
-                    )
-            ],
-          ),
-        );
-          }
-          else {
-            return CircularProgressIndicator();
-          }
-        } else {
-          return Container();
-        }
-        
-      }
+              );
+              }
+            },
+          )
+        ],
+      ),
     );
   }
 }

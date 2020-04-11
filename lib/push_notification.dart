@@ -33,7 +33,7 @@ class PushNotificationService {
   }
 
   // Replace with server token from firebase console settings.
-final String serverToken = 'AAAA9shRjdo:APA91bHA80_mP4XBXY0dUXG87CdVKjcFX3fuCXft8CAVLq8v5HjT66slVysGB1-VNGaPv5sA4vYwBBNfjf1ncKHXZ6lhDhIvAgRKVD6LiKyqEtIt1KnpR5RlSlZWrbV0qUlOFRCYDCJy';
+final String serverToken = "AAAA9shRjdo:APA91bHA80_mP4XBXY0dUXG87CdVKjcFX3fuCXft8CAVLq8v5HjT66slVysGB1-VNGaPv5sA4vYwBBNfjf1ncKHXZ6lhDhIvAgRKVD6LiKyqEtIt1KnpR5RlSlZWrbV0qUlOFRCYDCJy";
 final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
 Future<Map<String, dynamic>> sendAndRetrieveMessage(String title, String body) async {

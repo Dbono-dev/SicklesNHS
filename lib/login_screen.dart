@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sickles_nhs_app/auth_service.dart';
 import 'package:sickles_nhs_app/sign_up.dart';
 import 'package:sickles_nhs_app/size_config.dart';
@@ -21,8 +22,8 @@ class LoginScreen extends StatelessWidget {
             TopHalfLoginPage(),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
             LoginPage(),
-            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 8.5),),
-            BottonHalfLoginPage()
+            //Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 8.5),),
+            //BottonHalfLoginPage()
           ],
         )
       ],
@@ -116,8 +117,10 @@ class LoginPage extends StatefulWidget {
 class _MiddlePageLoginScreen extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
+  final _theFormKey = GlobalKey<FormState>();
   String _password;
   String _email;
+  String _theEmail;
   final AuthService _auth = AuthService();
 
   @override
@@ -167,7 +170,68 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                 ),
                   ),
               ),
-              Padding(padding: EdgeInsets.all(10),),
+              Material(
+                color: Colors.transparent,
+                child: FlatButton(
+                  onPressed: () async {
+                    return showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      child: AlertDialog(
+                        title: Text("Reset Password"),
+                        content: Container(
+                          height: SizeConfig.blockSizeVertical * 15,
+                          child: Column(
+                            children: <Widget>[
+                              Text("Enter your Email"),
+                              Form(
+                                key: _theFormKey,
+                                child: TextFormField(
+                                  onSaved: (value) => _theEmail = value,
+                                  validator: (val) => val.isEmpty ? 'Enter an email': null,
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Cancel", style: TextStyle(color: Colors.green),)
+                              ),
+                              FlatButton(
+                                onPressed: () async {
+                                  if(_theFormKey.currentState.validate()) {
+                                    _theFormKey.currentState.save();
+                                    try {
+                                      await _auth.resetPassword(_theEmail);
+                                    }
+                                    on PlatformException catch (error) {
+                                      print(error.message);
+                                      Navigator.of(context).pop();
+                                    }
+                                  }
+                                },
+                                child: Text("Ok", style: TextStyle(color: Colors.green))
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    );
+                  },
+                  child: Text(
+                    "Forgot Password/Reset Password", 
+                    style: TextStyle(color: Colors.white)
+                  ),
+                ),
+              ),
+              Padding(padding: EdgeInsets.all(1),),
               Material(
                 elevation: 8.0,
                 borderRadius: BorderRadius.circular(30.0),
