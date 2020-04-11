@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sickles_nhs_app/database.dart';
 import 'package:sickles_nhs_app/size_config.dart';
@@ -58,12 +59,15 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   int _endTime;
   int _endTimeMinutes;
   String _address;
-  String _date = "";
-  String _photoUrl = "";
+  String _date;
   String _max;
   String _type = "";
   String fileSelect = "No File Selected";
   File image;
+  var _photoUrl;
+  StorageReference firebaseStorageRef;
+  var listOfDates = new List<DateTime> ();
+  DateTime startDate = new DateTime.now();
 
   Future getImage(String eventTitle) async {
     var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -72,7 +76,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       fileSelect = "File Selected";
     });
 
-    final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(eventTitle + '.jpg');
+    firebaseStorageRef = FirebaseStorage.instance.ref().child(eventTitle + '.jpg');
     final StorageUploadTask task = firebaseStorageRef.putFile(tempImage);
   }
 
@@ -89,7 +93,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   }
 
   bool communityServiceEventValue = false;
-
   bool serviceEventValue = false;
 
   @override
@@ -156,20 +159,15 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
                         borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
                         child: Text(theDate),
-                        onPressed: () {
-                          showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                            return Container(
-                              height: MediaQuery.of(context).copyWith().size.height / 3,
-                              child: CupertinoDatePicker(
-                                initialDateTime: newDateTime(),
-                                onDateTimeChanged: (DateTime newDate) {
-                                  _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
-                                },
-                                mode: CupertinoDatePickerMode.date,
-                                maximumDate: new DateTime(2030, 12, 30)
-                              ),
-                            );
-                          });
+                        onPressed: () async {
+                          DateTime newDateTime = await showRoundedDatePicker(
+                            context: context,
+                            initialDate: startDate,
+                            lastDate: DateTime(DateTime.now().year + 1),
+                            borderRadius: 16,
+                            theme: ThemeData(primarySwatch: Colors.green),
+                            textActionButton: "Add More Dates",
+                          );
                         },
                       ),
                       OutlineButton(
@@ -214,7 +212,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                       child: CupertinoDatePicker(
                                         initialDateTime: newDateTime() ,
                                         onDateTimeChanged: (DateTime newdate) {
-                                          print(newdate);
                                           _endTime = newdate.hour;
                                           _endTimeMinutes = newdate.minute;
                                         },
@@ -376,6 +373,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             form.save();
                             if(form.validate()) {
                               try {
+                                _photoUrl = await firebaseStorageRef.getDownloadURL();
+                                _date = newDateTime.toString().substring(5, 7) + "/" + newDateTime.toString().substring(8, 10) + "/" + newDateTime.toString().substring(0, 4);
                                 dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
                                 if(result == null) {
                                   print("Fill in all the forms.");
@@ -421,7 +420,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     );
   }
 
-  Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, String photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
+  Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
   await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
 }
 }

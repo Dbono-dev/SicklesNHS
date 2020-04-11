@@ -37,24 +37,28 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
           key: _fourthformKey,
           child: Column(
             children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15))
+              Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                    ),
+                    hintText: "Title"
                   ),
-                  hintText: "Title"
                 ),
               ),
               Padding(padding: EdgeInsets.all(10)),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15))
+              Expanded(
+    child: TextFormField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                    ),
+                    hintText: "Body of Message"
                   ),
-                  hintText: "Body of Message"
+                  maxLines: 6,
+                  minLines: 3,
                 ),
-                maxLines: 6,
-                minLines: 3,
               ),
               Spacer(),
               Material(

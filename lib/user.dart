@@ -11,6 +11,7 @@ class UserData {
   final String grade;
   final int permissions;
   final String date;
+  final int hours;
 
-  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date});
+  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours});
 }

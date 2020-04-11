@@ -12,11 +12,12 @@ import 'package:sickles_nhs_app/messages_page.dart';
 import 'package:sickles_nhs_app/leaderboard.dart';
 
 class AccountProfile extends StatelessWidget {
-  AccountProfile({Key key, this.posts, this.type, this.name}) : super (key: key);
+  AccountProfile({Key key, this.posts, this.type, this.name, this.uid}) : super (key: key);
 
   final DocumentSnapshot posts;
   final String type;
   final String name;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class AccountProfile extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
           children: <Widget>[
-            TopHalfAccountProfile(type: type, posts: posts, name: name),
+            TopHalfAccountProfile(type: type, uid: uid, name: name),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
             MiddleAccountProfile(type: type, post: posts),
           ],
@@ -34,10 +35,10 @@ class AccountProfile extends StatelessWidget {
 }
 
 class TopHalfAccountProfile extends StatelessWidget {
-  TopHalfAccountProfile({Key key, this.type, this.posts, this.name}) : super (key: key);
+  TopHalfAccountProfile({Key key, this.type, this.uid, this.name}) : super (key: key);
 
   final String type;
-  final DocumentSnapshot posts;
+  final String uid;
   final String name;
 
   String adjustedTime = (DateTime(DateTime.now().year, DateTime.now().month, (DateTime.now().day + 1), DateTime.now().minute, DateTime.now().second)).toString();
@@ -46,39 +47,53 @@ class TopHalfAccountProfile extends StatelessWidget {
   Widget build(BuildContext context) {
   Widget icons() {
     if(type == "admin") {
-      return IconButton(
-        icon: Icon(Icons.more_horiz),
-        color: Colors.white,
-        iconSize: 75,
-        onPressed: () {
-          //Navigator.push(context, 
-           // MaterialPageRoute(builder: (context) => MessagesPage()
-           // ));
-           final act = CupertinoActionSheet(
-             title: Text('Elevate Privileges'),
-             actions: <Widget>[
-               CupertinoActionSheetAction(
-                 onPressed: () {
-                   DatabaseService(uid: "").updateUserPermissions(2, "05/20/21");
-                 },
-                 child: Text('Elevate to Officer Permanently')
-                 ),
-               CupertinoActionSheetAction(
-                 onPressed: () {
-                  DatabaseService(uid: "r70s5x7XCbfLNp88RRXtUvCue042").updateUserPermissions(2, adjustedTime);
-                 },
-                 child: Text('Elevate to Officer for a day')
-                )
-             ],
-             cancelButton: CupertinoActionSheetAction(
-               onPressed: () {
-                 Navigator.pop(context);
-               },
-               child: Text("Cancel")
-               ),
-           );
-           showCupertinoModalPopup(context: context, builder: (BuildContext context) => act);
-        },
+      return Row(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.more_horiz),
+            color: Colors.white,
+            iconSize: 75,
+            onPressed: () {
+              //Navigator.push(context, 
+               // MaterialPageRoute(builder: (context) => MessagesPage()
+               // ));
+               final act = CupertinoActionSheet(
+                 title: Text('Elevate Privileges'),
+                 actions: <Widget>[
+                   CupertinoActionSheetAction(
+                     onPressed: () {
+                       DatabaseService(uid: uid).updateUserPermissions(2, "05/20/21");
+                     },
+                     child: Text('Elevate to Officer Permanently')
+                     ),
+                   CupertinoActionSheetAction(
+                     onPressed: () {
+                      DatabaseService(uid: uid).updateUserPermissions(2, adjustedTime);
+                     },
+                     child: Text('Elevate to Officer for a day')
+                    )
+                 ],
+                 cancelButton: CupertinoActionSheetAction(
+                   onPressed: () {
+                     Navigator.pop(context);
+                   },
+                   child: Text("Cancel")
+                   ),
+               );
+               showCupertinoModalPopup(context: context, builder: (BuildContext context) => act);
+            },
+          ),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),),
+          IconButton(
+            icon: Icon(Icons.edit),
+            color: Colors.white,
+            iconSize: 60,
+            onPressed: () {
+              
+            },
+          ),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),),          
+        ],
       );
     }
     if(type == "student") {
@@ -90,7 +105,7 @@ class TopHalfAccountProfile extends StatelessWidget {
             iconSize: 60,
             onPressed: () {
               Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewHours(name: name, post: posts)));
+              MaterialPageRoute(builder: (context) => AddNewHours(name: name, uid: uid)));
             }
           ),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
@@ -115,6 +130,19 @@ class TopHalfAccountProfile extends StatelessWidget {
                 ));
             },
           ),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),),
+          Container(
+                  child: IconButton(
+                    icon: Icon(Icons.settings),
+                    color: Colors.white,
+                    iconSize: 60,
+                    onPressed: () {
+                      Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => SettingsPage()
+                        ));
+                    },
+                  )
+                ),
         ],
       );
     }
@@ -151,23 +179,9 @@ class TopHalfAccountProfile extends StatelessWidget {
                     Navigator.pop(context);
                   },
                 ),
-                Padding(
-                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                ),
-                icons(),
-                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
-                Container(
-                  child: IconButton(
-                    icon: Icon(Icons.settings),
-                    color: Colors.white,
-                    iconSize: 60,
-                    onPressed: () {
-                      Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => SettingsPage()
-                        ));
-                    },
-                  )
-                ),
+                //Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),),
+                Spacer(),
+                icons(),                
               ],
             ),
           ),
@@ -178,13 +192,12 @@ class TopHalfAccountProfile extends StatelessWidget {
 class MiddleAccountProfile extends StatelessWidget {
   MiddleAccountProfile({Key key, this.type, this.post}) : super (key: key);
 
-  final items = Event.getEvents();
   final String type;
   DocumentSnapshot post;
 
   Future getCompletedHours() async {
     var firestone = Firestore.instance;
-    QuerySnapshot qn = await firestone.collection("Approving Hours").getDocuments();
+    QuerySnapshot qn = await firestone.collection("members").getDocuments();
     return qn.documents;
   }
 
@@ -329,7 +342,7 @@ class MiddleAccountProfile extends StatelessWidget {
                       height: SizeConfig.blockSizeVertical * 7,
                       width: SizeConfig.blockSizeHorizontal * 25,
                         child: Material(
-                        child: Align(alignment: Alignment.center, child: Text("5 Hours", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                        child: Align(alignment: Alignment.center, child: Text(userData.hours.toString() + " Hours", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                       ),
                     ),
                   ),
@@ -381,13 +394,15 @@ class MiddleAccountProfile extends StatelessWidget {
                              return ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (_, index) {
-                              if((snapshot.data[index].data['name']).toString().contains(userData.firstName + userData.lastName) && snapshot.data[index].data['complete'] == true) {
-                                return AccountProfileCards(
-                                  title: snapshot.data[index].data['type'],
-                                  date: snapshot.data[index].data['date'],
-                                  hours: snapshot.data[index].data['hours']
-                                );
-                              }
+                                if(userData.firstName.toString().contains("TheAdmin")) {
+                                  print("got here");
+                                  List<String> completedEvents = List.from(snapshot.data[index].data['completed events']);
+                                  return AccountProfileCards(
+                                    title: completedEvents[0].toString(),
+                                    date: completedEvents[1],
+                                    hours: completedEvents[2]
+                                  );
+                                }
                               },
                             ); 
                             }

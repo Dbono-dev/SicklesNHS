@@ -1,8 +1,12 @@
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_scanner_overlay_shape.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sickles_nhs_app/size_config.dart';
 import 'package:sickles_nhs_app/view_students.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class ScanningPage extends StatelessWidget {
   @override
@@ -53,9 +57,10 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
             ),
             child: FlatButton(
               onPressed: () {
-                Navigator.push(context, 
-                  MaterialPageRoute(builder: (context) => QRCodeCamera()
-                ));
+                //Navigator.push(context, 
+                  //MaterialPageRoute(builder: (context) => QRCodeCamera()
+                //));
+                _scanBytes();
               },
             child: Text("Start Scanning", textAlign: TextAlign.center,
               style: TextStyle(
@@ -72,7 +77,14 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
   }
 }
 
-class QRCodeCamera extends StatefulWidget {
+  Future _scanBytes() async {
+    File file = await ImagePicker.pickImage(source: ImageSource.camera);
+    Uint8List bytes = file.readAsBytesSync();
+    String barcode = await scanner.scanBytes(bytes);
+    print(barcode);
+  }
+
+/*class QRCodeCamera extends StatefulWidget {
 
   @override
   _QRCodeCameraState createState() => _QRCodeCameraState();
@@ -114,17 +126,7 @@ class _QRCodeCameraState extends State<QRCodeCamera> {
           ),
           Expanded(
             flex: 5,
-            child: QRView(
-              onQRViewCreated: _onQRViewCreate,
-              overlay: QrScannerOverlayShape(
-                borderRadius: 10,
-                borderColor: Colors.green,
-                borderLength: 30,
-                borderWidth: 10,
-                cutOutSize: 300
-              ),
-              key: qrKey,
-            ),
+            child: Container()
           ),
           Expanded(
             flex: 1,
@@ -143,3 +145,4 @@ class _QRCodeCameraState extends State<QRCodeCamera> {
       super.dispose();
     }
 }
+*/

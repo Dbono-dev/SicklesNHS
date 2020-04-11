@@ -9,7 +9,7 @@ class DatabaseService {
 
   final CollectionReference memberCollection = Firestore.instance.collection('members');
 
-  Future updateUserData(String firstName, String lastName, String hours, String studentNum, String grade, String uid) async {
+  Future updateUserData(String firstName, String lastName, int hours, String studentNum, String grade, String uid) async {
     return await memberCollection.document(uid).setData({
       'first name': firstName,
       'last name': lastName,
@@ -29,18 +29,26 @@ class DatabaseService {
     });
   }
 
+  Future updateHoursRequest(int hours) async {
+    return await memberCollection.document(uid).updateData({
+      'hours': hours
+    });
+  }
+
   Future updateCompetedEvents(List<String> newEvent) async {
     return await memberCollection.document(uid).updateData({
       'completed events': newEvent,
     });
   }
+  
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       firstName: snapshot.data['first name'],
       lastName: snapshot.data['last name'],
       grade: snapshot.data['grade'],
-      permissions: snapshot.data['permissions']
+      permissions: snapshot.data['permissions'],
+      hours: snapshot.data['hours']
     );
   }
 
@@ -56,7 +64,7 @@ class DatabaseEvent {
 
   final CollectionReference eventsCollection = Firestore.instance.collection('events');
 
- Future updateEvents(String title, String description, int startTime, int endTime, String date, String photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
+ Future updateEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
     return await eventsCollection.document(title).setData({
       'title': title,
       'description': description,

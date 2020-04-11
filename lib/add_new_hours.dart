@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/view_students.dart';
 import 'package:sickles_nhs_app/size_config.dart';
@@ -8,10 +7,10 @@ import 'package:sickles_nhs_app/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewHours extends StatelessWidget {
-  AddNewHours({Key key, this.name, this.post}) : super (key: key);
+  AddNewHours({Key key, this.name, this.uid}) : super (key: key);
 
   final String name;
-  final DocumentSnapshot post;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class AddNewHours extends StatelessWidget {
           children: <Widget> [
             TopHalfViewStudentsPage(),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-            AddNewHoursMiddle(name: name, post: post),
+            AddNewHoursMiddle(name: name, uid: uid),
           ]
         ),
       ),
@@ -34,16 +33,17 @@ class AddNewHours extends StatelessWidget {
 }
 
 class AddNewHoursMiddle extends StatefulWidget {
-  AddNewHoursMiddle({Key key, this.name, this.post}) : super (key: key);
+  AddNewHoursMiddle({Key key, this.name, this.uid}) : super (key: key);
 
   final String name;
-  final DocumentSnapshot post;
+  final String uid;
 
   @override
   _AddNewHoursMiddleState createState() => _AddNewHoursMiddleState();
 }
 
 class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
+
   DateTime newDateTime () {
     int theCurrentTime = DateTime.now().minute;
     DateTime theNewDateTime = DateTime.now();
@@ -65,11 +65,10 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
   String _emailSup;
   String _date;
   final _fourthformKey = GlobalKey<FormState>();
-  //final String _uid = post.data['uid'];
-  final String _uid = "";
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: SizeConfig.blockSizeVertical * 78,
       child: Scaffold(
@@ -305,7 +304,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 final StorageUploadTask task = firebaseStorageRef.putData(signture);
                                 var url = await firebaseStorageRef.getDownloadURL();
 
-                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, _uid);
+                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid);
 
                                 if(result == null) {
                                   print("Fill in all the forms.");

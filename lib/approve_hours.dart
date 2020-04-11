@@ -116,19 +116,25 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                 color: Colors.green,
                                 onPressed: () {
                                   setState(() {
-                                    
+                                    var list = new List<String>(3);
+                                    list[0] = snapshot.data[index].data['type'];
+                                    list[1] = snapshot.data[index].data['date'];
+                                    list[2] = snapshot.data[index].data['hours'];
+                                    sendEventToDatabase(list, snapshot.data[index].data['uid'].toString());
+                                    sendHoursRequestUpdate(int.parse(list[2]), snapshot.data[index].data['uid'].toString());
+                                    sendMessage("Hour Approval Update", "Your hours have been approved");
+                                    sendDeleteHourRequest(snapshot.data[index].data['type']);
                                   });
-                                  sendEventToDatabase(snapshot.data[index].data['type'], true);
-                                  sendMessage("Hour Approval Update", "Your hours have been approved");
                                 },
                               ),
                               IconButton(
                                 icon: Icon(Icons.block),
                                 color: Colors.red,
                                 onPressed: () {
-                                  
-                                  sendDeleteHourRequest(snapshot.data[index].data['type']);
-                                  sendMessage("Hour Approval Update", "Your hours have been declined");
+                                  setState(() {
+                                    sendDeleteHourRequest(snapshot.data[index].data['type']);
+                                    sendMessage("Hour Approval Update", "Your hours have been declined");
+                                  });
                                 },
                               )
                             ],
@@ -164,8 +170,12 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
     );
   }
   
-  Future sendEventToDatabase(String type, bool complete) async {
-    await DatabaseSubmitHours().updateCompleteness(type, complete);
+  Future sendEventToDatabase(List<String> event, String uid) async {
+    await DatabaseService(uid: uid).updateCompetedEvents(event);
+  }
+
+  Future sendHoursRequestUpdate(int hours, String uid) async {
+    await DatabaseService(uid: uid).updateHoursRequest(hours);
   }
 
   Future sendDeleteHourRequest(String type) async {

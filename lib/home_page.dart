@@ -186,7 +186,7 @@ class TopHalfHomePage extends StatelessWidget {
                         elevation: 8,
                         onPressed: () {
                           Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName)
+                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName, uid: user.uid)
                             ));
                         },
                         child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
@@ -216,6 +216,7 @@ class MiddleHomePageCards extends StatelessWidget {
     SizeConfig().init(context);
     final AuthService _auth = AuthService();
     Color theColor;
+    Widget image;
 
     navigateToDetail(DocumentSnapshot post) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post,)));
@@ -228,6 +229,12 @@ class MiddleHomePageCards extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
+          if(post.data['photo url'] != null) {
+            image = Image.network(post.data['photo url']);
+          }
+          if(post.data['photo url'] == null) {
+            image = Image.asset("SicklesNHS.jpg");
+          }
           if(post.data["type"].toString() == "Community Service Project") {
             theColor = Colors.yellow[400];
           }
@@ -272,7 +279,7 @@ class MiddleHomePageCards extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   clipBehavior: Clip.antiAlias,
-                                  child: Image.asset("SicklesNHS.jpg")
+                                  child: image
                                 ),
                               ),
                             ),
@@ -475,12 +482,11 @@ class _StudentMyEvents extends State<StudentMyEvents> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final AuthService _auth = AuthService();
-
+    int x = 0;
     final user = Provider.of<User>(context);
 
     int _whithin10Days(DocumentSnapshot snapshot) {
       int _date = Jiffy(DateTime.now()).dayOfYear;
-      print(_date);
       return _date;
     }
 
@@ -537,7 +543,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                         if(snapshot.connectionState == ConnectionState.waiting) {
                           return Center(
                             child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                             )
                           );
                         }
@@ -547,6 +553,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                             itemCount: snapshot.data.length,
                             itemBuilder: (_, index) {
                               if(snapshot.data[index].data['type'] == "clubDates") {
+                                x += 1;
                                 if(Jiffy(DateTime(int.parse(snapshot.data[index].data['date'].substring(6)), int.parse(snapshot.data[index].data['date'].substring(0, 2)), int.parse(snapshot.data[index].data['date'].substring(3, 5)))).dayOfYear - _whithin10Days(snapshot.data[index]) <= 10) {
                                   return BottomPageCards(post: snapshot.data[index]);
                                 }
@@ -557,9 +564,11 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                               else {
                                 return Container(height: 0,);
                               }
+                              
                             }
                           );
                         }
+                        
                       }
                     ),
                   ),
@@ -570,7 +579,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                         if(snapshot.connectionState == ConnectionState.waiting) {
                           return Center(
                             child: CircularProgressIndicator(
-                              backgroundColor: Colors.green,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                             ),
                           );
                         }

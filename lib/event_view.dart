@@ -47,11 +47,14 @@ class MiddleEventViewPage extends StatelessWidget {
   int endTimeMinutes;
   double modifiedStartTimeMinutes;
   double modifiedEndTimeMinutes;
+  String theStartTimeMinutes;
+  String theEndTimeMinutes;
   String location;
   String remainingSpots;
   String title;
   String description;
   double differenceTime;
+  Widget _image;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +68,7 @@ class MiddleEventViewPage extends StatelessWidget {
       startTimeMinutes = 56;
       endTimeMinutes = 31;
       differenceTime = 0.5;
+      _image = Image.asset("SicklesNHS.jpg");
     }
     else {
       location = post.data['address'];
@@ -73,31 +77,45 @@ class MiddleEventViewPage extends StatelessWidget {
       description = post.data['description'];
       startTimeMinutes = post.data["start time minutes"];
       endTimeMinutes = post.data["end time minutes"];
+      if(post.data['photo url'] != null) {
+        _image = Image.network(post.data['photo url'].toString());
+      }
+      else {
+        _image = Image.asset("SicklesNHS.jpg");
+      }
 
       if(startTimeMinutes == 0) {
         modifiedStartTimeMinutes = 0.0;
+        theStartTimeMinutes = "00";
       }
       if(startTimeMinutes == 15) {
         modifiedStartTimeMinutes = 0.25;
+        theStartTimeMinutes = "15";
       }
       if(startTimeMinutes == 30) {
         modifiedStartTimeMinutes = 0.5;
+        theStartTimeMinutes = "30";
       }
       if(startTimeMinutes == 45) {
         modifiedStartTimeMinutes = 0.75;
+        theStartTimeMinutes = "45";
       }
 
       if(endTimeMinutes == 0) {
         modifiedEndTimeMinutes = 0.0;
+        theEndTimeMinutes = "00";
       }
       if(endTimeMinutes == 15) {
         modifiedEndTimeMinutes = 0.25;
+        theEndTimeMinutes = "15";
       }
       if(endTimeMinutes == 30) {
         modifiedEndTimeMinutes = 0.5;
+        theEndTimeMinutes = "30";
       }
       if(endTimeMinutes == 45) {
         modifiedEndTimeMinutes = 0.75;
+        theEndTimeMinutes = "45";
       }
       
       double modifiedEndTime = post.data["end time"] + modifiedEndTimeMinutes;
@@ -145,16 +163,20 @@ class MiddleEventViewPage extends StatelessWidget {
                 ),
                 Text(post.data["date"]),
                 Container(
-                height: 145,
-                width: 315,
-                child: Image.asset("SicklesNHS.jpg"),
+                  height: 145,
+                  width: 315,
+                  child: _image,
                 ),
                 Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
-                Text(
-                  description, 
-                  overflow: TextOverflow.ellipsis,
+                Container(
+                  height: 140,
+                  child: SingleChildScrollView(
+                    child:
+                      Text(description,
+                        textAlign: TextAlign.center,
+                      ),                  
+                  ),
                 ),
-                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 7.9),),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -176,7 +198,7 @@ class MiddleEventViewPage extends StatelessWidget {
                            child: Center(
                              child: Material(
                                child: Text(
-                                 startTime.toString() + ":" + startTimeMinutes.toString() + " " + timeofDayStart + " - " + endTime.toString() + ":" + endTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
+                                 startTime.toString() + ":" + theStartTimeMinutes + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
                                ),
                              ),
                            ),
