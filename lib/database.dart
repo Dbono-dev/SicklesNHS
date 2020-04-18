@@ -37,7 +37,7 @@ class DatabaseService {
 
   Future updateCompetedEvents(List<String> newEvent) async {
     return await memberCollection.document(uid).updateData({
-      'completed events': newEvent,
+      'completed events': FieldValue.arrayUnion(newEvent),
     });
   }
   
@@ -48,7 +48,7 @@ class DatabaseService {
       lastName: snapshot.data['last name'],
       grade: snapshot.data['grade'],
       permissions: snapshot.data['permissions'],
-      hours: snapshot.data['hours']
+      //hours: snapshot.data['hours']
     );
   }
 

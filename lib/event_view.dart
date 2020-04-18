@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:provider/provider.dart';
+import 'package:sickles_nhs_app/add_new_event.dart';
 import 'package:sickles_nhs_app/qr_code_page.dart';
 import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/view_students.dart';
 import 'package:sickles_nhs_app/database.dart';
 import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/account_profile.dart';
 
 class EventPageView extends StatelessWidget {
   EventPageView ({Key key, this.post}) : super (key: key);
@@ -22,7 +23,7 @@ class EventPageView extends StatelessWidget {
           Container(
               child: Column(
               children: <Widget>[
-                TopHalfViewStudentsPage(),
+                TopHalfViewEventsPage(post: post),
                 Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
                 MiddleEventViewPage(post: post,),
                 Spacer(),
@@ -32,6 +33,96 @@ class EventPageView extends StatelessWidget {
           ],
         ),
     );
+  }
+}
+
+class TopHalfViewEventsPage extends StatelessWidget {
+  TopHalfViewEventsPage({Key key, this.post}) : super (key: key);
+
+  DocumentSnapshot post;
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+
+    return StreamBuilder<UserData>(
+      stream: DatabaseService(uid: user.uid).userData,
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          UserData userData = snapshot.data;
+          Widget editIcon() {
+            if(userData.permissions == 0) {
+              return IconButton(
+                color: Colors.white,
+                iconSize: 55,
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent(title: post.data['title'], description: post.data['description'], max: post.data['max participates'], address: post.data['address'], type: post.data['type'], date: post.data['date'], startTime: post.data['start time'], startTimeMinutes: post.data['start time minutes'], endTimeMinutes: post.data['end time minutes'], endTime: post.data['end time'],)));
+                },
+              );
+            }
+            else {
+              return Container();
+            }
+          }
+
+            return Material(
+              child: Container(
+              height: SizeConfig.blockSizeVertical * 20,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30)
+                ),
+                boxShadow: [BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0,
+                  offset: Offset(0, 5.0)
+                  )
+                ],
+                color: Colors.green,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.white,
+                    iconSize: 60,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 22),
+                  ),
+                  editIcon(),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 1)),
+                  Container(
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.grey,
+                      elevation: 8,
+                      onPressed: () {
+                        Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) => AccountProfile(type: "student",)
+                          ));
+                      },
+                      child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
+                        color: Colors.white,
+                        fontSize: SizeConfig.blockSizeVertical * 5.5
+                      ),),
+                    ),
+                  )
+                ],
+              ),
+            ),
+      );
+        }
+        else {
+          return Container();
+        }
+      });
   }
 }
 

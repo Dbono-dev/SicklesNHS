@@ -232,6 +232,14 @@ class MiddleAccountProfile extends StatelessWidget {
   }
 
   Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours) {
+    Color _theColor = Colors.white;
+    Color _theTextColor = Colors.black;
+
+    if(int.parse(hours) >= 6) {
+      _theColor = Colors.green;
+      _theTextColor = Colors.white;
+    }
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -262,6 +270,16 @@ class MiddleAccountProfile extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation(Colors.green),
                 );
               }
+              if(snapshot.data.length == 0) {
+                return Material(
+                  child: Center(
+                    child: Text("NO EVENTS", style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 45
+                    )),
+                  ),
+                );
+              }
               else {
                 double events = snapshot.data.length / 3;
                 if(events > 9) {
@@ -282,7 +300,8 @@ class MiddleAccountProfile extends StatelessWidget {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
-                            child: Align(alignment: Alignment.center, child: Text(hours.toString() + " Hours", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                              color: _theColor,
+                              child: Align(alignment: Alignment.center, child: Text(hours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
                           ),
                         ),
                       ),
@@ -334,12 +353,15 @@ class MiddleAccountProfile extends StatelessWidget {
                             return Container(
                               width: SizeConfig.blockSizeHorizontal * 92.5,
                               child: ListView.builder(
-                                itemCount: 1,
+                                itemCount: int.parse(_events),
                                 itemBuilder: (_, index) {
+                                  if(index == 1) {
+                                    index = 3;
+                                  }
                                     return AccountProfileCards(
-                                      title: completedEvents[0].toString(),
-                                      date: completedEvents[1].toString(),
-                                      hours: completedEvents[2].toString()
+                                      title: completedEvents[index].toString(),
+                                      date: completedEvents[index + 1].toString(),
+                                      hours: completedEvents[index + 2].toString(),
                                     );
                                 }
                               ),

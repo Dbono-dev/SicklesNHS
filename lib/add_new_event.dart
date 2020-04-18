@@ -12,6 +12,20 @@ import 'package:sickles_nhs_app/view_students.dart';
 
   
   class AddNewEvent extends StatefulWidget {
+    AddNewEvent({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
+
+    String title;
+    String description;
+    int startTime;
+    int startTimeMinutes;
+    int endTime;
+    int endTimeMinutes;
+    String address;
+    String date;
+    String max;
+    String type;
+    String fileSelect;
+
     @override
     _AddNewEventState createState() => _AddNewEventState();
   }
@@ -30,7 +44,7 @@ import 'package:sickles_nhs_app/view_students.dart';
             children: <Widget> [
               TopHalfViewStudentsPage(),
               Padding(padding: EdgeInsets.fromLTRB(0.0, 15, 0, 0)),
-              MiddleNewEventPage(),
+              MiddleNewEventPage(title: widget.title, description: widget.description, startTime: widget.startTime, startTimeMinutes: widget.startTimeMinutes, endTime: widget.endTime, endTimeMinutes: widget.endTimeMinutes, address: widget.address, date: widget.date, max: widget.max, type: widget.type,),
             ]
           )
         ],
@@ -46,22 +60,26 @@ class Options {
 
 class MiddleNewEventPage extends StatefulWidget {
 
+  MiddleNewEventPage({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
+
+  String title;
+  String description;
+  int startTime;
+  int startTimeMinutes;
+  int endTime;
+  int endTimeMinutes;
+  String address;
+  String date;
+  String max;
+  String type;
+  String fileSelect;
+  
+
   @override
   _MiddleNewEventPageState createState() => _MiddleNewEventPageState();
 }
 
 class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
-  String _title;
-
-  String _description;
-  int _startTime;
-  int _startTimeMinutes;
-  int _endTime;
-  int _endTimeMinutes;
-  String _address;
-  String _date;
-  String _max;
-  String _type = "";
   String fileSelect = "No File Selected";
   File image;
   var _photoUrl;
@@ -101,6 +119,19 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     Options selectedOption;
     String select = "Select";
     String theDate = "Date";
+    String _bottomText = "Create Event";
+
+    String _type = widget.type;
+
+    if(_type == "Community Service Project") {
+      communityServiceEventValue = true;
+    }
+    else if(_type == "Service Event") {
+      serviceEventValue = true;
+    }
+    else {
+      
+    }
 
     List<Options> users = <Options> [
       Options(0, "Weekly"),
@@ -108,6 +139,19 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       Options(2, "Monthly"),
       Options(3, "Every Other Month")
     ];
+
+    String _title = widget.title;
+    if(_title != null) {
+      _bottomText = "Save Event";
+    }
+    String _description = widget.description;
+    int _startTime = widget.startTime;
+    int _startTimeMinutes = widget.startTimeMinutes;
+    int _endTime = widget.endTime;
+    int _endTimeMinutes = widget.endTimeMinutes;
+    String _address = widget.address;
+    String _date = widget.date;
+    String _max = widget.max;
 
     return Container(
       color: Colors.transparent,
@@ -356,7 +400,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                     Builder(
                       builder: (context) {
                         return FlatButton(
-                          child: Text("Create Event", style: TextStyle(
+                          child: Text(_bottomText, style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
                             color: Colors.white

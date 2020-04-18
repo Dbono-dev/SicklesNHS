@@ -132,6 +132,7 @@ class TopHalfHomePage extends StatelessWidget {
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
+        print(snapshot);
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
 
@@ -195,7 +196,7 @@ class TopHalfHomePage extends StatelessWidget {
           ],
         );
         } else {
-          return Container();
+          return CircularProgressIndicator();
         }
       }
     );
@@ -486,6 +487,11 @@ class _StudentMyEvents extends State<StudentMyEvents> {
       return _date;
     }
 
+    int _clubDate(DocumentSnapshot snapshot) {
+      int _date = Jiffy(DateTime(int.parse(snapshot.data['date'].substring(6)), int.parse(snapshot.data['date'].substring(0, 2)), int.parse(snapshot.data['date'].substring(3, 5)))).dayOfYear;
+      return _date;
+    }
+
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
@@ -550,7 +556,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                             itemBuilder: (_, index) {
                               if(snapshot.data[index].data['type'] == "clubDates") {
                                 x += 1;
-                                if(Jiffy(DateTime(int.parse(snapshot.data[index].data['date'].substring(6)), int.parse(snapshot.data[index].data['date'].substring(0, 2)), int.parse(snapshot.data[index].data['date'].substring(3, 5)))).dayOfYear - _whithin10Days(snapshot.data[index]) <= 10) {
+                                if(_clubDate(snapshot.data[index]) - _whithin10Days(snapshot.data[index]) <= 10 && _clubDate(snapshot.data[index]) > _whithin10Days(snapshot.data[index])) {
                                   return BottomPageCards(post: snapshot.data[index]);
                                 }
                                 else {

@@ -26,7 +26,13 @@ class MiddlePageNotification extends StatefulWidget {
 
 class _MiddlePageNotificationState extends State<MiddlePageNotification> {
 
+  void intState() {
+    PushNotificationService().initialise();
+  }
+
   final _fourthformKey = GlobalKey<FormState>();
+  String _title;
+  String _body;
 
   @override
   Widget build(BuildContext context) {
@@ -38,28 +44,37 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: TextFormField(
+                    onSaved: (value) => _title = value,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))
+                      ),
+                      hintText: "Title"
                     ),
-                    hintText: "Title"
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.all(10)),
+              Padding(padding: EdgeInsets.all(0)),
               Expanded(
-    child: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: TextFormField(
+                    onSaved: (value) => _body = value,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))
+                      ),
+                      hintText: "Body of Message"
                     ),
-                    hintText: "Body of Message"
+                    maxLines: 6,
+                    minLines: 3,
                   ),
-                  maxLines: 6,
-                  minLines: 3,
                 ),
               ),
+              
               Spacer(),
               Material(
                 type: MaterialType.transparency,
@@ -81,9 +96,11 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                   color: Colors.green,
                 ),
                 child: GestureDetector(
-                      onTap: () {
-                        sendMessage();
+                      onTap: () async {
+                        _fourthformKey.currentState.save();
+                        sendMessage(_title, _body);
                         print("works");
+                        _fourthformKey.currentState.reset();
                       },
                     child: Center(
                       child: Text("Send", style: TextStyle(
@@ -101,7 +118,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
     );
   }
 
-  Future sendMessage() async {
-    await PushNotificationService().sendAndRetrieveMessage("hi", "this is the body");
+  Future sendMessage(String title, String body) async {
+    await PushNotificationService().sendAndRetrieveMessage(title, body);
   }
 }
