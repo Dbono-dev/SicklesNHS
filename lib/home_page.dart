@@ -16,6 +16,7 @@ import 'package:sickles_nhs_app/user.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/view_students.dart';
 import 'package:sickles_nhs_app/notification_system.dart';
+import 'package:sickles_nhs_app/export_data.dart';
 
 class TheOpeningPage extends StatelessWidget {
   TheOpeningPage({Key key}) : super (key: key);
@@ -132,7 +133,6 @@ class TopHalfHomePage extends StatelessWidget {
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
-        print(snapshot);
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
 
@@ -814,7 +814,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                     Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
                     GestureDetector(
                       onTap: () {
-
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExportDataPage()));
                       },
                       child: Card(
                         elevation: 8,

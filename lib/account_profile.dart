@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/add_new_hours.dart';
 import 'package:sickles_nhs_app/database.dart';
-import 'package:sickles_nhs_app/event.dart';
 import 'package:sickles_nhs_app/size_config.dart';
 import 'package:sickles_nhs_app/user.dart';
 import 'package:provider/provider.dart';
@@ -232,6 +231,7 @@ class MiddleAccountProfile extends StatelessWidget {
   }
 
   Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours) {
+    print(hours);
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
 

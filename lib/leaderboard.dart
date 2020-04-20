@@ -21,7 +21,7 @@ class Leaderboard extends StatelessWidget {
 class LeaderboardBody extends StatelessWidget {
   Future getPosts() async {
     var firestore = Firestore.instance;
-    Query qn = firestore.collection("members").orderBy('hours');
+    Query qn = firestore.collection("members").orderBy('hours', descending: true);
     QuerySnapshot qns = await qn.getDocuments();
     return qns.documents;
   }
@@ -126,13 +126,13 @@ class LeaderboardBody extends StatelessWidget {
 
   Widget medals(Color color, String place) {
     return Container(
-          height: 50,
-          width: 30,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color
-          ),
-          child: Center(child: Text(place)),
-        );
+      height: 50,
+      width: 30,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color
+      ),
+      child: Center(child: Text(place)),
+    );
   }
 }
