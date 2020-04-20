@@ -7,10 +7,11 @@ import 'package:sickles_nhs_app/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewHours extends StatelessWidget {
-  AddNewHours({Key key, this.name, this.uid}) : super (key: key);
+  AddNewHours({Key key, this.name, this.uid, this.hours}) : super (key: key);
 
   final String name;
   final String uid;
+  final int hours;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class AddNewHours extends StatelessWidget {
           children: <Widget> [
             TopHalfViewStudentsPage(),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-            AddNewHoursMiddle(name: name, uid: uid),
+            AddNewHoursMiddle(name: name, uid: uid, hours: hours),
           ]
         ),
       ),
@@ -33,10 +34,11 @@ class AddNewHours extends StatelessWidget {
 }
 
 class AddNewHoursMiddle extends StatefulWidget {
-  AddNewHoursMiddle({Key key, this.name, this.uid}) : super (key: key);
+  AddNewHoursMiddle({Key key, this.name, this.uid, this.hours}) : super (key: key);
 
   final String name;
   final String uid;
+  final int hours;
 
   @override
   _AddNewHoursMiddleState createState() => _AddNewHoursMiddleState();
@@ -304,7 +306,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 final StorageUploadTask task = firebaseStorageRef.putData(signture);
                                 var url = await firebaseStorageRef.getDownloadURL();
 
-                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid);
+                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours);
 
                                 if(result == null) {
                                   print("Fill in all the forms.");
@@ -349,7 +351,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
     );
   }
 
-  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, var url, String uid) async {
-    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false, url, uid);
+  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, var url, String uid, int currentHours) async {
+    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false, url, uid, currentHours);
   }
 }

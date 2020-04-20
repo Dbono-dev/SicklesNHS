@@ -12,6 +12,10 @@ class ImportantDateMain extends StatefulWidget {
 
 class _ImportantDateMainState extends State<ImportantDateMain> {
   String _date;
+  String _firstDate = "";
+  String _secondDate = "";
+  String _thirdDate = "";
+  String _forthDate = "";
 
     Future getPosts() async {
       var firestore = Firestore.instance;
@@ -54,7 +58,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                           ),
                           onPressed: () {
                             showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                              return SetClubDates("new", "clubDates", "");
+                              return SetClubDates("new", "clubDates", "", "");
                             });
                           },
                         )
@@ -99,7 +103,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                                 ),
                                 onPressed: () {
                                   showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                                    return SetClubDates("edit", "clubDates", snapshot.data[index].data['date'].toString());
+                                    return SetClubDates("edit", "clubDates", snapshot.data[index].data['date'].toString(), "");
                                   });
                                 }
                               ),
@@ -122,16 +126,17 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                       return Container();
                     }
                     }
-                  ); 
+                  );
                   },
                 ),
               ),
+              Padding(padding: EdgeInsets.all(5)),
               Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget> [
                 Text("Set End of Quarter", style: TextStyle(fontSize: 25),),
                 Padding(padding: EdgeInsets.all(5)),
-                Container(
+                /*Container(
                   width: SizeConfig.blockSizeHorizontal * 35,
                   child: Card(
                     elevation: 8,
@@ -154,11 +159,11 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                       },
                     )
                   ),
-                ),
+                ),*/
               ]
             ),
             Container(
-                height: SizeConfig.blockSizeVertical * 27.5,
+                height: SizeConfig.blockSizeVertical * 33,
                 width: SizeConfig.blockSizeHorizontal * 75,
                 child: FutureBuilder(
                   future: getPosts(),
@@ -171,7 +176,34 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                       );
                     }
                     else {
-                      return ListView.builder(
+                      for(int i = 0; i < snapshot.data.length; i++) {
+                        if(snapshot.data[i].data['type'] == "endOfQuarter") {
+                          if(snapshot.data[i].data['quarter'] == "First") {
+                            _firstDate = snapshot.data[i].data['date'];
+                          }
+                          else if(snapshot.data[i].data['quarter'] == "Second") {
+                            _secondDate = snapshot.data[i].data['date'];
+                          }
+                          else if(snapshot.data[i].data['quarter'] == "Third") {
+                            _thirdDate = snapshot.data[i].data['date'];
+                          }
+                          else if(snapshot.data[i].data['quarter'] == "Fourth") {
+                            _forthDate = snapshot.data[i].data['date'];
+                          }
+                        }
+                      }
+                      return Column(
+                        children: <Widget>[
+                          _endOfQuarterCards("First", _firstDate),
+                          _endOfQuarterCards("Second", _secondDate),
+                          _endOfQuarterCards("Third", _thirdDate),
+                          _endOfQuarterCards("Fourth", _forthDate)
+                        ],
+                      );
+
+
+
+                      /*return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
                       if(snapshot.data[index].data['type'].toString() == "endOfQuarter") {
@@ -218,7 +250,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                         return Container();
                       }
                       }
-                  );
+                  );*/
                     }
                       },
                   ),
@@ -243,8 +275,12 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
     await DatabaseImportantDates().deleteImportantDates(type, date);
   }
 
+  Future sendEndOfQuarterDateToDatabase(String type, String date, String quarter) async {
+    await DatabaseImportantDates().setEndOfQuarter(type, date, quarter);
+  }
 
-  Widget SetClubDates(String editOrNew, String type, String oldDate) {
+
+  Widget SetClubDates(String editOrNew, String type, String oldDate, String quarter) {
     return Container(
       height: SizeConfig.blockSizeVertical * 41,
       child: Column(
@@ -255,11 +291,10 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                 if(type == "clubDates" && editOrNew == "new") {
                   sendDateToDatabase("clubDates", _date);
                 }
-                else if(type == "endOfQuarter" && editOrNew == "new") {
-                  sendDateToDatabase("endOfQuarter", _date);
-                }
-                else if(type == "endOfQuarter" && editOrNew == "edit") {
-                  editDateToDatabase("endOfQuarter", oldDate, _date);
+                else if(type == "endOfQuarter") {
+                  setState(() {
+                    sendEndOfQuarterDateToDatabase(type, _date, quarter);                    
+                  });
                 }
                 else {
                   editDateToDatabase("clubDates", oldDate, _date);
@@ -283,4 +318,41 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
       ),
     );
   }
+
+  Widget _endOfQuarterCards(String number, String date) {
+    if(date == "") {
+      date = "No Date";
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),                        
+      child: Card(
+        elevation: 8,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(number + " Quarter"),
+            Text(
+              date,
+              textAlign: TextAlign.center,
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.edit,
+              ),
+              onPressed: () {
+                showModalBottomSheet(context: context, builder: (BuildContext builder) {
+                  return SetClubDates("", "endOfQuarter" , date, number);//snapshot.data['date'].toString());
+                });
+              }
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
 }

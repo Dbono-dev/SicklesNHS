@@ -29,16 +29,27 @@ class DatabaseService {
     });
   }
 
-  Future updateHoursRequest(int hours) async {
+  Future updateHoursRequest(int hours, int currentHours) async {
     return await memberCollection.document(uid).updateData({
-      'hours': hours
+      'hours': currentHours + hours
     });
   }
 
-  Future updateCompetedEvents(List<String> newEvent) async {
-    return await memberCollection.document(uid).updateData({
-      'completed events': FieldValue.arrayUnion(newEvent),
-    });
+  Future updateCompetedEvents(String title, String date, String hours, String pastTitle, String pastDate, String pastHours) async {
+    try {
+      return await memberCollection.document(uid).updateData({
+        'event title': pastTitle + "-" + title,
+        'event date': pastDate + "-" + date,
+        'event hours': pastHours + "-" + hours,
+      });  
+    }
+    catch (e) {
+      return await memberCollection.document(uid).updateData({
+        'event title': title, 
+        'event date': date,
+        'event hours': hours,
+      });
+    }
   }
   
 
@@ -93,7 +104,7 @@ class DatabaseSubmitHours {
 
   final CollectionReference submitHours = Firestore.instance.collection('Approving Hours');
 
- Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid) async {
+ Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid, int currentHours) async {
     return await submitHours.document(type).setData({
       'type': type,
       'location': location,
@@ -105,7 +116,8 @@ class DatabaseSubmitHours {
       'name': name, 
       'complete': complete,
       'url': url,
-      'uid': uid
+      'uid': uid,
+      'current hours': hours
     });
   }
 
@@ -141,5 +153,22 @@ class DatabaseImportantDates {
 
   Future deleteImportantDates(String type, String date) async {
     return await submitHours.document(type + date).delete();
+  }
+
+  Future setEndOfQuarter(String type, String date, String quarter) async {
+    try{
+      return await submitHours.document(type + quarter).updateData({
+        'type': type,
+        'date': date,
+        'quarter': quarter
+      });
+    }
+    catch(e) {
+      return await submitHours.document(type + quarter).setData({
+        'type': type,
+        'date': date,
+        'quarter': quarter
+      });
+    }
   }
 }

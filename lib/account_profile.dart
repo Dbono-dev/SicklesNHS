@@ -11,12 +11,13 @@ import 'package:sickles_nhs_app/messages_page.dart';
 import 'package:sickles_nhs_app/leaderboard.dart';
 
 class AccountProfile extends StatelessWidget {
-  AccountProfile({Key key, this.posts, this.type, this.name, this.uid}) : super (key: key);
+  AccountProfile({Key key, this.posts, this.type, this.name, this.uid, this.hours}) : super (key: key);
 
   final DocumentSnapshot posts;
   final String type;
   final String name;
   final String uid;
+  final int hours;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class AccountProfile extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
           children: <Widget>[
-            TopHalfAccountProfile(type: type, uid: uid, name: name),
+            TopHalfAccountProfile(type: type, uid: uid, name: name, hours: hours,),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
             MiddleAccountProfile(type: type, post: posts),
           ],
@@ -34,11 +35,12 @@ class AccountProfile extends StatelessWidget {
 }
 
 class TopHalfAccountProfile extends StatelessWidget {
-  TopHalfAccountProfile({Key key, this.type, this.uid, this.name}) : super (key: key);
+  TopHalfAccountProfile({Key key, this.type, this.uid, this.name, this.hours}) : super (key: key);
 
   final String type;
   final String uid;
   final String name;
+  final int hours;
 
   String adjustedTime = (DateTime(DateTime.now().year, DateTime.now().month, (DateTime.now().day + 1), DateTime.now().minute, DateTime.now().second)).toString();
 
@@ -104,7 +106,7 @@ class TopHalfAccountProfile extends StatelessWidget {
             iconSize: 60,
             onPressed: () {
               Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewHours(name: name, uid: uid)));
+              MaterialPageRoute(builder: (context) => AddNewHours(name: name, uid: uid, hours: hours,)));
             }
           ),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
@@ -231,7 +233,6 @@ class MiddleAccountProfile extends StatelessWidget {
   }
 
   Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours) {
-    print(hours);
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
 

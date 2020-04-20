@@ -113,7 +113,6 @@ class TopHalfHomePage extends StatelessWidget {
   String time = formatDate(now, [HH]);
   String theTime = time.substring(0);
   theTiming = int.parse(time);
-  print(theTiming);
   if(4 < theTiming && theTiming < 12)
   {
     timeOfDay = "Good Morning ";
@@ -183,7 +182,7 @@ class TopHalfHomePage extends StatelessWidget {
                         elevation: 8,
                         onPressed: () {
                           Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName, uid: user.uid)
+                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName, uid: user.uid, hours: userData.hours),
                             ));
                         },
                         child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
