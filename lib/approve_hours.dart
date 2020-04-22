@@ -45,6 +45,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
   String pastTitles;
   String pastDates;
   String pastHours;
+  String currentHours;
   int x = 0;
 
   @override
@@ -131,11 +132,12 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                             if(snapshot.data[index].data['uid'] == notTheSnapshot.data[i].data['uid']) {
                                               pastTitles = notTheSnapshot.data[i].data['event title'];
                                               pastDates = notTheSnapshot.data[i].data['event date'];
+                                              currentHours = notTheSnapshot.data[i].data['hours'].toString();
                                               pastHours = notTheSnapshot.data[i].data['event hours'];
                                             }
                                           }
                                           sendEventToDatabase(snapshot.data[index].data['type'], snapshot.data[index].data['date'], snapshot.data[index].data['hours'], snapshot.data[index].data['uid'].toString(), pastTitles, pastDates, pastHours);
-                                          sendHoursRequestUpdate(int.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), int.parse(pastHours));
+                                          sendHoursRequestUpdate(int.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), int.parse(currentHours));
                                           sendMessage("Hour Approval Update", "Your hours have been approved");
                                           sendDeleteHourRequest(snapshot.data[index].data['type']);
                                         });

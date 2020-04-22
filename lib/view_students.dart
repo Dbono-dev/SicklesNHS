@@ -258,6 +258,22 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
   }
 
   Widget TheViewStudents(DocumentSnapshot snapshot) {
+    Color backgroundColor;
+    Color fontColorOne;
+    Color fontColorTwo;
+
+    if(snapshot.data['hours'] >= 6) {
+      backgroundColor = Colors.green;
+      fontColorOne = Colors.white;
+      fontColorTwo = Colors.white;
+    }
+    else {
+      backgroundColor = Colors.white;
+      fontColorOne = Colors.green;
+      fontColorTwo = Colors.black;
+    }
+
+
     return GestureDetector(
       onTap: () {
         Navigator.push(context, 
@@ -267,31 +283,35 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
         child: Container(
         width: SizeConfig.blockSizeHorizontal * 75,
           child: Card(
+            color: backgroundColor,
             elevation: 8,
-            child: Row(
-              children: <Widget> [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(snapshot.data["first name"] + " " + snapshot.data["last name"], style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 25
-                      ),),
-                      Text("Hours: " + snapshot.data["hours"].toString() + "\t Grade: " + snapshot.data["grade"])
-                  ],  
-                ),
-                Spacer(),
-                IconButton(
-                      icon: Icon(Icons.arrow_forward),
-                      iconSize: 35,
-                      onPressed: () {
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot, type: "admin",)
-                        ));
-                      },
-                    )
-              ]
+            child: Padding(
+              padding: const EdgeInsets.all(2.5),
+              child: Row(
+                children: <Widget> [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(snapshot.data["first name"] + " " + snapshot.data["last name"], style: TextStyle(
+                          color: fontColorOne,
+                          fontSize: 25
+                        ),),
+                        Text("Hours: " + snapshot.data["hours"].toString() + "\t Grade: " + snapshot.data["grade"], style: TextStyle(color: fontColorTwo),)
+                    ],  
+                  ),
+                  Spacer(),
+                  IconButton(
+                        icon: Icon(Icons.arrow_forward),
+                        iconSize: 35,
+                        onPressed: () {
+                          Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => AccountProfile(posts: snapshot, type: "admin",)
+                          ));
+                        },
+                      )
+                ]
+              ),
             )
         )),
     );

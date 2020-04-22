@@ -201,10 +201,7 @@ class MiddleAccountProfile extends StatelessWidget {
   Future getCompletedHours(String uid) async {
     var firestone = Firestore.instance;
     QuerySnapshot qn = await firestone.collection("members").getDocuments();
-    DocumentReference docRef = Firestore.instance.collection('members').document(uid);
-    DocumentSnapshot docSnap = await docRef.get();
-    completedEvents = docSnap.data['completed events'];
-    return completedEvents;
+    return qn.documents;
   }
 
   Widget build(BuildContext context) {
@@ -235,6 +232,10 @@ class MiddleAccountProfile extends StatelessWidget {
   Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
+
+    List<String> title = new List<String> ();
+    List<String> date = new List<String> ();
+    List<String> theHours = new List<String> ();
 
     if(int.parse(hours) >= 6) {
       _theColor = Colors.green;
@@ -271,24 +272,25 @@ class MiddleAccountProfile extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation(Colors.green),
                 );
               }
-              if(snapshot.data.length == 0) {
-                return Material(
-                  child: Center(
-                    child: Text("NO EVENTS", style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 45
-                    )),
-                  ),
-                );
-              }
               else {
-                double events = snapshot.data.length / 3;
-                if(events > 9) {
-                  _events = events.toString().substring(0, 2);
+                String howManyEvents;
+                for(int theIndex = 0; theIndex < snapshot.data.length; theIndex++) {
+                  if(snapshot.data[theIndex].data['first name'] + snapshot.data[theIndex].data['last name'] == firstName + lastName) {
+                    howManyEvents = snapshot.data[theIndex].data['event title'];
+
+                    for(int i = 0; i < howManyEvents.length; i++) {
+                      if(howManyEvents.substring(0, i).contains("-")) {
+                        title.add(howManyEvents.substring(0, i - 1));
+                        howManyEvents = howManyEvents.substring(i);
+                        i = 0;
+                      }
+                      else if(i == howManyEvents.length - 1) {
+                        title.add(howManyEvents);
+                      }
+                    }
+                  }
                 }
-                else {
-                  _events = events.toString().substring(0, 1);
-                }
+
                 return Column(
                 children: <Widget>[
                   Row(
@@ -312,7 +314,7 @@ class MiddleAccountProfile extends StatelessWidget {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
-                            child: Align(alignment: Alignment.center, child: Text(_events + " Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                            child: Align(alignment: Alignment.center, child: Text(title.length.toString() + " Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
                       ),
@@ -340,33 +342,77 @@ class MiddleAccountProfile extends StatelessWidget {
                               child: CircularProgressIndicator(),
                             );
                           }
-                          if(snapshot.data.length == 0) {
-                            return Material(
-                              child: Center(
-                                child: Text("NO EVENTS", style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 45
-                                )),
-                              ),
-                            );
-                          }
                           else {
-                            return Container(
-                              width: SizeConfig.blockSizeHorizontal * 92.5,
-                              child: ListView.builder(
-                                itemCount: int.parse(_events),
-                                itemBuilder: (_, index) {
-                                  if(index == 1) {
-                                    index = 3;
+                            String theEventDate;
+                            String theEventHours;
+
+                            for(int theIndex = 0; theIndex < snapshot.data.length; theIndex++) {
+                              if(snapshot.data[theIndex].data['first name'] + snapshot.data[theIndex].data['last name'] == firstName + lastName) {
+                                theEventDate = snapshot.data[theIndex].data['event date'];
+                                theEventHours = snapshot.data[theIndex].data['event hours'];
+
+                                /*for(int i = 0; i < theEventTitle.length; i++) {
+                                  if(theEventTitle.substring(0, i).contains("-")) {
+                                    title.add(theEventTitle.substring(0, i - 1));
+                                    theEventTitle = theEventTitle.substring(i);
+                                    i = 0;
                                   }
-                                    return AccountProfileCards(
-                                      title: completedEvents[index].toString(),
-                                      date: completedEvents[index + 1].toString(),
-                                      hours: completedEvents[index + 2].toString(),
-                                    );
+                                  else if(i == theEventTitle.length - 1) {
+                                    title.add(theEventTitle);
+                                  }
+                                }*/
+
+                                for(int i = 0; i < theEventDate.length; i++) {
+                                  if(theEventDate.substring(0, i).contains("-")) {
+                                    date.add(theEventDate.substring(0, i - 1));
+                                    theEventDate = theEventDate.substring(i);
+                                    i = 0;
+                                  }
+                                  else if(i == theEventDate.length - 1) {
+                                    date.add(theEventDate);
+                                  }
                                 }
-                              ),
-                            );
+
+                                for(int i = 0; i <= theEventHours.length; i++) {
+                                  if(theEventHours.substring(0, i).contains("-")) {
+                                    theHours.add(theEventHours.substring(0, i - 1));
+                                    theEventHours = theEventHours.substring(i);
+                                    i = 0;
+                                  }
+                                  else if(i == theEventHours.length) {
+                                    theHours.add(theEventHours);
+                                  }
+                                }
+                              }
+                            }
+                            if(title.length == 0) {
+                              return Material(
+                                child: Center(
+                                  child: Text("NO EVENTS", style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 45
+                                  )),
+                                ),
+                              );
+                            }
+                            else {
+                              return Container(
+                                width: SizeConfig.blockSizeHorizontal * 92.5,
+                                child: ListView.builder(
+                                  itemCount: title.length,
+                                  itemBuilder: (_, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
+                                      child: AccountProfileCards(
+                                        title: title[index],
+                                        date: date[index],
+                                        hours: theHours[index]
+                                      ),
+                                    );
+                                  }
+                                ),
+                              );
+                            }
                           }
                         },      
                       ) 
@@ -374,7 +420,7 @@ class MiddleAccountProfile extends StatelessWidget {
                 ],
               );
               }
-            },
+          }
           )
         ],
       ),
@@ -393,7 +439,7 @@ class AccountProfileCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        height: SizeConfig.blockSizeVertical * 5,
+        height: SizeConfig.blockSizeVertical * 6,
         width: SizeConfig.blockSizeHorizontal * 75,
         child: Card(
           elevation: 8,

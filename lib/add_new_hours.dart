@@ -70,7 +70,6 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: SizeConfig.blockSizeVertical * 78,
       child: Scaffold(

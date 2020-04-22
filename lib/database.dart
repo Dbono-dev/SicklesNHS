@@ -18,7 +18,10 @@ class DatabaseService {
       'grade': grade,
       'permissions': 2,
       'date': "5/20/21",
-      'uid': uid
+      'uid': uid,
+      'event title': "",
+      'event date': "",
+      'event hours': ""
     });
   }
 
