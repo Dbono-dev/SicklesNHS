@@ -210,7 +210,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                         itemBuilder: (_, index) {
                           if(search != "") {
                             if(snapshot.data[index].data['first name'].toString().contains(search) || snapshot.data[index].data['last name'].toString().contains(search) || (snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"]).toString().contains(search)) {
-                              return TheViewStudents(snapshot.data[index]);
+                              return TheViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
@@ -218,7 +218,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                           }
                           else if(firstCheck == true) {
                             if(int.parse(snapshot.data[index].data['grade']) == 10) {
-                              return TheViewStudents(snapshot.data[index]);
+                              return TheViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
@@ -226,7 +226,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                           }
                           else if(secondCheck == true) {
                             if(int.parse(snapshot.data[index].data["grade"]) == 11) {
-                              return TheViewStudents(snapshot.data[index]);
+                              return TheViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
@@ -234,14 +234,14 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                           }
                           else if(thirdCheck == true) {
                             if(int.parse(snapshot.data[index].data['grade']) == 12) {
-                              return TheViewStudents(snapshot.data[index]);
+                              return TheViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
                             }
                           }
                           else {
-                            return TheViewStudents(snapshot.data[index]);
+                            return TheViewStudents(snapshot.data[index], context);
                           }
                         },
                       ),
@@ -256,8 +256,9 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
       ),
     );
   }
+}
 
-  Widget TheViewStudents(DocumentSnapshot snapshot) {
+Widget TheViewStudents(DocumentSnapshot snapshot, BuildContext context) {
     Color backgroundColor;
     Color fontColorOne;
     Color fontColorTwo;
@@ -316,4 +317,3 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
         )),
     );
   }
-}
