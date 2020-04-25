@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/custom_painter.dart';
 import 'package:sickles_nhs_app/size_config.dart';
 import 'package:sickles_nhs_app/view_students.dart';
 
@@ -11,14 +12,24 @@ class Leaderboard extends StatelessWidget {
       body: Column(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          LeaderboardBody()
+          Padding(padding: EdgeInsets.all(5)),
+          Expanded(child: LeaderBoardTheReal())
         ]
       ),
     );
   }
 }
 
-class LeaderboardBody extends StatelessWidget {
+class LeaderBoardTheReal extends StatefulWidget {
+  @override
+  _LeaderBoardTheRealState createState() => _LeaderBoardTheRealState();
+}
+
+class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  Color left = Colors.black;
+  Color right = Colors.white;
+
   Future getPosts() async {
     var firestore = Firestore.instance;
     Query qn = firestore.collection("members").orderBy('hours', descending: true);
@@ -26,14 +37,126 @@ class LeaderboardBody extends StatelessWidget {
     return qns.documents;
   }
 
+  PageController _pageController;
+
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      body: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overscroll) {
+          overscroll.disallowGlow();
+        },
+        child: Container(
+              child: SingleChildScrollView(
+                child: Material(
+                  color: Colors.transparent,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: SizeConfig.blockSizeVertical * 79,
+                        width: SizeConfig.blockSizeHorizontal * 100,
+                        child: Card(
+                          elevation: 10,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: _buildMenuBar(context)
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: PageView(
+                                  controller: _pageController,
+                                  onPageChanged: (i) {
+                                    if(i == 0) {
+                                      setState(() {
+                                        right = Colors.white;
+                                        left = Colors.black;
+                                      });
+                                    }
+                                    else if(i == 1) {
+                                      setState(() {
+                                        right = Colors.black;
+                                        left = Colors.white;
+                                      });
+                                    }
+                                  },
+                                  children: <Widget>[
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints.expand(),
+                                      child: theLeaderBoard(),
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints.expand(),
+                                      child: theLeaderBoard(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  Widget _buildMenuBar(BuildContext context) {
+    return Container(
+      height: 50,
+      width: 300,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: Colors.green
+      ),
+      child: CustomPaint(
+        painter: TabIndicationPainter(pageController: _pageController),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              child: FlatButton(
+                onPressed: _onSignInButtonPress,
+                child: Text("Current Quarter", style: TextStyle(color: left,))
+                ),
+            ),
+            Expanded(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: _onSignUpButtonPress,
+                child: Text("This Year", style: TextStyle(color: right,))
+                ),
+              )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget theLeaderBoard() {
     return Container(
       child: Column(
         children: <Widget> [
           Padding(padding: EdgeInsets.all(5)),
           Container(
-            height: SizeConfig.blockSizeVertical * 78,
+
+          ),
+          Container(
+            height: SizeConfig.blockSizeVertical * 65,
             child: FutureBuilder(
               future: getPosts(),
               builder: (_, snapshot) {
@@ -135,4 +258,13 @@ class LeaderboardBody extends StatelessWidget {
       child: Center(child: Text(place)),
     );
   }
+
+  void _onSignInButtonPress() {
+    _pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+  }
+
+  void _onSignUpButtonPress() {
+    _pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+  }
+
 }

@@ -66,9 +66,6 @@ class _AccountProfileState extends State<AccountProfile> {
             color: Colors.white,
             iconSize: 75,
             onPressed: () {
-              //Navigator.push(context, 
-               // MaterialPageRoute(builder: (context) => MessagesPage()
-               // ));
                final act = CupertinoActionSheet(
                  title: Text('Elevate Privileges'),
                  actions: <Widget>[
@@ -96,7 +93,7 @@ class _AccountProfileState extends State<AccountProfile> {
             },
           ),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),),
-          IconButton(
+          editing != true ? IconButton(
             icon: Icon(Icons.edit),
             color: Colors.white,
             iconSize: 60,
@@ -105,7 +102,7 @@ class _AccountProfileState extends State<AccountProfile> {
                 editing = true;
               });
             },
-          ),
+          ) : Container(),
           Padding(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),
             child: editing == true ? RaisedButton(
@@ -328,15 +325,19 @@ class _AccountProfileState extends State<AccountProfile> {
                 for(int theIndex = 0; theIndex < snapshot.data.length; theIndex++) {
                   if(snapshot.data[theIndex].data['first name'] + snapshot.data[theIndex].data['last name'] == firstName + lastName) {
                     howManyEvents = snapshot.data[theIndex].data['event title'];
+                    if(howManyEvents == "" || howManyEvents == null) {
 
-                    for(int i = 0; i < howManyEvents.length; i++) {
-                      if(howManyEvents.substring(0, i).contains("-")) {
-                        title.add(howManyEvents.substring(0, i - 1));
-                        howManyEvents = howManyEvents.substring(i);
-                        i = 0;
-                      }
-                      else if(i == howManyEvents.length - 1) {
-                        title.add(howManyEvents);
+                    }
+                    else {
+                      for(int i = 0; i < howManyEvents.length; i++) {
+                        if(howManyEvents.substring(0, i).contains("-")) {
+                          title.add(howManyEvents.substring(0, i - 1));
+                          howManyEvents = howManyEvents.substring(i);
+                          i = 0;
+                        }
+                        else if(i == howManyEvents.length - 1) {
+                          title.add(howManyEvents);
+                        }
                       }
                     }
                   }
@@ -348,14 +349,45 @@ class _AccountProfileState extends State<AccountProfile> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Card(
-                        elevation: 8,
-                        child: Container(
-                          height: SizeConfig.blockSizeVertical * 7,
-                          width: SizeConfig.blockSizeHorizontal * 25,
-                            child: Material(
-                              color: _theColor,
-                              child: Align(alignment: Alignment.center, child: Text(hours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Padding(
+                                padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 25, 0, SizeConfig.blockSizeVertical * 25),
+                                child: AlertDialog(
+                                  title: Text("Hours"),
+                                  content: Column(
+                                    children: <Widget> [
+                                      Text("Quarter 1: "),
+                                      Text("Quarter 2: "),
+                                      Text("Quarter 3: "),
+                                      Text("Quarter 4: "),
+                                    ]
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("DONE", style: TextStyle(color: Colors.green),),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          );
+                        },
+                        child: Card(
+                          elevation: 8,
+                          child: Container(
+                            height: SizeConfig.blockSizeVertical * 7,
+                            width: SizeConfig.blockSizeHorizontal * 25,
+                              child: Material(
+                                color: _theColor,
+                                child: Align(alignment: Alignment.center, child: Text(hours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
+                            ),
                           ),
                         ),
                       ),
@@ -390,7 +422,9 @@ class _AccountProfileState extends State<AccountProfile> {
                         builder: (_, snapshot) {
                           if(snapshot.connectionState == ConnectionState.waiting) {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(Colors.green),
+                              ),
                             );
                           }
                           else {
@@ -402,36 +436,40 @@ class _AccountProfileState extends State<AccountProfile> {
                                 theEventDate = snapshot.data[theIndex].data['event date'];
                                 theEventHours = snapshot.data[theIndex].data['event hours'];
 
-                                for(int i = 0; i < theEventDate.length; i++) {
-                                  if(theEventDate.substring(0, i).contains("-")) {
-                                    date.add(theEventDate.substring(0, i - 1));
-                                    theEventDate = theEventDate.substring(i);
-                                    i = 0;
+                                if(theEventDate == "" || theEventDate == null || theEventHours == "" || theEventHours == null) {
+
+                                }
+                                else {
+                                  for(int i = 0; i < theEventDate.length; i++) {
+                                    if(theEventDate.substring(0, i).contains("-")) {
+                                      date.add(theEventDate.substring(0, i - 1));
+                                      theEventDate = theEventDate.substring(i);
+                                      i = 0;
+                                    }
+                                    else if(i == theEventDate.length - 1) {
+                                      date.add(theEventDate);
+                                    }
                                   }
-                                  else if(i == theEventDate.length - 1) {
-                                    date.add(theEventDate);
+
+
+                                  for(int i = 0; i < date.length; i++) {
+                                    thenewDate.add(format.parse(date[i]));
+                                  }
+
+                                  //thenewDate.sort((a, b) => a.compareTo(b));
+
+                                  for(int i = 0; i <= theEventHours.length; i++) {
+                                    if(theEventHours.substring(0, i).contains("-")) {
+                                      theHours.add(theEventHours.substring(0, i - 1));
+                                      theEventHours = theEventHours.substring(i);
+                                      i = 0;
+                                    }
+                                    else if(i == theEventHours.length) {
+                                      theHours.add(theEventHours);
+                                    }
                                   }
                                 }
-
-
-                                for(int i = 0; i < date.length; i++) {
-                                  thenewDate.add(format.parse(date[i]));
-                                }
-
-                                thenewDate.sort((a, b) => a.compareTo(b));
-
-                                print(thenewDate);
-
-                                for(int i = 0; i <= theEventHours.length; i++) {
-                                  if(theEventHours.substring(0, i).contains("-")) {
-                                    theHours.add(theEventHours.substring(0, i - 1));
-                                    theEventHours = theEventHours.substring(i);
-                                    i = 0;
-                                  }
-                                  else if(i == theEventHours.length) {
-                                    theHours.add(theEventHours);
-                                  }
-                                }
+                                
                               }
                             }
                             if(title.length == 0) {
@@ -451,7 +489,9 @@ class _AccountProfileState extends State<AccountProfile> {
                                   future: getQuarterHours(),
                                   builder: (_, quarterHours) {
                                     if(quarterHours.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
+                                      return Center(child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(Colors.green),
+                                      ));
                                     }
                                     else {
                                       for(int i = 0; i < quarterHours.data.length; i++) {
@@ -479,7 +519,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                           if(thefirstQuarter == true) {
                                             return AccountProfileCards(
                                               title: title[index],
-                                              date: thenewDate[index].toString().substring(0, 10),
+                                              date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
                                                   editing: editing,
                                             );
@@ -491,7 +531,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                                 quarterPages("First"),
                                                 AccountProfileCards(
                                                   title: title[index],
-                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
                                                 )
@@ -503,7 +543,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                           if(thesecondQuarter == true) {
                                             return AccountProfileCards(
                                               title: title[index],
-                                              date: thenewDate[index].toString().substring(0, 10),
+                                              date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
                                                   editing: editing,
                                             );
@@ -515,7 +555,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                                 quarterPages("Third"),
                                                 AccountProfileCards(
                                                   title: title[index],
-                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
                                                 )
@@ -527,7 +567,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                           if(thethirdQuarter == true) {
                                             return AccountProfileCards(
                                               title: title[index],
-                                              date: thenewDate[index].toString().substring(0, 10),
+                                              date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
                                                   editing: editing,
                                             );
@@ -539,7 +579,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                                 quarterPages("Third"),
                                                 AccountProfileCards(
                                                   title: title[index],
-                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
                                                 )
@@ -551,7 +591,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                           if(theforthQuarter == true) {
                                             return AccountProfileCards(
                                               title: title[index],
-                                              date: thenewDate[index].toString().substring(0, 10),
+                                              date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
                                                   editing: editing,
                                             );
@@ -563,7 +603,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                                 quarterPages("Fourth"),
                                                 AccountProfileCards(
                                                   title: title[index],
-                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
                                                 )

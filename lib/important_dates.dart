@@ -155,7 +155,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                     else {
                       for(int i = 0; i < snapshot.data.length; i++) {
                         if(snapshot.data[i].data['type'] == "endOfQuarter") {
-                          if(snapshot.data[i].data['quarter'] == "Start Of School") {
+                          if(snapshot.data[i].data['quarter'] == "Start of School") {
                             _startOfSchool = snapshot.data[i].data['date'];
                           }
                           if(snapshot.data[i].data['quarter'] == "First") {
@@ -217,23 +217,35 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
       height: SizeConfig.blockSizeVertical * 41,
       child: Column(
         children: <Widget>[
-          FlatButton(
-            onPressed: () {
-              setState(() {
-                if(type == "clubDates" && editOrNew == "new") {
-                  sendDateToDatabase("clubDates", _date);
-                }
-                else if(type == "endOfQuarter") {
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
                   setState(() {
-                    sendEndOfQuarterDateToDatabase(type, _date, quarter);                    
+                    if(type == "clubDates" && editOrNew == "new") {
+                      sendDateToDatabase("clubDates", _date);
+                    }
+                    else if(type == "endOfQuarter") {
+                      setState(() {
+                        sendEndOfQuarterDateToDatabase(type, _date, quarter);                    
+                      });
+                    }
+                    else {
+                      editDateToDatabase("clubDates", oldDate, _date);
+                    }
+                    Navigator.of(context).pop();
                   });
-                }
-                else {
-                  editDateToDatabase("clubDates", oldDate, _date);
-                }
-              });
-            },
-            child: Text("DONE", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+                },
+                child: Text("DONE", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("CANCEL", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+              )
+            ],
           ),
           Container(
             height: MediaQuery.of(context).copyWith().size.height / 3,

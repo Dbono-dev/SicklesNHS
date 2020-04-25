@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/view_students.dart';
 import 'package:sickles_nhs_app/notification_system.dart';
 import 'package:sickles_nhs_app/export_data.dart';
+import 'package:intl/intl.dart';
 
 class TheOpeningPage extends StatelessWidget {
   TheOpeningPage({Key key}) : super (key: key);
@@ -54,6 +55,8 @@ class MiddleHomePage extends StatelessWidget {
       return qn.documents;
     }
 
+    DateFormat format = new DateFormat("MM/dd/yyyy");
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -83,13 +86,36 @@ class MiddleHomePage extends StatelessWidget {
                 );
               }
               else {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (_, index) {
-                    return MiddleHomePageCards(post: snapshot.data[index]);
+                int theLength = snapshot.data.length;
+                for(int i = 0; i < snapshot.data.length; i++) {
+                  if(format.parse(snapshot.data[i].data['date']).isBefore(DateTime.now())) {
+                    theLength = theLength - 1;
                   }
-                );
+                }
+                if(theLength == 0) {
+                  return Material(
+                    child: Center(
+                      child: Text("NO EVENTS", style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 45
+                      )),
+                    ),
+                  );
+                }
+                else {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (_, index) {
+                      if(format.parse(snapshot.data[index].data['date']).isAfter(DateTime.now())) {
+                        return MiddleHomePageCards(post: snapshot.data[index]);
+                      }
+                      else {
+                        return Container();
+                      }
+                    }
+                  );
+                }
               }
             }
           )
