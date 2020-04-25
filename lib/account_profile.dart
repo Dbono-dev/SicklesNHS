@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:sickles_nhs_app/add_new_hours.dart';
 import 'package:sickles_nhs_app/database.dart';
 import 'package:sickles_nhs_app/size_config.dart';
@@ -12,7 +11,7 @@ import 'package:sickles_nhs_app/messages_page.dart';
 import 'package:sickles_nhs_app/leaderboard.dart';
 import 'package:intl/intl.dart';
 
-class AccountProfile extends StatelessWidget {
+class AccountProfile extends StatefulWidget {
   AccountProfile({Key key, this.posts, this.type, this.name, this.uid, this.hours}) : super (key: key);
 
   final DocumentSnapshot posts;
@@ -22,34 +21,44 @@ class AccountProfile extends StatelessWidget {
   final int hours;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-          children: <Widget>[
-            TopHalfAccountProfile(type: type, uid: uid, name: name, hours: hours,),
-            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
-            MiddleAccountProfile(type: type, post: posts),
-          ],
-        )
-    );
-  }
+  _AccountProfileState createState() => _AccountProfileState();
 }
 
-class TopHalfAccountProfile extends StatelessWidget {
-  TopHalfAccountProfile({Key key, this.type, this.uid, this.name, this.hours}) : super (key: key);
-
-  final String type;
-  final String uid;
-  final String name;
-  final int hours;
-
+class _AccountProfileState extends State<AccountProfile> {
+  bool editing;
   String adjustedTime = (DateTime(DateTime.now().year, DateTime.now().month, (DateTime.now().day + 1), DateTime.now().minute, DateTime.now().second)).toString();
+  List completedEvents = new List();
+
+  Future getCompletedHours(String uid) async {
+    var firestone = Firestore.instance;
+    QuerySnapshot qn = await firestone.collection("members").getDocuments();
+    return qn.documents;
+  }
+
+  Future getQuarterHours() async {
+    var firestone = Firestore.instance;
+    QuerySnapshot qn = await firestone.collection("Important Dates").getDocuments();
+    return qn.documents;
+  }
 
   @override
   Widget build(BuildContext context) {
-  Widget icons() {
-    if(type == "admin") {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              topHalfOfAccountProfile(context),
+              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
+              middleAcountProfilePage(context)
+            ],
+          ),
+      )
+    );
+  }
+
+  Widget icons(BuildContext context) {
+    if(widget.type == "admin") {
       return Row(
         children: <Widget>[
           IconButton(
@@ -65,13 +74,13 @@ class TopHalfAccountProfile extends StatelessWidget {
                  actions: <Widget>[
                    CupertinoActionSheetAction(
                      onPressed: () {
-                       DatabaseService(uid: uid).updateUserPermissions(2, "05/20/21");
+                       DatabaseService(uid: widget.uid).updateUserPermissions(2, "05/20/21");
                      },
                      child: Text('Elevate to Officer Permanently')
                      ),
                    CupertinoActionSheetAction(
                      onPressed: () {
-                      DatabaseService(uid: uid).updateUserPermissions(2, adjustedTime);
+                      DatabaseService(uid: widget.uid).updateUserPermissions(2, adjustedTime);
                      },
                      child: Text('Elevate to Officer for a day')
                     )
@@ -92,14 +101,29 @@ class TopHalfAccountProfile extends StatelessWidget {
             color: Colors.white,
             iconSize: 60,
             onPressed: () {
-              
+              setState(() {
+                editing = true;
+              });
             },
           ),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),),          
+          Padding(
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),
+            child: editing == true ? RaisedButton(
+              onPressed: () {
+                setState(() {
+                  editing = false;
+                });
+              },
+              elevation: 8,
+              color: Colors.white,
+              child: Text("SAVE"),
+            ) : Container(),
+          ),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.5),),          
         ],
       );
     }
-    if(type == "student") {
+    if(widget.type == "student") {
       return Row(
         children: <Widget>[
           IconButton(
@@ -108,7 +132,7 @@ class TopHalfAccountProfile extends StatelessWidget {
             iconSize: 60,
             onPressed: () {
               Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewHours(name: name, uid: uid, hours: hours,)));
+              MaterialPageRoute(builder: (context) => AddNewHours(name: widget.name, uid: widget.uid, hours: widget.hours,)));
             }
           ),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
@@ -154,6 +178,7 @@ class TopHalfAccountProfile extends StatelessWidget {
     }
   }
 
+  Widget topHalfOfAccountProfile(BuildContext context) {
     return Material(
             child: Container(
             height: SizeConfig.blockSizeVertical * 20,
@@ -182,37 +207,15 @@ class TopHalfAccountProfile extends StatelessWidget {
                     Navigator.pop(context);
                   },
                 ),
-                //Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),),
                 Spacer(),
-                icons(),                
+                icons(context),                
               ],
             ),
           ),
     );
   }
-}
 
-class MiddleAccountProfile extends StatelessWidget {
-  MiddleAccountProfile({Key key, this.type, this.post}) : super (key: key);
-
-  final String type;
-  DocumentSnapshot post;
-  List completedEvents = new List();
-  String _events;
-
-  Future getCompletedHours(String uid) async {
-    var firestone = Firestore.instance;
-    QuerySnapshot qn = await firestone.collection("members").getDocuments();
-    return qn.documents;
-  }
-
-  Future getQuarterHours() async {
-    var firestone = Firestore.instance;
-    QuerySnapshot qn = await firestone.collection("Important Dates").getDocuments();
-    return qn.documents;
-  }
-
-  Widget build(BuildContext context) {
+  Widget middleAcountProfilePage(BuildContext context) {
     final user = Provider.of<User>(context);
 
     return StreamBuilder<UserData>(
@@ -220,10 +223,10 @@ class MiddleAccountProfile extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
-          if(type == "admin") {
-            return recentActivity(post.data['first name'], post.data['last name'], post.data['grade'], post.data['uid'], post.data['hours'].toString());
+          if(widget.type == "admin") {
+            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString());
           }
-          if(type == "student") {
+          if(widget.type == "student") {
             return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString());
           }
           else {
@@ -280,9 +283,36 @@ class MiddleAccountProfile extends StatelessWidget {
           ),
           ),
           Padding(padding: EdgeInsets.all(4),),
-          Material(child: Text(firstName + " " + lastName, style: TextStyle(fontSize: 35),)),
+          Material(
+            child: editing != true ? Text(
+              firstName + " " + lastName, style: TextStyle(fontSize: 35),
+              ) : SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 65,
+                child: TextFormField(
+                  style: TextStyle(fontSize: 35),
+                  textAlign: TextAlign.center,
+                  initialValue: firstName + " " + lastName,
+            ),
+              )
+          ),
           Padding(padding: EdgeInsets.all(1),),
-          Material(child: Text(grade + "th Grade", style: TextStyle(fontSize: 20),)),
+          Material(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                editing == true ? SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 7.5,
+                  child: TextFormField(
+                    initialValue: grade,
+                    keyboardType: TextInputType.number,
+                  ),
+                ) : Text(grade, style: TextStyle(fontSize: 20)),
+                Text(
+                  "th Grade", style: TextStyle(fontSize: 20),
+                ),
+              ],
+            )
+          ),
           Padding(padding: EdgeInsets.all(7),),
 
           FutureBuilder(
@@ -372,17 +402,6 @@ class MiddleAccountProfile extends StatelessWidget {
                                 theEventDate = snapshot.data[theIndex].data['event date'];
                                 theEventHours = snapshot.data[theIndex].data['event hours'];
 
-                                /*for(int i = 0; i < theEventTitle.length; i++) {
-                                  if(theEventTitle.substring(0, i).contains("-")) {
-                                    title.add(theEventTitle.substring(0, i - 1));
-                                    theEventTitle = theEventTitle.substring(i);
-                                    i = 0;
-                                  }
-                                  else if(i == theEventTitle.length - 1) {
-                                    title.add(theEventTitle);
-                                  }
-                                }*/
-
                                 for(int i = 0; i < theEventDate.length; i++) {
                                   if(theEventDate.substring(0, i).contains("-")) {
                                     date.add(theEventDate.substring(0, i - 1));
@@ -461,7 +480,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                             return AccountProfileCards(
                                               title: title[index],
                                               date: thenewDate[index].toString().substring(0, 10),
-                                              hours: theHours[index]
+                                              hours: theHours[index],
+                                                  editing: editing,
                                             );
                                           }
                                           else {
@@ -472,7 +492,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                                 AccountProfileCards(
                                                   title: title[index],
                                                   date: thenewDate[index].toString().substring(0, 10),
-                                                  hours: theHours[index]
+                                                  hours: theHours[index],
+                                                  editing: editing,
                                                 )
                                               ],
                                             );
@@ -483,7 +504,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                             return AccountProfileCards(
                                               title: title[index],
                                               date: thenewDate[index].toString().substring(0, 10),
-                                              hours: theHours[index]
+                                              hours: theHours[index],
+                                                  editing: editing,
                                             );
                                           }
                                           else {
@@ -494,7 +516,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                                 AccountProfileCards(
                                                   title: title[index],
                                                   date: thenewDate[index].toString().substring(0, 10),
-                                                  hours: theHours[index]
+                                                  hours: theHours[index],
+                                                  editing: editing,
                                                 )
                                               ],
                                             );
@@ -505,7 +528,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                             return AccountProfileCards(
                                               title: title[index],
                                               date: thenewDate[index].toString().substring(0, 10),
-                                              hours: theHours[index]
+                                              hours: theHours[index],
+                                                  editing: editing,
                                             );
                                           }
                                           else {
@@ -516,7 +540,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                                 AccountProfileCards(
                                                   title: title[index],
                                                   date: thenewDate[index].toString().substring(0, 10),
-                                                  hours: theHours[index]
+                                                  hours: theHours[index],
+                                                  editing: editing,
                                                 )
                                               ],
                                             );
@@ -527,7 +552,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                             return AccountProfileCards(
                                               title: title[index],
                                               date: thenewDate[index].toString().substring(0, 10),
-                                              hours: theHours[index]
+                                              hours: theHours[index],
+                                                  editing: editing,
                                             );
                                           }
                                           else {
@@ -538,7 +564,8 @@ class MiddleAccountProfile extends StatelessWidget {
                                                 AccountProfileCards(
                                                   title: title[index],
                                                   date: thenewDate[index].toString().substring(0, 10),
-                                                  hours: theHours[index]
+                                                  hours: theHours[index],
+                                                  editing: editing,
                                                 )
                                               ],
                                             );
@@ -563,6 +590,7 @@ class MiddleAccountProfile extends StatelessWidget {
       ),
     );
   }
+}
 
   Widget quarterPages(String quarter) {
     return Material(
@@ -582,14 +610,15 @@ class MiddleAccountProfile extends StatelessWidget {
       )
     );
   }
-}
+
 
 class AccountProfileCards extends StatelessWidget {
-  AccountProfileCards({Key key, this.title, this.date, this.hours}) : super (key: key);
+  AccountProfileCards({Key key, this.title, this.date, this.hours, this.editing}) : super (key: key);
 
   final String title;
   final String date;
   final String hours;
+  final bool editing;
 
   @override
   Widget build(BuildContext context) {
@@ -609,7 +638,16 @@ class AccountProfileCards extends StatelessWidget {
                 children: <Widget>[
                   Text(title, style: TextStyle(fontSize: 20),),
                   Text(date, style: TextStyle(fontSize: 20),),
-                  Text("+" + hours, style: TextStyle(color: Colors.green, fontSize: 20),)
+                  editing == true ? SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 7.5,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      child: TextFormField(
+                        initialValue: hours,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ) : Text("+" + hours, style: TextStyle(color: Colors.green, fontSize: 20),)
                 ],
               ),
             ),
