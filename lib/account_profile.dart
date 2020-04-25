@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:sickles_nhs_app/add_new_hours.dart';
 import 'package:sickles_nhs_app/database.dart';
 import 'package:sickles_nhs_app/size_config.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/settings_page.dart';
 import 'package:sickles_nhs_app/messages_page.dart';
 import 'package:sickles_nhs_app/leaderboard.dart';
+import 'package:intl/intl.dart';
 
 class AccountProfile extends StatelessWidget {
   AccountProfile({Key key, this.posts, this.type, this.name, this.uid, this.hours}) : super (key: key);
@@ -204,6 +206,12 @@ class MiddleAccountProfile extends StatelessWidget {
     return qn.documents;
   }
 
+  Future getQuarterHours() async {
+    var firestone = Firestore.instance;
+    QuerySnapshot qn = await firestone.collection("Important Dates").getDocuments();
+    return qn.documents;
+  }
+
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
@@ -236,6 +244,19 @@ class MiddleAccountProfile extends StatelessWidget {
     List<String> title = new List<String> ();
     List<String> date = new List<String> ();
     List<String> theHours = new List<String> ();
+    List<DateTime> thenewDate = new List<DateTime>();
+
+    DateTime startOfSchool;
+    DateTime firstQuarter;
+    DateTime secondQuarter;
+    DateTime thirdQuarter;
+    DateTime forthQuarter;
+    bool thefirstQuarter = false;
+    bool thesecondQuarter = false;
+    bool thethirdQuarter = false;
+    bool theforthQuarter = false;
+    DateFormat format = new DateFormat("MM/dd/yyyy");
+    DateFormat secondFormat = new DateFormat("MM-dd-yyyy");
 
     if(int.parse(hours) >= 6) {
       _theColor = Colors.green;
@@ -373,6 +394,15 @@ class MiddleAccountProfile extends StatelessWidget {
                                   }
                                 }
 
+
+                                for(int i = 0; i < date.length; i++) {
+                                  thenewDate.add(format.parse(date[i]));
+                                }
+
+                                thenewDate.sort((a, b) => a.compareTo(b));
+
+                                print(thenewDate);
+
                                 for(int i = 0; i <= theEventHours.length; i++) {
                                   if(theEventHours.substring(0, i).contains("-")) {
                                     theHours.add(theEventHours.substring(0, i - 1));
@@ -398,18 +428,125 @@ class MiddleAccountProfile extends StatelessWidget {
                             else {
                               return Container(
                                 width: SizeConfig.blockSizeHorizontal * 92.5,
-                                child: ListView.builder(
-                                  itemCount: title.length,
-                                  itemBuilder: (_, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
-                                      child: AccountProfileCards(
-                                        title: title[index],
-                                        date: date[index],
-                                        hours: theHours[index]
-                                      ),
+                                child: FutureBuilder(
+                                  future: getQuarterHours(),
+                                  builder: (_, quarterHours) {
+                                    if(quarterHours.connectionState == ConnectionState.waiting) {
+                                      return Center(child: CircularProgressIndicator());
+                                    }
+                                    else {
+                                      for(int i = 0; i < quarterHours.data.length; i++) {
+                                        if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Start of School") {
+                                          startOfSchool = secondFormat.parse(quarterHours.data[i].data['date']);
+                                        }
+                                        if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "First") {
+                                          firstQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                                        }
+                                        if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Second") {
+                                          secondQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                                        }
+                                        if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Third") {
+                                          thirdQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                                        }
+                                        if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Fourth") {
+                                          forthQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                                        }
+                                      }
+                                    }
+                                    return ListView.builder(
+                                      itemCount: title.length,
+                                      itemBuilder: (_, index) {
+                                        if(thenewDate[index].isAfter(startOfSchool) && thenewDate[index].isBefore(firstQuarter)) {
+                                          if(thefirstQuarter == true) {
+                                            return AccountProfileCards(
+                                              title: title[index],
+                                              date: thenewDate[index].toString().substring(0, 10),
+                                              hours: theHours[index]
+                                            );
+                                          }
+                                          else {
+                                            thefirstQuarter = true;
+                                            return Column(
+                                              children: <Widget>[
+                                                quarterPages("First"),
+                                                AccountProfileCards(
+                                                  title: title[index],
+                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  hours: theHours[index]
+                                                )
+                                              ],
+                                            );
+                                          }
+                                        }
+                                        if(thenewDate[index].isAfter(firstQuarter) && thenewDate[index].isBefore(secondQuarter)) {
+                                          if(thesecondQuarter == true) {
+                                            return AccountProfileCards(
+                                              title: title[index],
+                                              date: thenewDate[index].toString().substring(0, 10),
+                                              hours: theHours[index]
+                                            );
+                                          }
+                                          else {
+                                            thesecondQuarter = true;
+                                            return Column(
+                                              children: <Widget>[
+                                                quarterPages("Third"),
+                                                AccountProfileCards(
+                                                  title: title[index],
+                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  hours: theHours[index]
+                                                )
+                                              ],
+                                            );
+                                          }
+                                        }
+                                        if(thenewDate[index].isAfter(secondQuarter) && thenewDate[index].isBefore(thirdQuarter)) {
+                                          if(thethirdQuarter == true) {
+                                            return AccountProfileCards(
+                                              title: title[index],
+                                              date: thenewDate[index].toString().substring(0, 10),
+                                              hours: theHours[index]
+                                            );
+                                          }
+                                          else {
+                                            thethirdQuarter = true;
+                                            return Column(
+                                              children: <Widget>[
+                                                quarterPages("Third"),
+                                                AccountProfileCards(
+                                                  title: title[index],
+                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  hours: theHours[index]
+                                                )
+                                              ],
+                                            );
+                                          }
+                                        }
+                                        if(thenewDate[index].isAfter(thirdQuarter) && thenewDate[index].isBefore(forthQuarter)) {
+                                          if(theforthQuarter == true) {
+                                            return AccountProfileCards(
+                                              title: title[index],
+                                              date: thenewDate[index].toString().substring(0, 10),
+                                              hours: theHours[index]
+                                            );
+                                          }
+                                          else {
+                                            theforthQuarter = true;
+                                            return Column(
+                                              children: <Widget>[
+                                                quarterPages("Fourth"),
+                                                AccountProfileCards(
+                                                  title: title[index],
+                                                  date: thenewDate[index].toString().substring(0, 10),
+                                                  hours: theHours[index]
+                                                )
+                                              ],
+                                            );
+                                          }
+                                        }
+                                      }
                                     );
-                                  }
+                                  },
                                 ),
                               );
                             }
@@ -426,6 +563,25 @@ class MiddleAccountProfile extends StatelessWidget {
       ),
     );
   }
+
+  Widget quarterPages(String quarter) {
+    return Material(
+      child: Container(
+        height: SizeConfig.blockSizeVertical * 6,
+        width: SizeConfig.blockSizeHorizontal * 90,
+        child: Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)
+          ),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(quarter + " Quarter", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+            )
+        )
+      )
+    );
+  }
 }
 
 class AccountProfileCards extends StatelessWidget {
@@ -440,7 +596,7 @@ class AccountProfileCards extends StatelessWidget {
     return Material(
       child: Container(
         height: SizeConfig.blockSizeVertical * 6,
-        width: SizeConfig.blockSizeHorizontal * 75,
+        width: SizeConfig.blockSizeHorizontal * 90,
         child: Card(
           elevation: 8,
           shape: RoundedRectangleBorder(

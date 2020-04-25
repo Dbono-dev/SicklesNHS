@@ -9,7 +9,7 @@ class Wrapper extends StatelessWidget {
   final PushNotificationService _pushNotificationService = PushNotificationService();
 
   Future pushNotification() async {
-    await _pushNotificationService.initialise();
+    //await _pushNotificationService.initialise();
   }
 
   @override

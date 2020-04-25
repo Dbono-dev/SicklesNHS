@@ -56,8 +56,10 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
           future: getPosts(),
           builder: (_, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
               );
             }
             else if(snapshot.data.length == 0) {

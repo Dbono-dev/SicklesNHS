@@ -10,7 +10,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
 
   void intState() {
-    PushNotificationService().initialise();
+    //PushNotificationService().initialise();
   }
 
   @override

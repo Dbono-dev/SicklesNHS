@@ -127,8 +127,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   @override
   Widget build(BuildContext context) {
     final _thirdformKey = GlobalKey<FormState>();
-    Options selectedOption;
-    String select = "Select";
     String _bottomText = "Create Event";
 
     String _type = widget.type;
@@ -144,7 +142,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     }
 
     if(onDate != null) {
-      doesNotEnd = onDate.toString();
+      doesNotEnd = "Until " + onDate.toString().substring(0, 10);
     }
 
     if(theStartTime == null) {
@@ -182,13 +180,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       doesNotRepeat = "Repeats every " + selectedValue.toString() + " " + typeOfDate + theDate;
     }
 
-    List<Options> users = <Options> [
-      Options(0, "Weekly"),
-      Options(1, "Every Other Week"),
-      Options(2, "Monthly"),
-      Options(3, "Every Other Month")
-    ];
-
     String _title = widget.title;
     if(_title != null) {
       _bottomText = "Save Event";
@@ -201,6 +192,18 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     String _address = widget.address;
     String _date = widget.date;
     String _max = widget.max;
+
+    if(_startTime != null) {
+      theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
+    }
+
+    if(_endTime != null) {
+      theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
+    }
+
+    String startingDate;
+    startingDate = _newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+    startingDate = _date != null ? _date : "Date";
 
     return Container(
       color: Colors.transparent,
@@ -251,7 +254,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         highlightColor: Colors.green,
                         shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
                         borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                        child: Text(_newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString()),
+                        child: Text(startingDate),
                         onPressed: () async {
                           _newDateTime = await showRoundedDatePicker(
                             context: context,
@@ -273,28 +276,28 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                     child: Text(theStartTime),
                     onPressed: () {
                       showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext builder) {
-                              return Container(
-                                  height: MediaQuery.of(context).copyWith().size.height / 3,
-                                  child: CupertinoDatePicker(
-                                    initialDateTime: newDateTime(),
-                                    onDateTimeChanged: (DateTime newdate) {
-                                      _startTime = newdate.hour;
-                                      _startTimeMinutes = newdate.minute;
-                                      theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
-                                      setState(() {
-                                        
-                                      });
-                                    },
-                                    use24hFormat: false,
-                                    maximumDate: new DateTime(2030, 12, 30),
-                                    minimumYear: 2020,
-                                    maximumYear: 2030,
-                                    minuteInterval: 15,
-                                    mode: CupertinoDatePickerMode.time,
-                              ));
-                            });
+                        context: context,
+                        builder: (BuildContext builder) {
+                          return Container(
+                              height: MediaQuery.of(context).copyWith().size.height / 3,
+                              child: CupertinoDatePicker(
+                                initialDateTime: newDateTime(),
+                                onDateTimeChanged: (DateTime newdate) {
+                                  _startTime = newdate.hour;
+                                  _startTimeMinutes = newdate.minute;
+                                  theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
+                                  setState(() {
+                                    
+                                  });
+                                },
+                                use24hFormat: false,
+                                maximumDate: new DateTime(2030, 12, 30),
+                                minimumYear: 2020,
+                                maximumYear: 2030,
+                                minuteInterval: 15,
+                                mode: CupertinoDatePickerMode.time,
+                          ));
+                        });
                     },
                   ),
                       OutlineButton(
@@ -341,115 +344,113 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             borderRadius: BorderRadius.vertical(top: Radius.circular(25))
                           ),
                           builder: (BuildContext builder) {
-                            return Container(
-                              height: SizeConfig.blockSizeVertical * 33,
-                              child: Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: CupertinoPicker(
-                                            backgroundColor: Colors.white,
-                                            itemExtent: 28,
-                                            onSelectedItemChanged: (value) {
-                                              setState(() {
-                                                selectedValue = value;
-                                                print(selectedValue);
-                                              });
-                                            },
-                                            children: [
-                                              Text("0"),
-                                              Text("1"),
-                                              Text("2"),
-                                              Text("3"),
-                                              Text("4"),
-                                              Text("5"),
-                                              Text("6"),
-                                              Text("7"),
-                                              Text("8"),
-                                              Text("9"),
-                                              Text("10"),
-                                            ]),
-                                        ),
-                                        Expanded(
-                                          child: CupertinoPicker(
-                                            backgroundColor: Colors.white,
-                                            itemExtent: 32,
-                                            onSelectedItemChanged: (value) {
-                                              setState(() {
-                                                secondSelectedValue = value;
-                                                print(secondSelectedValue);
-                                              });
-                                            },
-                                            children: [
-                                              Text("days"),
-                                              Text("weeks"),
-                                              Text("months"),
-                                              Text("years")
-                                            ]),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Container(
-                                            height: SizeConfig.blockSizeVertical * 33,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: <Widget> [
-                                                FlatButton(
-                                                  child: Text("On a date"),
-                                                  onPressed: () async {
-                                                    onDate = await showRoundedDatePicker(
-                                                        context: context,
-                                                        initialDate: startDate,
-                                                        lastDate: DateTime(DateTime.now().year + 1),
-                                                        borderRadius: 16,
-                                                        theme: ThemeData(primarySwatch: Colors.green),
-                                                      );
-                                                    setState(() {
-                                                      
-                                                    });
-                                                  },
-                                                ),
-                                                FlatButton(
-                                                  child: Text("After number of occurrences"),
-                                                  onPressed: () {
-
-                                                  },
-                                                )
-                                              ]
+                                return Container(
+                                  height: SizeConfig.blockSizeVertical * 33,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: CupertinoPicker(
+                                                backgroundColor: Colors.white,
+                                                itemExtent: 28,
+                                                onSelectedItemChanged: (value) {
+                                                  setState(() {
+                                                    selectedValue = value;
+                                                  });
+                                                },
+                                                children: [
+                                                  Text("0"),
+                                                  Text("1"),
+                                                  Text("2"),
+                                                  Text("3"),
+                                                  Text("4"),
+                                                  Text("5"),
+                                                  Text("6"),
+                                                  Text("7"),
+                                                  Text("8"),
+                                                  Text("9"),
+                                                  Text("10"),
+                                                ]),
                                             ),
+                                            Expanded(
+                                              child: CupertinoPicker(
+                                                backgroundColor: Colors.white,
+                                                itemExtent: 32,
+                                                onSelectedItemChanged: (value) {
+                                                  setState(() {
+                                                    secondSelectedValue = value;
+                                                  });
+                                                },
+                                                children: [
+                                                  Text("days"),
+                                                  Text("weeks"),
+                                                  Text("months"),
+                                                  Text("years")
+                                                ]),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: SizeConfig.blockSizeVertical * 33,
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: <Widget> [
+                                                    FlatButton(
+                                                      child: Text("On a date"),
+                                                      onPressed: () async {
+                                                        onDate = await showRoundedDatePicker(
+                                                            context: context,
+                                                            initialDate: startDate,
+                                                            lastDate: DateTime(DateTime.now().year + 1),
+                                                            borderRadius: 16,
+                                                            theme: ThemeData(primarySwatch: Colors.green),
+                                                          );
+                                                        setState(() {
+                                                          
+                                                        });
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text("After number of occurrences"),
+                                                      onPressed: () {
+
+                                                      },
+                                                    )
+                                                  ]
+                                                ),
+                                              );
+                                            }
                                           );
-                                        }
-                                      );
-                                    },
-                                    child: Container(
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: <Widget>[
-                                          FlatButton.icon(
-                                            onPressed: () {
-                                              
-                                            },
-                                            icon: Icon(Icons.compare_arrows),
-                                            label: Text(doesNotEnd)
-                                          ),
-                                          Icon(Icons.arrow_forward_ios)
-                                        ],
+                                        },
+                                        child: Container(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: <Widget>[
+                                              FlatButton.icon(
+                                                onPressed: () {
+                                                  
+                                                },
+                                                icon: Icon(Icons.compare_arrows),
+                                                label: Text(doesNotEnd)
+                                              ),
+                                              Icon(Icons.arrow_forward_ios)
+                                            ],
+                                          )
+                                        ),
                                       )
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
+                                    ],
+                                  ),
+                                );
                           });
                       },
                       child: Text(doesNotRepeat)

@@ -12,16 +12,17 @@ class ImportantDateMain extends StatefulWidget {
 
 class _ImportantDateMainState extends State<ImportantDateMain> {
   String _date;
+  String _startOfSchool = "";
   String _firstDate = "";
   String _secondDate = "";
   String _thirdDate = "";
   String _forthDate = "";
 
-    Future getPosts() async {
-      var firestore = Firestore.instance;
-      QuerySnapshot qn = await firestore.collection("Important Dates").getDocuments();
-      return qn.documents;
-    }
+  Future getPosts() async {
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("Important Dates").getDocuments();
+    return qn.documents;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,30 +137,6 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
               children: <Widget> [
                 Text("Set End of Quarter", style: TextStyle(fontSize: 25),),
                 Padding(padding: EdgeInsets.all(5)),
-                /*Container(
-                  width: SizeConfig.blockSizeHorizontal * 35,
-                  child: Card(
-                    elevation: 8,
-                    child: FlatButton(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget> [
-                          Icon(
-                            Icons.add_circle_outline,
-                            size: 35,
-                          ),
-                          Text("Add", style: TextStyle(fontSize: 25),)
-                        ]
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                          return SetClubDates("new", "endOfQuarter", "");
-                        });
-                      },
-                    )
-                  ),
-                ),*/
               ]
             ),
             Container(
@@ -178,6 +155,9 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                     else {
                       for(int i = 0; i < snapshot.data.length; i++) {
                         if(snapshot.data[i].data['type'] == "endOfQuarter") {
+                          if(snapshot.data[i].data['quarter'] == "Start Of School") {
+                            _startOfSchool = snapshot.data[i].data['date'];
+                          }
                           if(snapshot.data[i].data['quarter'] == "First") {
                             _firstDate = snapshot.data[i].data['date'];
                           }
@@ -192,65 +172,17 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                           }
                         }
                       }
-                      return Column(
-                        children: <Widget>[
-                          _endOfQuarterCards("First", _firstDate),
-                          _endOfQuarterCards("Second", _secondDate),
-                          _endOfQuarterCards("Third", _thirdDate),
-                          _endOfQuarterCards("Fourth", _forthDate)
-                        ],
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            _endOfQuarterCards("Start of School", _startOfSchool),
+                            _endOfQuarterCards("First", _firstDate),
+                            _endOfQuarterCards("Second", _secondDate),
+                            _endOfQuarterCards("Third", _thirdDate),
+                            _endOfQuarterCards("Fourth", _forthDate)
+                          ],
+                        )
                       );
-
-
-
-                      /*return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (_, index) {
-                      if(snapshot.data[index].data['type'].toString() == "endOfQuarter") {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),                        
-                        child: Card(
-                          elevation: 8,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                snapshot.data[index].data['date'].toString(),
-                                textAlign: TextAlign.center,
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.edit,
-                                ),
-                                onPressed: () {
-                                  showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                                    return SetClubDates("edit", "endOfQuarter" ,snapshot.data[index].data['date'].toString());
-                                  });
-                                }
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    deleteDateToDatabase(snapshot.data[index].data['type'].toString(), snapshot.data[index].data['inital date'].toString());
-                                  });
-                                }
-                              )
-                            ],
-                          )
-                        ),
-                      );
-                      }
-                      else {
-                        return Container();
-                      }
-                      }
-                  );*/
                     }
                       },
                   ),

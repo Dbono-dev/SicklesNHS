@@ -112,12 +112,52 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
   bool secondCheck = false;
   bool thirdCheck = false;
 
+
   @override
   Widget build(BuildContext context) {
+    int yes = 0;
+    int no = 0;
+
     return Container(
       height: SizeConfig.blockSizeVertical * 78,
       child: Column(
         children: <Widget>[
+          Container(
+            child: FutureBuilder(
+              future: getPosts(),
+              builder: (_, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+                else {
+                  for(int i = 0; i < snapshot.data.length; i++) {
+                    if(snapshot.data[i].data['hours'] >= 6) {
+                      yes = yes + 1;
+                    }
+                    else {
+                      no = no + 1;
+                    }
+                  }
+                  return Card(
+                    child: Column(
+                      children: <Widget>[
+                        Text("Current Status of this Quarter"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Icon(Icons.check, color: Colors.green,),
+                            Text("Completed: " + yes.toString()),
+                            Icon(Icons.close, color: Colors.red,),
+                            Text("Not Completed: " + no.toString())
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            )
+          ),
           Container(
             child: TextFormField(
               initialValue: search,

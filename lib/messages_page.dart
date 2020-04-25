@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/view_students.dart';
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sickles_nhs_app/message.dart';
+import 'package:sickles_nhs_app/size_config.dart';
 
 class MessagesPage extends StatelessWidget {
   @override
@@ -9,18 +13,70 @@ class MessagesPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           TopHalfViewStudentsPage(),
-          MessagesMiddlePage()
+          Container(height: SizeConfig.blockSizeVertical * 80, child: MessagesMiddlePage())
         ],
       ),
     );
   }
 }
 
-class MessagesMiddlePage extends StatelessWidget {
+class MessagesMiddlePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  _MessagesMiddlePageState createState() => _MessagesMiddlePageState();
+}
 
+class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+
+  final List<Message> messages = [];
+
+  void initState() {
+    if(Platform.isIOS) {
+      _fcm.requestNotificationPermissions(IosNotificationSettings());
+    }
+
+    _fcm.onTokenRefresh.listen(sendTokenToServer);
+    _fcm.getToken();
+
+    _fcm.subscribeToTopic('all');
+
+    super.initState();
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+        final notification = message['notification'];
+        setState(() {
+          messages.add(Message(title: notification['title'], body: notification['body']));
+        });
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+        final notification = message['notification'];
+        setState(() {
+          messages.add(Message(title: notification['title'], body: notification['body']));
+        });
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+        final notification = message['notification'];
+        setState(() {
+          messages.add(Message(title: notification['title'], body: notification['body']));
+        });
+      }
     );
+  }
+
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: messages.map(buildMessage).toList(),
+  );
+
+  Widget buildMessage(Message message) => ListTile(
+    title: Text(message.title),
+    subtitle: Text(message.body),
+  );
+
+  void sendTokenToServer(String fcmToken) {
+    print('Token: $fcmToken');
   }
 }

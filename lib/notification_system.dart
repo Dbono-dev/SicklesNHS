@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:sickles_nhs_app/push_notification.dart';
 import 'package:sickles_nhs_app/size_config.dart';
 import 'package:sickles_nhs_app/view_students.dart';
@@ -32,7 +33,7 @@ class MiddlePageNotification extends StatefulWidget {
 class _MiddlePageNotificationState extends State<MiddlePageNotification> {
 
   void intState() {
-    PushNotificationService().initialise();
+    //PushNotificationService().initialise();
   }
 
   final _fourthformKey = GlobalKey<FormState>();
@@ -372,8 +373,10 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                 child: GestureDetector(
                   onTap: () async {
                     _fourthformKey.currentState.save();
-                    sendMessage(_title, _body);
                     print("works");
+                    final response = await PushNotificationService().sendAndRetrieveMessage(
+                      _title, _body
+                    );
                     _fourthformKey.currentState.reset();
                   },
                 child: Center(
