@@ -88,8 +88,10 @@ class MiddleHomePage extends StatelessWidget {
               else {
                 int theLength = snapshot.data.length;
                 for(int i = 0; i < snapshot.data.length; i++) {
-                  if(format.parse(snapshot.data[i].data['date']).isBefore(DateTime.now())) {
+                  if(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)).isBefore(DateTime.now())) {
+                    print(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)));
                     theLength = theLength - 1;
+                    print(theLength);
                   }
                 }
                 if(theLength == 0) {

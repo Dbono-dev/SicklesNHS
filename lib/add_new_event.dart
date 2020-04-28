@@ -123,6 +123,15 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   DateTime _newDateTime;
   String theStartTime;
   String theEndTime;
+  String _title;
+  String _description;
+  int _startTime;
+  int _startTimeMinutes;
+  int _endTime;
+  int _endTimeMinutes;
+  String _address;
+  String _date;
+  String _max;
 
   @override
   Widget build(BuildContext context) {
@@ -180,18 +189,18 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       doesNotRepeat = "Repeats every " + selectedValue.toString() + " " + typeOfDate + theDate;
     }
 
-    String _title = widget.title;
-    if(_title != null) {
+    if(widget.title != null) {
+      _title = widget.title;
       _bottomText = "Save Event";
+      _description = widget.description;
+      _startTime = widget.startTime;
+      _startTimeMinutes = widget.startTimeMinutes;
+      _endTime = widget.endTime;
+      _endTimeMinutes = widget.endTimeMinutes;
+      _address = widget.address;
+      _date = widget.date;
+      _max = widget.max;
     }
-    String _description = widget.description;
-    int _startTime = widget.startTime;
-    int _startTimeMinutes = widget.startTimeMinutes;
-    int _endTime = widget.endTime;
-    int _endTimeMinutes = widget.endTimeMinutes;
-    String _address = widget.address;
-    String _date = widget.date;
-    String _max = widget.max;
 
     if(_startTime != null) {
       theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
@@ -202,8 +211,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     }
 
     String startingDate;
-    startingDate = _newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
-    startingDate = _date != null ? _date : "Date";
+    startingDate = _newDateTime == null || _newDateTime.toString().length > 10 ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+    startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
 
     return Container(
       color: Colors.transparent,
@@ -566,18 +575,52 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           )),
                           onPressed: () async {
                             print("clicked");
+                            final form = _thirdformKey.currentState;
+                            form.save();
+
                             if(communityServiceEventValue == true) {
                               _type = "Community Service Project";
                             }
                             if(serviceEventValue == true) {
                               _type = "Service Event";
                             }
-                            final form = _thirdformKey.currentState;
-                            form.save();
+                            if(doesNotRepeat != "Does Not Repeat" && theDate != null) {
+                              if(typeOfDate == "days") {
+                                DateTime tempDateTime = _newDateTime;
+                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                for(int i = 1; i < 999; i++) {
+                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                    break;
+                                  }
+                                  else {
+                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + (selectedValue * i));
+                                    if(tempDateTime.isAfter(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                    }
+                                  }
+                                  print(_date);
+                                }
+                              }
+                              if(typeOfDate == "weeks") {
+
+                              }
+                              if(typeOfDate == "months") {
+
+                              }
+                              if(typeOfDate == "years") {
+
+                              }
+                            }
+                            else {
+                              _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                            }
+
                             if(form.validate()) {
                               try {
-                                _photoUrl = await firebaseStorageRef.getDownloadURL();
-                                _date = newDateTime.toString().substring(5, 7) + "/" + newDateTime.toString().substring(8, 10) + "/" + newDateTime.toString().substring(0, 4);
+                                //_photoUrl = await firebaseStorageRef.getDownloadURL();
                                 dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
                                 if(result == null) {
                                   print("Fill in all the forms.");
@@ -607,6 +650,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                               }
                             } 
                             else {
+                              print("failed");
                               return Container();
                             }}
                         );

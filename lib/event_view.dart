@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:provider/provider.dart';
@@ -126,10 +127,16 @@ class TopHalfViewEventsPage extends StatelessWidget {
   }
 }
 
-class MiddleEventViewPage extends StatelessWidget {
+class MiddleEventViewPage extends StatefulWidget {
   MiddleEventViewPage ({Key key, this.post}) : super (key: key);
 
   final DocumentSnapshot post;
+
+  @override
+  _MiddleEventViewPageState createState() => _MiddleEventViewPageState();
+}
+
+class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
   String timeofDayStart = "am";
   String timeofDayEnd = "am";
   int startTime;
@@ -146,13 +153,15 @@ class MiddleEventViewPage extends StatelessWidget {
   String description;
   double differenceTime;
   Widget _image;
+  int shownDate = 0;
+  String theShownDate = "";
 
   @override
   Widget build(BuildContext context) {
-    if(post.data['type'] == "clubDates") {
+    if(widget.post.data['type'] == "clubDates") {
       location = "Sickles High School";
       remainingSpots = "";
-      title = "Club Meeting" + " " + post.data['date'].toString().substring(0, 5);
+      title = "Club Meeting" + " " + widget.post.data['date'].toString().substring(0, 5);
       description= "";
       startTime = 10;
       endTime = 11;
@@ -162,14 +171,14 @@ class MiddleEventViewPage extends StatelessWidget {
       _image = Image.asset("SicklesNHS.jpg");
     }
     else {
-      location = post.data['address'];
-      remainingSpots = (int.parse(post.data["max participates"]) - post.data["participates"].length).toString();
-      title = post.data['title'];
-      description = post.data['description'];
-      startTimeMinutes = post.data["start time minutes"];
-      endTimeMinutes = post.data["end time minutes"];
-      if(post.data['photo url'] != null) {
-        _image = Image.network(post.data['photo url'].toString());
+      location = widget.post.data['address'];
+      remainingSpots = (int.parse(widget.post.data["max participates"]) - widget.post.data["participates"].length).toString();
+      title = widget.post.data['title'];
+      description = widget.post.data['description'];
+      startTimeMinutes = widget.post.data["start time minutes"];
+      endTimeMinutes = widget.post.data["end time minutes"];
+      if(widget.post.data['photo url'] != null) {
+        _image = Image.network(widget.post.data['photo url'].toString());
       }
       else {
         _image = Image.asset("SicklesNHS.jpg");
@@ -209,28 +218,35 @@ class MiddleEventViewPage extends StatelessWidget {
         theEndTimeMinutes = "45";
       }
       
-      double modifiedEndTime = post.data["end time"] + modifiedEndTimeMinutes;
-      double modifiedStartTime = post.data["start time"] + modifiedStartTimeMinutes;
+      double modifiedEndTime = widget.post.data["end time"] + modifiedEndTimeMinutes;
+      double modifiedStartTime = widget.post.data["start time"] + modifiedStartTimeMinutes;
 
       differenceTime = modifiedEndTime - modifiedStartTime;
 
-      startTime = post.data['start time'];
-      endTime = post.data['end time'];
+      startTime = widget.post.data['start time'];
+      endTime = widget.post.data['end time'];
 
-      if(post.data["end time"] > 12) {
-        endTime = (post.data["end time"] - 12);
+      if(widget.post.data["end time"] > 12) {
+        endTime = (widget.post.data["end time"] - 12);
         timeofDayEnd = "pm";
       }
-      if(post.data["start time"] > 12) {
-        startTime = (post.data["start time"] - 12);
+      if(widget.post.data["start time"] > 12) {
+        startTime = (widget.post.data["start time"] - 12);
         timeofDayStart = "pm";
       }
-      if(post.data["start time"] == 12) {
+      if(widget.post.data["start time"] == 12) {
         timeofDayStart = "pm";
       }
-      if(post.data["end time"] == 12) {
+      if(widget.post.data["end time"] == 12) {
         timeofDayEnd = "pm";
       }
+    }
+
+    if(shownDate == 0) {
+      theShownDate = "04/29/2020";
+    }
+    if(shownDate == 1) {
+      theShownDate = "05/04/2020";
     }
 
     return Card(
@@ -252,7 +268,41 @@ class MiddleEventViewPage extends StatelessWidget {
                   fontWeight: FontWeight.bold
                 ),
                 ),
-                Text(post.data["date"]),
+                widget.post.data['date'].toString().length > 10 ? GestureDetector(
+                  onTap: () {
+                    showCupertinoModalPopup(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: SizeConfig.blockSizeVertical * 33,
+                          child: CupertinoPicker(
+                            backgroundColor: Colors.white,
+                            itemExtent: 32,
+                            onSelectedItemChanged: (value) {
+                              setState(() {
+                                shownDate = value;
+                              });
+                            },
+                            children: [
+                              Text(widget.post.data['date'].toString().substring(0, 10)),
+                              Text(widget.post.data['date'].toString().substring(11, 21)),
+                            ]
+                          ),
+                        );
+                      }
+                    );
+                  },
+                  child: Container(
+                    width: SizeConfig.blockSizeHorizontal * 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text(theShownDate),
+                        Icon(Icons.keyboard_arrow_down)
+                      ],
+                    ),
+                  )
+                ) : Text(widget.post.data['date']),
                 Container(
                   height: 145,
                   width: 315,
