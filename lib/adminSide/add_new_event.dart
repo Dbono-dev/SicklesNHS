@@ -5,10 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sickles_nhs_app/database.dart';
-import 'package:sickles_nhs_app/size_config.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sickles_nhs_app/view_students.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
 
   
   class AddNewEvent extends StatefulWidget {

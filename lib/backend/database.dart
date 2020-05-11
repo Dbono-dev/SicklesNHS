@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 
 class DatabaseService {
 
@@ -173,5 +173,17 @@ class DatabaseImportantDates {
         'quarter': quarter
       });
     }
+  }
+}
+
+class DatabaseBugs {
+  DatabaseBugs();
+
+  final CollectionReference submitBugs = Firestore.instance.collection("bugs");
+
+  Future submmissionBugs(String summary) async {
+    return await submitBugs.document(summary.substring(0, 5)).setData({
+      'summary': summary
+    });
   }
 }

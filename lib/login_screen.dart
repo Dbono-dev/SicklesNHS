@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sickles_nhs_app/auth_service.dart';
+import 'package:sickles_nhs_app/backend/auth_service.dart';
 import 'package:sickles_nhs_app/sign_up.dart';
-import 'package:sickles_nhs_app/size_config.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen ({Key key}) : super (key: key);

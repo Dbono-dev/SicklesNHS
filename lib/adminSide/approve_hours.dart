@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/push_notification.dart';
-import 'package:sickles_nhs_app/view_students.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/database.dart';
+import 'package:sickles_nhs_app/backend/push_notification.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ApproveHoursPage extends StatelessWidget {

@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:provider/provider.dart';
-import 'package:sickles_nhs_app/add_new_event.dart';
-import 'package:sickles_nhs_app/qr_code_page.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/database.dart';
-import 'package:sickles_nhs_app/user.dart';
-import 'package:sickles_nhs_app/account_profile.dart';
+import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
+import 'package:sickles_nhs_app/memberSide/qr_code_page.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
+import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 
 class EventPageView extends StatelessWidget {
   EventPageView ({Key key, this.post}) : super (key: key);

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/home_page.dart';
 import 'package:sickles_nhs_app/login_screen.dart';
-import 'package:sickles_nhs_app/push_notification.dart';
-import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/backend/push_notification.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 
 class Wrapper extends StatelessWidget {
   final PushNotificationService _pushNotificationService = PushNotificationService();

@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/view_students.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
 class ScanningPage extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/auth_service.dart';
+import 'package:sickles_nhs_app/backend/auth_service.dart';
 import 'package:sickles_nhs_app/login_screen.dart';
-import 'package:sickles_nhs_app/size_config.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage ({Key key}) : super (key: key);

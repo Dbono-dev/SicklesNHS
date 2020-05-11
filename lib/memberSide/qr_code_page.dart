@@ -1,9 +1,8 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/account_profile.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:sickles_nhs_app/view_students.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
 
 class QRCodePage extends StatelessWidget {
 QRCodePage ({Key key, this.title, this.name, this.type}) : super (key: key);

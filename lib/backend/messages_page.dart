@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/view_students.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:sickles_nhs_app/message.dart';
-import 'package:sickles_nhs_app/size_config.dart';
+import 'package:sickles_nhs_app/adminSide/message.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 
 class MessagesPage extends StatelessWidget {
   @override

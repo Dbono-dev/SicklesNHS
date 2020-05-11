@@ -4,8 +4,8 @@ import "package:firebase_auth/firebase_auth.dart";
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:sickles_nhs_app/database.dart';
-import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

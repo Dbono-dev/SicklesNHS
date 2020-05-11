@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/add_new_hours.dart';
-import 'package:sickles_nhs_app/database.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/memberSide/add_new_hours.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
-import 'package:sickles_nhs_app/settings_page.dart';
-import 'package:sickles_nhs_app/messages_page.dart';
-import 'package:sickles_nhs_app/leaderboard.dart';
+import 'package:sickles_nhs_app/memberSide/settings_page.dart';
+import 'package:sickles_nhs_app/backend/messages_page.dart';
+import 'package:sickles_nhs_app/memberSide/leaderboard.dart';
 import 'package:intl/intl.dart';
 
 class AccountProfile extends StatefulWidget {

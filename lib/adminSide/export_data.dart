@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/view_students.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/view_students.dart';
-import 'package:sickles_nhs_app/size_config.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:signature/signature.dart';
-import 'package:sickles_nhs_app/database.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewHours extends StatelessWidget {

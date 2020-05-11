@@ -1,22 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:sickles_nhs_app/account_profile.dart';
-import 'package:sickles_nhs_app/add_new_event.dart';
-import 'package:sickles_nhs_app/approve_hours.dart';
-import 'package:sickles_nhs_app/auth_service.dart';
-import 'package:sickles_nhs_app/database.dart';
-import 'package:sickles_nhs_app/event_view.dart';
+import 'package:sickles_nhs_app/memberSide/account_profile.dart';
+import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
+import 'package:sickles_nhs_app/adminSide/approve_hours.dart';
+import 'package:sickles_nhs_app/backend/auth_service.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/memberSide/event_view.dart';
 import 'package:date_format/date_format.dart';
-import 'package:sickles_nhs_app/event.dart';
-import 'package:sickles_nhs_app/important_dates.dart';
-import 'package:sickles_nhs_app/scanning_page.dart';
-import 'package:sickles_nhs_app/size_config.dart';
-import 'package:sickles_nhs_app/user.dart';
+import 'package:sickles_nhs_app/adminSide/important_dates.dart';
+import 'package:sickles_nhs_app/adminSide/scanning_page.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
-import 'package:sickles_nhs_app/view_students.dart';
-import 'package:sickles_nhs_app/notification_system.dart';
-import 'package:sickles_nhs_app/export_data.dart';
+import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'package:sickles_nhs_app/memberSide/notification_system.dart';
+import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
 
 class TheOpeningPage extends StatelessWidget {
@@ -341,8 +340,6 @@ class MiddleHomePageCards extends StatelessWidget {
 
 class BottonHalfHomePage extends StatelessWidget {
   BottonHalfHomePage({Key key}) : super (key: key);
-
-  final items = Event.getEvents();
 
   @override
   Widget build(BuildContext context) {
@@ -709,189 +706,50 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                 width: SizeConfig.blockSizeHorizontal * 90,
                 child: ListView(
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddNewEvent()
-                    ));
-                      },
-                        child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.add_circle,
-                              size: 35,
-                            ),
-                            Text("Add New Event", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),),
-                          ],
-                        )
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViewStudents()
-                        ));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.people,
-                              size: 35,
-                            ),
-                            Text("View Students", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),),
-                          ],
-                        )
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Notifications()
-                        ));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.notifications,
-                              size: 35,
-                            ),
-                            Text("Send Notification", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),),
-                          ],
-                        )
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ScanningPage()
-                        ));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.photo_camera,
-                              size: 35
-                            ),
-                            Text("Start Scanning", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),)
-                          ],
-                        ),
-                      )
-                    ),
-                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ApproveHoursPage()
-                        ));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.check_circle,
-                              size: 35,
-                            ),
-                            Text("Approve Hours", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),),
-                          ],
-                        )
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExportDataPage()));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget> [
-                            Icon(
-                              Icons.import_export,
-                              size: 35
-                            ),
-                            Text("Export Data", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600,
-                            ),),
-                          ]
-                        )
-                      )
-                    ),
-                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ImportantDateMain()
-                        ));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.date_range,
-                              size: 35,
-                            ),
-                            Text("Set Important Dates", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),),
-                          ],
-                        )
-                      ),
-                    ),
+                    adminTags(context, AddNewEvent(), Icons.add_circle, "Add New Event"),
+                    adminTags(context, ViewStudents(), Icons.people, "View Students"),
+                    adminTags(context, Notifications(), Icons.notifications, "Send Notification"),
+                    adminTags(context, ScanningPage(), Icons.photo_camera, "Start Scanning"),
+                    adminTags(context, ApproveHoursPage(), Icons.check_circle, "Approve Hours"),
+                    adminTags(context, ExportDataPage(), Icons.import_export, "Export Data"),
+                    adminTags(context, ImportantDateMain(), Icons.date_range, "Set Important Dates"),
                   ],
               ))
             ],
           ),
         );
 }
+}
+
+Widget adminTags(BuildContext context, Widget location, IconData theIcon, String theText) {
+  return Column(
+    children: <Widget>[
+      GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => location));
+        },
+        child: Card(
+          elevation: 8,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget> [
+              Icon(
+                theIcon,
+                size: 35,
+                color: Colors.black,
+              ),
+              Padding(padding: EdgeInsets.all(7)),
+              Text(theText, textAlign: TextAlign.center, style: TextStyle(
+                fontSize: SizeConfig.blockSizeVertical * 5,
+                fontWeight: FontWeight.w600,
+              ),),
+            ]
+          )
+        )
+      ),
+      Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5)),
+    ],
+  );
 }
 
 class OfficerMyEvents extends StatefulWidget {
@@ -936,35 +794,8 @@ class _OfficerMyEvents extends State<OfficerMyEvents> {
               Container(
                 height: SizeConfig.blockSizeVertical * 25,
                 width: SizeConfig.blockSizeHorizontal * 90,
-                child: ListView(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ScanningPage()
-                        ));
-                      },
-                      child: Card(
-                        elevation: 8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.photo_camera,
-                              size: 35
-                            ),
-                            Text("Start Scanning", textAlign: TextAlign.center, style: TextStyle(
-                              fontSize: SizeConfig.blockSizeVertical * 5,
-                              fontWeight: FontWeight.w600
-                            ),)
-                          ],
-                        ),
-                      )
-                    ),
-                  ],
-              ))
+                child: adminTags(context, ScanningPage(), Icons.photo_camera, "Start Scanning"),
+                )
             ],
           ),
         );
