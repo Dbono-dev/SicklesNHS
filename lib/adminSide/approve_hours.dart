@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sickles_nhs_app/backend/push_notification.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 
 class ApproveHoursPage extends StatelessWidget {
   @override
@@ -46,6 +48,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
   String pastDates;
   String pastHours;
   String currentHours;
+  int quarterHours;
   int x = 0;
 
   @override
@@ -128,18 +131,25 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                     IconButton(
                                       icon: Icon(Icons.check),
                                       color: Colors.green,
-                                      onPressed: () {
-                                        setState(() {
-                                          for(int i = 0; i < notTheSnapshot.data.length; i++) {
+                                      onPressed: () async {
+                                        DateFormat _format = new DateFormat("MM/dd/yyyy");
+                                        String quarter = await CurrentQuarter(_format.parse(snapshot.data[index].data['date'])).getQuarter();
+
+                                        for(int i = 0; i < notTheSnapshot.data.length; i++) {
                                             if(snapshot.data[index].data['uid'] == notTheSnapshot.data[i].data['uid']) {
                                               pastTitles = notTheSnapshot.data[i].data['event title'];
                                               pastDates = notTheSnapshot.data[i].data['event date'];
                                               currentHours = notTheSnapshot.data[i].data['hours'].toString();
                                               pastHours = notTheSnapshot.data[i].data['event hours'];
+                                              quarterHours = notTheSnapshot.data[i].data[quarter];
                                             }
                                           }
+
+                                        sendHoursRequestUpdate(int.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), int.parse(currentHours));
+
+                                        setState(() {
                                           sendEventToDatabase(snapshot.data[index].data['type'], snapshot.data[index].data['date'], snapshot.data[index].data['hours'], snapshot.data[index].data['uid'].toString(), pastTitles, pastDates, pastHours);
-                                          sendHoursRequestUpdate(int.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), int.parse(currentHours));
+                                          sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), int.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
                                           sendMessage("Hour Approval Update", "Your hours have been approved");
                                           sendDeleteHourRequest(snapshot.data[index].data['type']);
                                         });
@@ -201,6 +211,10 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
 
   Future sendDeleteHourRequest(String type) async {
     await DatabaseSubmitHours().deleteCompleteness(type);
+  }
+
+  Future sendHoursQuarterUpdate(String uid, int hours, int currentHours, String quarter) async {
+    await DatabaseService(uid: uid).updateHoursByQuarter(hours, currentHours, quarter);
   }
   
   Future sendMessage(String title, String body) async {

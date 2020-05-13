@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/custom_painter.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 
 class Leaderboard extends StatelessWidget {
   @override
@@ -30,17 +33,23 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
   Color left = Colors.black;
   Color right = Colors.white;
 
-  Future getPosts() async {
+  Future getPosts(String quarter) async {
     var firestore = Firestore.instance;
-    Query qn = firestore.collection("members").orderBy('hours', descending: true);
+    Query qn = firestore.collection("members").orderBy(quarter, descending: true);
     QuerySnapshot qns = await qn.getDocuments();
     return qns.documents;
+  }
+
+  String currentQuarter;
+
+  Future getQuarter() async {
+    currentQuarter = await CurrentQuarter(DateTime.now()).currentQuarter();
   }
 
   PageController _pageController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       key: _scaffoldKey,
       body: NotificationListener<OverscrollIndicatorNotification>(
@@ -83,14 +92,14 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                                       });
                                     }
                                   },
-                                  children: <Widget>[
+                                  children: <Widget> [
                                     ConstrainedBox(
                                       constraints: BoxConstraints.expand(),
-                                      child: theLeaderBoard(),
+                                      child: theLeaderBoard("quarter"),
                                     ),
                                     ConstrainedBox(
                                       constraints: BoxConstraints.expand(),
-                                      child: theLeaderBoard(),
+                                      child: theLeaderBoard("hours"),
                                     )
                                   ],
                                 ),
@@ -147,18 +156,15 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
     );
   }
 
-  Widget theLeaderBoard() {
+  Widget theLeaderBoard(String quarter) {
     return Container(
       child: Column(
         children: <Widget> [
           Padding(padding: EdgeInsets.all(5)),
           Container(
-
-          ),
-          Container(
             height: SizeConfig.blockSizeVertical * 65,
             child: FutureBuilder(
-              future: getPosts(),
+              future: getQuarter(),
               builder: (_, snapshot) {
               if(snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -168,16 +174,36 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                 );
               }
               else {
-                return Material(
-                  child: Container(
-                    height: SizeConfig.blockSizeVertical * 75,
-                    child: ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (_, index) {
-                        return ViewStudentsCard(snapshot.data[index], index);
-                      }
-                    ),
-                  ),
+                return FutureBuilder(
+                  future: getPosts(quarter),
+                  builder: (_, notTheSnapshot) {
+                    if(snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.green)
+                        )
+                      );
+                    }
+                    else {
+                      return Material(
+                        child: Container(
+                          height: SizeConfig.blockSizeVertical * 75,
+                          child: ListView.builder(
+                            itemCount: notTheSnapshot.data.length,
+                            itemBuilder: (_, index) {
+                              if(quarter.contains("hours")) {
+                                return ViewStudentsCard(notTheSnapshot.data[index], index, "hours");
+                              }
+                              else {
+                                print(currentQuarter);
+                                return ViewStudentsCard(notTheSnapshot.data[index], index, currentQuarter);
+                              }
+                            }
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 );
               }
             }
@@ -188,7 +214,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
     );
   }
 
-  Widget ViewStudentsCard(DocumentSnapshot snapshot, int index) {
+  Widget ViewStudentsCard(DocumentSnapshot snapshot, int index, String quarter) {
     Color color;
     String place;
 
@@ -235,7 +261,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Center(child: Text(snapshot.data['hours'].toString(), style: TextStyle(fontSize: SizeConfig.blockSizeVertical * 3.5),)),
+                    child: Center(child: Text(snapshot.data[quarter].toString(), style: TextStyle(fontSize: SizeConfig.blockSizeVertical * 3.5),)),
                   )
                 ]
               )

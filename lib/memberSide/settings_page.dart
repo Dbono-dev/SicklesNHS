@@ -32,6 +32,7 @@ class SettingsPageBody extends StatelessWidget {
           elevation: 10,
           onPressed: () {
             showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (BuildContext context) {
                 return Padding(

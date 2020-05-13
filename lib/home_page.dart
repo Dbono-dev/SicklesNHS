@@ -17,6 +17,7 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/memberSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
+import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 
 class TheOpeningPage extends StatelessWidget {
   TheOpeningPage({Key key}) : super (key: key);
@@ -88,9 +89,7 @@ class MiddleHomePage extends StatelessWidget {
                 int theLength = snapshot.data.length;
                 for(int i = 0; i < snapshot.data.length; i++) {
                   if(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)).isBefore(DateTime.now())) {
-                    print(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)));
                     theLength = theLength - 1;
-                    print(theLength);
                   }
                 }
                 if(theLength == 0) {
@@ -444,6 +443,8 @@ class BottomPageCards extends StatelessWidget {
   String title;
 
   Widget build(BuildContext context) {
+
+
   navigateToDetail(DocumentSnapshot post) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post,)));
   }

@@ -21,7 +21,7 @@ class DatabaseService {
       'uid': uid,
       'event title': "",
       'event date': "",
-      'event hours': ""
+      'event hours': "",
     });
   }
 
@@ -36,6 +36,19 @@ class DatabaseService {
     return await memberCollection.document(uid).updateData({
       'hours': currentHours + hours
     });
+  }
+
+  Future updateHoursByQuarter(int hours, int currentHours, String quarter) async {
+    try{
+      return await memberCollection.document(uid).updateData({
+        quarter: currentHours + hours
+      });
+    }
+    catch (e) {
+      return await memberCollection.document(uid).updateData({
+        quarter: hours
+      });
+    }
   }
 
   Future updateCompetedEvents(String title, String date, String hours, String pastTitle, String pastDate, String pastHours) async {

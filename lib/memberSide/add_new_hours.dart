@@ -165,6 +165,12 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                               if(value.isEmpty) {
                                 return 'Enter number';
                               }
+                              try {
+                                int.parse(value);
+                              }
+                              catch(e) {
+                                return 'Enter number';
+                              }
                               return null;
                             },
                           ),
