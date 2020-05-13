@@ -40,7 +40,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
     return qns.documents;
   }
 
-  String currentQuarter;
+  String currentQuarter = "";
 
   Future getQuarter() async {
     currentQuarter = await CurrentQuarter(DateTime.now()).currentQuarter();
@@ -175,9 +175,9 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
               }
               else {
                 return FutureBuilder(
-                  future: getPosts(quarter),
+                  future: getPosts(currentQuarter),
                   builder: (_, notTheSnapshot) {
-                    if(snapshot.connectionState == ConnectionState.waiting) {
+                    if(notTheSnapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(
                           valueColor: new AlwaysStoppedAnimation<Color>(Colors.green)
@@ -192,11 +192,10 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                             itemCount: notTheSnapshot.data.length,
                             itemBuilder: (_, index) {
                               if(quarter.contains("hours")) {
-                                return ViewStudentsCard(notTheSnapshot.data[index], index, "hours");
+                                return viewStudentsCard(notTheSnapshot.data[index], index, "hours");
                               }
                               else {
-                                print(currentQuarter);
-                                return ViewStudentsCard(notTheSnapshot.data[index], index, currentQuarter);
+                                return viewStudentsCard(notTheSnapshot.data[index], index, currentQuarter);
                               }
                             }
                           ),
@@ -214,7 +213,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
     );
   }
 
-  Widget ViewStudentsCard(DocumentSnapshot snapshot, int index, String quarter) {
+  Widget viewStudentsCard(DocumentSnapshot snapshot, int index, String quarter) {
     Color color;
     String place;
 
