@@ -155,9 +155,14 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                                                     child: ListView.builder(
                                                       itemCount: snapshot.data.length,
                                                       itemBuilder: (_, index) {
-                                                        return ListTile(
-                                                          title: Text(snapshot.data[index].data["title"])
-                                                        );
+                                                        if(snapshot.data.length == 0) {
+                                                          return Center(child: Text("No Events"),);
+                                                        }
+                                                        else {
+                                                          return ListTile(
+                                                            title: Text(snapshot.data[index].data["title"].toString())
+                                                          );
+                                                        }
                                                       }
                                                     )
                                                   )

@@ -117,10 +117,8 @@ class LoginPage extends StatefulWidget {
 class _MiddlePageLoginScreen extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
-  final _theFormKey = GlobalKey<FormState>();
   String _password;
   String _email;
-  String _theEmail;
   final AuthService _auth = AuthService();
 
   @override
@@ -173,62 +171,10 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
               Material(
                 color: Colors.transparent,
                 child: FlatButton(
+                  child: Text("Forgot Password/Reset Password", style: TextStyle(color: Colors.white),),
                   onPressed: () async {
-                    return showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      child: AlertDialog(
-                        title: Text("Reset Password"),
-                        content: Container(
-                          height: SizeConfig.blockSizeVertical * 15,
-                          child: Column(
-                            children: <Widget>[
-                              Text("Enter your Email"),
-                              Form(
-                                key: _theFormKey,
-                                child: TextFormField(
-                                  onSaved: (value) => _theEmail = value,
-                                  validator: (val) => val.isEmpty ? 'Enter an email': null,
-                                  keyboardType: TextInputType.emailAddress,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("Cancel", style: TextStyle(color: Colors.green),)
-                              ),
-                              FlatButton(
-                                onPressed: () async {
-                                  if(_theFormKey.currentState.validate()) {
-                                    _theFormKey.currentState.save();
-                                    try {
-                                      await _auth.resetPassword(_theEmail);
-                                    }
-                                    on PlatformException catch (error) {
-                                      print(error.message);
-                                      Navigator.of(context).pop();
-                                    }
-                                  }
-                                },
-                                child: Text("Ok", style: TextStyle(color: Colors.green))
-                              ),
-                            ],
-                          )
-                        ],
-                      )
-                    );
+                    resetPassword(context);
                   },
-                  child: Text(
-                    "Forgot Password/Reset Password", 
-                    style: TextStyle(color: Colors.white)
-                  ),
                 ),
               ),
               Padding(padding: EdgeInsets.all(1),),
@@ -263,3 +209,64 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
     );
   }
 }
+
+  Future resetPassword(BuildContext context) {
+    final _theFormKey = GlobalKey<FormState>();
+    String _theEmail;
+    final AuthService _auth = AuthService();
+
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      child: AlertDialog(
+        title: Text("Reset Password"),
+        content: Container(
+          height: SizeConfig.blockSizeVertical * 15,
+          child: Column(
+            children: <Widget>[
+              Text("Enter your Email"),
+              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+              Form(
+                key: _theFormKey,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Email..."
+                  ),
+                  onSaved: (value) => _theEmail = value,
+                  validator: (val) => val.isEmpty ? 'Enter an email': null,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Cancel", style: TextStyle(color: Colors.green),)
+              ),
+              FlatButton(
+                onPressed: () async {
+                  if(_theFormKey.currentState.validate()) {
+                    _theFormKey.currentState.save();
+                    try {
+                      await _auth.resetPassword(_theEmail);
+                    }
+                    on PlatformException catch (error) {
+                      print(error.message);
+                      Navigator.of(context).pop();
+                    }
+                  }
+                },
+                child: Text("Ok", style: TextStyle(color: Colors.green))
+              ),
+            ],
+          )
+        ],)
+      );
+    }

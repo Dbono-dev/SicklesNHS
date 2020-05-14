@@ -174,6 +174,9 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                 );
               }
               else {
+                if(quarter.contains("hours")) {
+                  currentQuarter = "hours";
+                }
                 return FutureBuilder(
                   future: getPosts(currentQuarter),
                   builder: (_, notTheSnapshot) {
@@ -191,12 +194,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                           child: ListView.builder(
                             itemCount: notTheSnapshot.data.length,
                             itemBuilder: (_, index) {
-                              if(quarter.contains("hours")) {
-                                return viewStudentsCard(notTheSnapshot.data[index], index, "hours");
-                              }
-                              else {
-                                return viewStudentsCard(notTheSnapshot.data[index], index, currentQuarter);
-                              }
+                              return viewStudentsCard(notTheSnapshot.data[index], index, currentQuarter);
                             }
                           ),
                         ),
