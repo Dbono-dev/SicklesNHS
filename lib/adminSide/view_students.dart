@@ -5,6 +5,7 @@ import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 
 class ViewStudents extends StatelessWidget {
   @override
@@ -15,6 +16,7 @@ class ViewStudents extends StatelessWidget {
           children: <Widget> [
             TopHalfViewStudentsPage(),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+            TopMiddleViewStudentPage(),
             MiddleViewStudentsPage(),
           ]
         )
@@ -94,6 +96,73 @@ class TopHalfViewStudentsPage extends StatelessWidget {
   }
 }
 
+class TopMiddleViewStudentPage extends StatelessWidget {
+  Future getPosts() async {
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("members").getDocuments();
+    return qn.documents;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int yes = 0;
+    int no = 0;
+
+    String currentQuarter = "";
+
+    Future getQuarter() async {
+      currentQuarter = await CurrentQuarter(DateTime.now()).currentQuarter();
+    }
+
+    return Container(
+      child: FutureBuilder(
+        future: getPosts(),
+        builder: (_, snapshot2) {
+          if(snapshot2.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green),);
+          }
+          else {
+            return FutureBuilder(
+              future: getQuarter(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green),);
+                }
+                else {
+                  for(int i = 0; i < snapshot2.data.length; i++) {
+                    if(snapshot2.data[i].data[currentQuarter] >= 6) {
+                      yes = yes + 1;
+                    }
+                    else { 
+                      no = no + 1;
+                    }
+                  }
+                  return Card(
+                    child: Column(
+                      children: <Widget>[
+                        Text("Current Status of this Quarter"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Icon(Icons.check, color: Colors.green,),
+                            Text("Completed: " + yes.toString()),
+                            Icon(Icons.close, color: Colors.red,),
+                            Text("Not Completed: " + no.toString())
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }
+            );
+          }
+        },
+      )
+    );
+  }
+}
+
 class MiddleViewStudentsPage extends StatefulWidget {
 
   @override
@@ -115,49 +184,10 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    int yes = 0;
-    int no = 0;
-
     return Container(
-      height: SizeConfig.blockSizeVertical * 78,
+      height: SizeConfig.blockSizeVertical * 70.5,
       child: Column(
         children: <Widget>[
-          Container(
-            child: FutureBuilder(
-              future: getPosts(),
-              builder: (_, snapshot) {
-                if(snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                else {
-                  for(int i = 0; i < snapshot.data.length; i++) {
-                    if(snapshot.data[i].data['hours'] >= 6) {
-                      yes = yes + 1;
-                    }
-                    else {
-                      no = no + 1;
-                    }
-                  }
-                  return Card(
-                    child: Column(
-                      children: <Widget>[
-                        Text("Current Status of this Quarter"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Icon(Icons.check, color: Colors.green,),
-                            Text("Completed: " + yes.toString()),
-                            Icon(Icons.close, color: Colors.red,),
-                            Text("Not Completed: " + no.toString())
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-            )
-          ),
           Container(
             child: TextFormField(
               initialValue: search,

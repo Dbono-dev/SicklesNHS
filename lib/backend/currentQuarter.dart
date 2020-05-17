@@ -14,7 +14,7 @@ class CurrentQuarter {
 
   Future<String> currentQuarter() async {
     DateFormat _format = new DateFormat("MM-dd-yyyy");
-
+    
     Future getQuarterDate(String documentName) async {
       DateTime temp;
       var document = Firestore.instance.collection("Important Dates").document(documentName);

@@ -1,12 +1,6 @@
-import 'dart:ffi';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
 
 class ScanningPage extends StatelessWidget {
   @override
@@ -57,10 +51,9 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
             ),
             child: FlatButton(
               onPressed: () {
-                //Navigator.push(context, 
-                  //MaterialPageRoute(builder: (context) => QRCodeCamera()
-                //));
-                _scanBytes();
+                Navigator.push(context, 
+                  MaterialPageRoute(builder: (context) => QRCodeCamera()
+                ));
               },
             child: Text("Start Scanning", textAlign: TextAlign.center,
               style: TextStyle(
@@ -77,34 +70,16 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
   }
 }
 
-  Future _scanBytes() async {
-    File file = await ImagePicker.pickImage(source: ImageSource.camera);
-    Uint8List bytes = file.readAsBytesSync();
-    String barcode = await scanner.scanBytes(bytes);
-    print(barcode);
-  }
-
-/*class QRCodeCamera extends StatefulWidget {
+class QRCodeCamera extends StatefulWidget {
 
   @override
   _QRCodeCameraState createState() => _QRCodeCameraState();
 }
 
 class _QRCodeCameraState extends State<QRCodeCamera> {
-  GlobalKey qrKey = GlobalKey();
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   var qrText = "";
-
-  QRViewController controller;
-
-    void _onQRViewCreate(QRViewController controller) {
-      this.controller = controller;
-      controller.scannedDataStream.listen((scanData) {
-        setState(() {
-          qrText = scanData;
-        });
-      });
-    }
 
 
   @override
@@ -138,11 +113,4 @@ class _QRCodeCameraState extends State<QRCodeCamera> {
       )
     );
   }
-
-    @override
-    void dispose() {
-      controller?.dispose();
-      super.dispose();
-    }
 }
-*/

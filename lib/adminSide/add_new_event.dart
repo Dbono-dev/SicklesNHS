@@ -620,7 +620,12 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
 
                             if(form.validate()) {
                               try {
-                                //_photoUrl = await firebaseStorageRef.getDownloadURL();
+                                try {
+                                _photoUrl = await firebaseStorageRef.getDownloadURL();
+                                }
+                                catch (e) {
+                                  
+                                }
                                 dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
                                 if(result == null) {
                                   print("Fill in all the forms.");

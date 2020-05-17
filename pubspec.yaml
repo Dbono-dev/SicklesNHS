@@ -37,7 +37,6 @@ dependencies:
   flushbar: ^1.10.0
   transparent_image: ^1.0.0
   jiffy: ^3.0.1
-  qrscan: ^0.2.17
   flutter_rounded_date_picker: ^1.0.4
   http: ^0.12.0+3
   intl: ^0.16.1
