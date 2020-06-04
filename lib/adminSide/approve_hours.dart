@@ -150,7 +150,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                         setState(() {
                                           sendEventToDatabase(snapshot.data[index].data['type'], snapshot.data[index].data['date'], snapshot.data[index].data['hours'], snapshot.data[index].data['uid'].toString(), pastTitles, pastDates, pastHours);
                                           sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), int.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
-                                          sendMessage("Hour Approval Update", "Your hours have been approved");
+                                          sendMessage("Hour Approval Update", "Your hours have been approved", context);
                                           sendDeleteHourRequest(snapshot.data[index].data['type']);
                                         });
                                       },
@@ -161,7 +161,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                       onPressed: () {
                                         setState(() {
                                           sendDeleteHourRequest(snapshot.data[index].data['type']);
-                                          sendMessage("Hour Approval Update", "Your hours have been declined");
+                                          sendMessage("Hour Approval Update", "Your hours have been declined", context);
                                         });
                                       },
                                     )
@@ -217,7 +217,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
     await DatabaseService(uid: uid).updateHoursByQuarter(hours, currentHours, quarter);
   }
   
-  Future sendMessage(String title, String body) async {
-    await PushNotificationService().sendAndRetrieveMessage(title, body);
+  Future sendMessage(String title, String body, BuildContext context) async {
+    await PushNotificationService().sendAndRetrieveMessage(title, body, context);
   }
 }

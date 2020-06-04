@@ -377,10 +377,12 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                 child: GestureDetector(
                   onTap: () async {
                     _fourthformKey.currentState.save();
-                    print("works");
                     final response = await PushNotificationService().sendAndRetrieveMessage(
-                      _title, _body
+                      _title, _body, context
                     );
+                    if(response == true) {
+                      print("works");
+                    }
                     _fourthformKey.currentState.reset();
                   },
                 child: Center(
@@ -399,7 +401,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
     );
   }
 
-  Future sendMessage(String title, String body) async {
-    await PushNotificationService().sendAndRetrieveMessage(title, body);
+  Future sendMessage(String title, String body, BuildContext context) async {
+    await PushNotificationService().sendAndRetrieveMessage(title, body, context);
   }
 }

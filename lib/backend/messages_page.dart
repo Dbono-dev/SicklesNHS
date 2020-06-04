@@ -35,7 +35,6 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
       _fcm.requestNotificationPermissions(IosNotificationSettings());
     }
 
-    _fcm.onTokenRefresh.listen(sendTokenToServer);
     _fcm.getToken();
 
     _fcm.subscribeToTopic('all');
@@ -75,8 +74,4 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
     title: Text(message.title),
     subtitle: Text(message.body),
   );
-
-  void sendTokenToServer(String fcmToken) {
-    print('Token: $fcmToken');
-  }
 }
