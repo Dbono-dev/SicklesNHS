@@ -35,9 +35,8 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
 
   Future getPosts(String quarter) async {
     var firestore = Firestore.instance;
-    Query qn = firestore.collection("members").orderBy(quarter, descending: true);
-    QuerySnapshot qns = await qn.getDocuments();
-    return qns.documents;
+    QuerySnapshot qn = await firestore.collection("members").orderBy(quarter, descending: true).getDocuments();
+    return qn.documents;
   }
 
   String currentQuarter = "";

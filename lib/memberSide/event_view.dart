@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
 import 'package:sickles_nhs_app/memberSide/qr_code_page.dart';
@@ -22,14 +25,18 @@ class EventPageView extends StatelessWidget {
         children: <Widget>[
           Container(color: Colors.white,),
           Container(
-              child: Column(
-              children: <Widget>[
-                TopHalfViewEventsPage(post: post),
-                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
-                MiddleEventViewPage(post: post,),
-                Spacer(),
-                BottomEventViewPage(post: post,),
+              child: SingleChildScrollView(
+                child: Column(
+                children: <Widget>[
+                  TopHalfViewEventsPage(post: post),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
+                  MiddleEventViewPage(post: post,),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+                  BottomEventViewPage(post: post,),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+                  BottomBottomEventViewPage()
         ], ),
+              ),
           )
           ],
         ),
@@ -497,6 +504,7 @@ class BottomEventViewPage extends StatelessWidget {
                       var participates = post.data['participates'];
                       participates.add(userData.firstName + " " + userData.lastName);
                       dynamic result = sendEventToDatabases(participates, title);
+                      dynamic result2 = sendBugToEmail(title, post);
                     }
                   },
                     child: Text(differentSignUp, style: TextStyle(
@@ -515,8 +523,47 @@ class BottomEventViewPage extends StatelessWidget {
     );
   }
 
+
   Future sendEventToDatabases(var participate, String title) async {
     await DatabaseEvent().updateEvent(participate, title);
   }
+
+  Future sendBugToEmail(String title, DocumentSnapshot post) async {
+    final _auth = FirebaseAuth.instance;
+    var currentUser = await _auth.currentUser();
+    String userEmail = currentUser.email;
+
+    String userName = "dbosports2";
+    String password = "Dbo7030217";
+
+    final smtpServer = gmail(userName, password);
+
+    final message = Message()
+    ..from = Address(userName, 'Sickles NHS Developer')
+    ..recipients.add(userEmail)
+    ..subject = "Signed up for " + title
+    ..text = "Thank you for signing up for " + title + ". \n Event Start Time: " + post.data['start time'].toString() + ":" + post.data['start time minutes'].toString();
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+    }
+  }
 }
 
+class BottomBottomEventViewPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,)
+          ],
+        )
+      ),
+    );
+  }
+}
