@@ -48,52 +48,34 @@ class MiddleHomePage extends StatelessWidget {
       return qn.documents;
     }
 
-    Future getClubDates() async {
-      var firestore = Firestore.instance;
-      QuerySnapshot qn = await firestore.collection("Important Dates").getDocuments();
-      return qn.documents;
-    }
-
     DateFormat format = new DateFormat("MM/dd/yyyy");
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: SizeConfig.blockSizeVertical * 45,
-          padding: EdgeInsets.all(10),
-          child: FutureBuilder(
-            future: getPosts(),
-            builder: (_, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
-                  ),
-                );
-              }
-              else if (snapshot.data.length == 0) {
-                return Material(
-                    child: Center(
-                    child: Text("NO EVENTS", style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 45
-                    )),
-                  ),
-                );
-              }
-              else {
-                int theLength = snapshot.data.length;
-                for(int i = 0; i < snapshot.data.length; i++) {
-                  if(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)).isBefore(DateTime.now())) {
-                    theLength = theLength - 1;
-                  }
+    final user = Provider.of<User>(context);
+
+    return Container(
+      height: SizeConfig.blockSizeVertical * 45,
+      padding: EdgeInsets.all(10),
+      child: StreamBuilder<UserData>(
+        stream: DatabaseService(uid: user.uid).userData,
+        builder: (context, snapshot) {
+          if(snapshot.hasData) {
+            UserData userData = snapshot.data;
+            return FutureBuilder(
+              future: getPosts(),
+              builder: (_, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                    ),
+                  );
                 }
-                if(theLength == 0) {
+                else if (snapshot.data.length == 0) {
                   return Material(
-                    child: Center(
+                      child: Center(
                       child: Text("NO EVENTS", style: TextStyle(
                         color: Colors.green,
                         fontSize: 45
@@ -102,24 +84,45 @@ class MiddleHomePage extends StatelessWidget {
                   );
                 }
                 else {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (_, index) {
-                      if(format.parse(snapshot.data[index].data['date']).isAfter(DateTime.now())) {
-                        return MiddleHomePageCards(post: snapshot.data[index]);
-                      }
-                      else {
-                        return Container();
-                      }
+                  int theLength = snapshot.data.length;
+                  for(int i = 0; i < snapshot.data.length; i++) {
+                    if(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)).isBefore(DateTime.now())) {
+                      theLength = theLength - 1;
                     }
-                  );
+                    else if(snapshot.data[i].data['participates'].contains(userData.firstName + " " + userData.lastName)) {
+                      theLength = theLength - 1;
+                    }
+                  }
+                  if(theLength == 0) {
+                    return Material(
+                      child: Center(
+                        child: Text("NO EVENTS", style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 45
+                        )),
+                      ),
+                    );
+                  }
+                  else {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (_, index) {
+                        if(format.parse(snapshot.data[index].data['date']).isAfter(DateTime.now())) {
+                          return MiddleHomePageCards(post: snapshot.data[index]);
+                        }
+                        else {
+                          return Container();
+                        }
+                      }
+                    );
+                  }
                 }
               }
-            }
-          )
-        )
-      ],
+            );
+          }
+        }
+      )
     );
   }
 }
@@ -499,6 +502,14 @@ class StudentMyEvents extends StatefulWidget {
 }
 
 class _StudentMyEvents extends State<StudentMyEvents> {
+
+  Future getStudentCards() async {
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("Important Dates").getDocuments();
+    QuerySnapshot otherQn = await firestore.collection("events").getDocuments();
+    return qn.documents + otherQn.documents;
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -560,86 +571,50 @@ class _StudentMyEvents extends State<StudentMyEvents> {
               Container(
               height: SizeConfig.blockSizeVertical * 27,
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: FutureBuilder(
-                      future: MiddleHomePage().getClubDates(),
-                      builder: (_, snapshot) {
-                        if(snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                            )
-                          );
+              child: FutureBuilder(
+                future: getStudentCards(),
+                builder: (_, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                      )
+                    );
+                  }
+                  else {
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data.length,
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      itemBuilder: (_, index) {
+                        if(snapshot.data[index].data['type'] == "clubDates") {
+                          x += 1;
+                          if(_clubDate(snapshot.data[index]) - _whithin10Days(snapshot.data[index]) <= 10 && _clubDate(snapshot.data[index]) > _whithin10Days(snapshot.data[index])) {
+                            return BottomPageCards(post: snapshot.data[index]);
+                          }
+                          else {
+                            return Container(height: 0,);
+                          }
                         }
                         else {
-                          return ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (_, index) {
-                              if(snapshot.data[index].data['type'] == "clubDates") {
-                                x += 1;
-                                if(_clubDate(snapshot.data[index]) - _whithin10Days(snapshot.data[index]) <= 10 && _clubDate(snapshot.data[index]) > _whithin10Days(snapshot.data[index])) {
-                                  return BottomPageCards(post: snapshot.data[index]);
-                                }
-                                else {
-                                  return Container(height: 0,);
-                                }
-                              }
-                              else {
-                                return Container(height: 0,);
-                              }
-                              
+                          if(snapshot.data[index].data['type'] == "Service Event") {
+                            if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+                              return BottomPageCards(post: snapshot.data[index]);
                             }
-                          );
+                            else {
+                              return Container();
+                            }
+                          }
+                          else {
+                            return Container();
+                          }
                         }
                         
                       }
-                    ),
-                  ),
-                  Expanded(
-                    child: FutureBuilder(
-                      future: MiddleHomePage().getPosts(),
-                      builder: (_, snapshot) {
-                        if(snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                            ),
-                          );
-                        }
-                        else if (snapshot.data.length == 0) {
-                          return Material(
-                              child: Center(
-                              child: Text("NO EVENTS", style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 45
-                              )),
-                            ),
-                          );
-                        }
-                        else {
-                          return ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (_, index) {
-                              if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
-                                return BottomPageCards(post: snapshot.data[index]);
-                              }
-                              else {
-                                return Container(
-                                  height: 0,
-                                  width: 0,
-                                );
-                              }
-                            }
-                          );
-                        }
-                      }
-                    ),
-                  ),
-                ],
+                    );
+                  }
+                  
+                }
               )
           ),
               ],
@@ -705,6 +680,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                 height: SizeConfig.blockSizeVertical * 25,
                 width: SizeConfig.blockSizeHorizontal * 90,
                 child: ListView(
+                  padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                   children: <Widget>[
                     adminTags(context, AddNewEvent(), Icons.add_circle, "Add New Event"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),

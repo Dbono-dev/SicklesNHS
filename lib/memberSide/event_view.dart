@@ -33,8 +33,8 @@ class EventPageView extends StatelessWidget {
                   MiddleEventViewPage(post: post,),
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
                   BottomEventViewPage(post: post,),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-                  BottomBottomEventViewPage()
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
+                  BottomBottomEventViewPage(post: post,)
         ], ),
               ),
           )
@@ -106,20 +106,23 @@ class TopHalfViewEventsPage extends StatelessWidget {
                     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 22),
                   ),
                   editIcon(),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 1)),
-                  Container(
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.grey,
-                      elevation: 8,
-                      onPressed: () {
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => AccountProfile(type: "student",)
-                          ));
-                      },
-                      child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
-                        color: Colors.white,
-                        fontSize: SizeConfig.blockSizeVertical * 5.5
-                      ),),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: Container(
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.grey,
+                        elevation: 8,
+                        onPressed: () {
+                          Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student",)
+                            ));
+                        },
+                        child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.blockSizeVertical * 5.5
+                        ),),
+                      ),
                     ),
                   )
                 ],
@@ -464,9 +467,9 @@ class BottomEventViewPage extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
-          //if(post.data['participates'].contains(userData.firstName + " " + userData.lastName)) {
-            //differentSignUp = "";
-          //}
+          if(post.data['participates'].contains(userData.firstName + " " + userData.lastName) && (differentSignUp != "Check In" || differentSignUp != "Check Out")) {
+            differentSignUp = "";
+          }
           return Material(
             type: MaterialType.transparency,
             child: Container(
@@ -554,13 +557,43 @@ class BottomEventViewPage extends StatelessWidget {
 }
 
 class BottomBottomEventViewPage extends StatelessWidget {
+
+  BottomBottomEventViewPage({this.post});
+
+  DocumentSnapshot post;
+  List participatesList = new List();
+
   @override
   Widget build(BuildContext context) {
+    participatesList = post.data['participates'];
+
     return Material(
+      color: Colors.transparent,
       child: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,)
+            Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,),
+            Container(
+              height: SizeConfig.blockSizeVertical * 45,
+              child: ListView.builder(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                itemCount: participatesList.length,
+                itemBuilder: (_, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
+                    child: Card(
+                      elevation: 10,
+                      child: ListTile(
+                        leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20),),
+                        title: Text(participatesList[index])
+                      )
+                    ),
+                  );
+                },
+              ),
+            )
           ],
         )
       ),
