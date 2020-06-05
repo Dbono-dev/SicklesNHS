@@ -10,6 +10,7 @@ import 'package:sickles_nhs_app/memberSide/settings_page.dart';
 import 'package:sickles_nhs_app/backend/messages_page.dart';
 import 'package:sickles_nhs_app/memberSide/leaderboard.dart';
 import 'package:intl/intl.dart';
+import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class AccountProfile extends StatefulWidget {
   AccountProfile({Key key, this.posts, this.type, this.name, this.uid, this.hours}) : super (key: key);
@@ -28,6 +29,8 @@ class _AccountProfileState extends State<AccountProfile> {
   bool editing;
   String adjustedTime = (DateTime(DateTime.now().year, DateTime.now().month, (DateTime.now().day + 1), DateTime.now().minute, DateTime.now().second)).toString();
   List completedEvents = new List();
+
+  String newHour;
 
   Future getCompletedHours(String uid) async {
     var firestone = Firestore.instance;
@@ -58,6 +61,7 @@ class _AccountProfileState extends State<AccountProfile> {
   }
 
   Widget icons(BuildContext context) {
+    print(widget.uid);
     if(widget.type == "admin") {
       return Row(
         children: <Widget>[
@@ -106,7 +110,13 @@ class _AccountProfileState extends State<AccountProfile> {
           Padding(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),
             child: editing == true ? RaisedButton(
-              onPressed: () {
+              onPressed: () async {
+                List eventHoursList = new List();
+                eventHoursList = widget.posts.data['event hours'];
+                for(int i = 0; i < global.theMap.length; i++) {
+                  eventHoursList[i] = global.theMap[i];
+                }
+                await DatabaseService(uid: widget.posts.data['uid']).updateCompetedEvents(widget.posts.data['event title'], widget.posts.data['event date'], eventHoursList);
                 setState(() {
                   editing = false;
                 });
@@ -241,9 +251,9 @@ class _AccountProfileState extends State<AccountProfile> {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
 
-    List<String> title = new List<String> ();
-    List<String> date = new List<String> ();
-    List<String> theHours = new List<String> ();
+    List title = new List ();
+    List date = new List ();
+    List theHours = new List ();
     List<DateTime> thenewDate = new List<DateTime>();
 
     DateTime startOfSchool;
@@ -321,11 +331,16 @@ class _AccountProfileState extends State<AccountProfile> {
                 );
               }
               else {
-                String howManyEvents;
                 for(int theIndex = 0; theIndex < snapshot.data.length; theIndex++) {
                   if(snapshot.data[theIndex].data['first name'] + snapshot.data[theIndex].data['last name'] == firstName + lastName) {
-                    howManyEvents = snapshot.data[theIndex].data['event title'];
-                    if(howManyEvents == "" || howManyEvents == null) {
+                    title = snapshot.data[theIndex].data['event title'];
+                    date = snapshot.data[theIndex].data['event date'];
+                    theHours = snapshot.data[theIndex].data['event hours'];
+
+                    for(int i = 0; i < date.length; i++) {
+                      thenewDate.add(format.parse(date[i]));
+                    }
+                    /*if(howManyEvents == "" || howManyEvents == null) {
 
                     }
                     else {
@@ -339,7 +354,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           title.add(howManyEvents);
                         }
                       }
-                    }
+                    }*/
                   }
                 }
 
@@ -428,50 +443,6 @@ class _AccountProfileState extends State<AccountProfile> {
                             );
                           }
                           else {
-                            String theEventDate;
-                            String theEventHours;
-
-                            for(int theIndex = 0; theIndex < snapshot.data.length; theIndex++) {
-                              if(snapshot.data[theIndex].data['first name'] + snapshot.data[theIndex].data['last name'] == firstName + lastName) {
-                                theEventDate = snapshot.data[theIndex].data['event date'];
-                                theEventHours = snapshot.data[theIndex].data['event hours'];
-
-                                if(theEventDate == "" || theEventDate == null || theEventHours == "" || theEventHours == null) {
-
-                                }
-                                else {
-                                  for(int i = 0; i < theEventDate.length; i++) {
-                                    if(theEventDate.substring(0, i).contains("-")) {
-                                      date.add(theEventDate.substring(0, i - 1));
-                                      theEventDate = theEventDate.substring(i);
-                                      i = 0;
-                                    }
-                                    else if(i == theEventDate.length - 1) {
-                                      date.add(theEventDate);
-                                    }
-                                  }
-
-
-                                  for(int i = 0; i < date.length; i++) {
-                                    thenewDate.add(format.parse(date[i]));
-                                  }
-
-                                  //thenewDate.sort((a, b) => a.compareTo(b));
-
-                                  for(int i = 0; i <= theEventHours.length; i++) {
-                                    if(theEventHours.substring(0, i).contains("-")) {
-                                      theHours.add(theEventHours.substring(0, i - 1));
-                                      theEventHours = theEventHours.substring(i);
-                                      i = 0;
-                                    }
-                                    else if(i == theEventHours.length) {
-                                      theHours.add(theEventHours);
-                                    }
-                                  }
-                                }
-                                
-                              }
-                            }
                             if(title.length == 0) {
                               return Material(
                                 child: Center(
@@ -517,11 +488,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                       itemBuilder: (_, index) {
                                         if(thenewDate[index].isAfter(startOfSchool) && thenewDate[index].isBefore(firstQuarter)) {
                                           if(thefirstQuarter == true) {
-                                            return AccountProfileCards(
+                                            return accountProfileCards(
                                               title: title[index],
                                               date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
                                                   editing: editing,
+                                                  index: index
                                             );
                                           }
                                           else {
@@ -529,11 +501,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                             return Column(
                                               children: <Widget>[
                                                 quarterPages("First"),
-                                                AccountProfileCards(
+                                                accountProfileCards(
                                                   title: title[index],
                                                   date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
+                                                  index: index
                                                 )
                                               ],
                                             );
@@ -541,11 +514,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                         }
                                         if(thenewDate[index].isAfter(firstQuarter) && thenewDate[index].isBefore(secondQuarter)) {
                                           if(thesecondQuarter == true) {
-                                            return AccountProfileCards(
+                                            return accountProfileCards(
                                               title: title[index],
                                               date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
-                                                  editing: editing,
+                                              editing: editing,
+                                              index: index
                                             );
                                           }
                                           else {
@@ -553,11 +527,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                             return Column(
                                               children: <Widget>[
                                                 quarterPages("Third"),
-                                                AccountProfileCards(
+                                                accountProfileCards(
                                                   title: title[index],
                                                   date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
+                                                  index: index
                                                 )
                                               ],
                                             );
@@ -565,11 +540,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                         }
                                         if(thenewDate[index].isAfter(secondQuarter) && thenewDate[index].isBefore(thirdQuarter)) {
                                           if(thethirdQuarter == true) {
-                                            return AccountProfileCards(
+                                            return accountProfileCards(
                                               title: title[index],
                                               date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
                                                   editing: editing,
+                                                  index: index
                                             );
                                           }
                                           else {
@@ -577,11 +553,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                             return Column(
                                               children: <Widget>[
                                                 quarterPages("Third"),
-                                                AccountProfileCards(
+                                                accountProfileCards(
                                                   title: title[index],
                                                   date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
+                                                  index: index
                                                 )
                                               ],
                                             );
@@ -589,11 +566,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                         }
                                         if(thenewDate[index].isAfter(thirdQuarter) && thenewDate[index].isBefore(forthQuarter)) {
                                           if(theforthQuarter == true) {
-                                            return AccountProfileCards(
+                                            return accountProfileCards(
                                               title: title[index],
                                               date: date[index].toString().substring(0, 10),
                                               hours: theHours[index],
-                                                  editing: editing,
+                                              editing: editing,
+                                              index: index
                                             );
                                           }
                                           else {
@@ -601,11 +579,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                             return Column(
                                               children: <Widget>[
                                                 quarterPages("Fourth"),
-                                                AccountProfileCards(
+                                                accountProfileCards(
                                                   title: title[index],
                                                   date: date[index].toString().substring(0, 10),
                                                   hours: theHours[index],
                                                   editing: editing,
+                                                  index: index
                                                 )
                                               ],
                                             );
@@ -652,16 +631,7 @@ class _AccountProfileState extends State<AccountProfile> {
   }
 
 
-class AccountProfileCards extends StatelessWidget {
-  AccountProfileCards({Key key, this.title, this.date, this.hours, this.editing}) : super (key: key);
-
-  final String title;
-  final String date;
-  final String hours;
-  final bool editing;
-
-  @override
-  Widget build(BuildContext context) {
+Widget accountProfileCards({Key key, String title, String date, String hours, bool editing, int index}) {
     return Material(
       child: Container(
         height: SizeConfig.blockSizeVertical * 6,
@@ -682,9 +652,15 @@ class AccountProfileCards extends StatelessWidget {
                     width: SizeConfig.blockSizeHorizontal * 7.5,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                      child: TextFormField(
-                        initialValue: hours,
-                        style: TextStyle(fontSize: 20),
+                      child: Form(
+                        child: TextFormField(
+                          onChanged: (val) {
+                            Map<int, String> details = {index: val.toString()};
+                            global.theMap = details;
+                          },
+                          initialValue: hours,
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
                     ),
                   ) : Text("+" + hours, style: TextStyle(color: Colors.green, fontSize: 20),)
@@ -695,4 +671,3 @@ class AccountProfileCards extends StatelessWidget {
       ),
     );
   }
-}

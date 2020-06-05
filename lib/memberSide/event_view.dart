@@ -458,7 +458,7 @@ class BottomEventViewPage extends StatelessWidget {
       else {
         differentSignUp = "Sign Up";
       }
-      if(post.data['participates'].length == post.data['max participates']) {
+      if(post.data['participates'].length == int.parse(post.data['max participates'])) {
         differentSignUp = "";
       }
 

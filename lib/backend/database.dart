@@ -51,21 +51,12 @@ class DatabaseService {
     }
   }
 
-  Future updateCompetedEvents(String title, String date, String hours, String pastTitle, String pastDate, String pastHours) async {
-    try {
-      return await memberCollection.document(uid).updateData({
-        'event title': pastTitle + "-" + title,
-        'event date': pastDate + "-" + date,
-        'event hours': pastHours + "-" + hours,
-      });  
-    }
-    catch (e) {
-      return await memberCollection.document(uid).updateData({
-        'event title': title, 
-        'event date': date,
-        'event hours': hours,
-      });
-    }
+  Future updateCompetedEvents(List title, List date, List hours) async {
+    return await memberCollection.document(uid).updateData({
+      'event title': title,
+      'event date': date,
+      'event hours': hours
+    });
   }
   
 

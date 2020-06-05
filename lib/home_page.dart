@@ -17,6 +17,7 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/memberSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
+import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class TheOpeningPage extends StatelessWidget {
   TheOpeningPage({Key key}) : super (key: key);
@@ -121,6 +122,9 @@ class MiddleHomePage extends StatelessWidget {
                 }
               }
             );
+          }
+          else {
+            return CircularProgressIndicator();
           }
         }
       )

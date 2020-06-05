@@ -44,9 +44,9 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
       QuerySnapshot qn = await firestore.collection("members").getDocuments();
       return qn.documents;
   }
-  String pastTitles;
-  String pastDates;
-  String pastHours;
+  List pastTitles = new List();
+  List pastDates = new List();
+  List pastHours = new List();
   String currentHours;
   int quarterHours;
   int x = 0;
@@ -137,18 +137,24 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
 
                                         for(int i = 0; i < notTheSnapshot.data.length; i++) {
                                             if(snapshot.data[index].data['uid'] == notTheSnapshot.data[i].data['uid']) {
-                                              pastTitles = notTheSnapshot.data[i].data['event title'];
-                                              pastDates = notTheSnapshot.data[i].data['event date'];
+                                              if(notTheSnapshot.data[i].data['event title'] != null) {
+                                                pastTitles = notTheSnapshot.data[i].data['event title'];
+                                                pastDates = notTheSnapshot.data[i].data['event date'];
+                                                pastHours = notTheSnapshot.data[i].data['event hours'];
+                                              }
                                               currentHours = notTheSnapshot.data[i].data['hours'].toString();
-                                              pastHours = notTheSnapshot.data[i].data['event hours'];
                                               quarterHours = notTheSnapshot.data[i].data[quarter];
                                             }
                                           }
+                                          
+                                          pastTitles.add(snapshot.data[index].data['type']);
+                                          pastDates.add(snapshot.data[index].data['date']);
+                                          pastHours.add(snapshot.data[index].data['hours']);
 
                                         sendHoursRequestUpdate(int.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), int.parse(currentHours));
 
                                         setState(() {
-                                          sendEventToDatabase(snapshot.data[index].data['type'], snapshot.data[index].data['date'], snapshot.data[index].data['hours'], snapshot.data[index].data['uid'].toString(), pastTitles, pastDates, pastHours);
+                                          sendEventToDatabase(pastTitles, pastDates, pastHours, snapshot.data[index].data['uid'].toString());
                                           sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), int.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
                                           sendMessage("Hour Approval Update", "Your hours have been approved", context);
                                           sendDeleteHourRequest(snapshot.data[index].data['type']);
@@ -200,8 +206,8 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
     );
   }
   
-  Future sendEventToDatabase(String title, String date, String hours, String uid, String pastTitle, String pastDate, String pastHours) async {
-    await DatabaseService(uid: uid).updateCompetedEvents(title, date, hours, pastTitle, pastDate, pastHours);
+  Future sendEventToDatabase(List title, List date, List hours, String uid,) async {
+    await DatabaseService(uid: uid).updateCompetedEvents(title, date, hours);
   }
 
   Future sendHoursRequestUpdate(int hours, String uid, int currentHours) async {
