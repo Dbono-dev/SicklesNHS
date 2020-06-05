@@ -57,6 +57,7 @@ class MiddleHomePage extends StatelessWidget {
 
     return Container(
       height: SizeConfig.blockSizeVertical * 45,
+      color: Colors.transparent,
       padding: EdgeInsets.all(10),
       child: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
@@ -131,17 +132,16 @@ class TopHalfHomePage extends StatelessWidget {
   TopHalfHomePage({Key key}) : super (key: key);
 
   String timeOfDay;
-  int theTiming;
 
   @override
   Widget build(BuildContext context) {
   SizeConfig().init(context);
 
   DateTime now = DateTime.now();
-  String time = formatDate(now, [HH]);
-  String theTime = time.substring(0);
-  theTiming = int.parse(time);
-  if(4 < theTiming && theTiming < 12)
+  String time = formatDate(now, [HH]).trim();
+  int theTiming = int.parse(time);
+
+  if(4 < theTiming && theTiming <= 11)
   {
     timeOfDay = "Good Morning ";
   }

@@ -75,7 +75,11 @@ class DatabaseService {
       lastName: snapshot.data['last name'],
       grade: snapshot.data['grade'],
       permissions: snapshot.data['permissions'],
-      hours: snapshot.data['hours']
+      hours: snapshot.data['hours'],
+      firstQuarter: snapshot.data['firstQuarter'],
+      secondQuarter: snapshot.data['secondQuarter'],
+      thirdQuarter: snapshot.data['thirdQuarter'],
+      fourthQuarter: snapshot.data['fourthQuarter']
     );
   }
 

@@ -221,10 +221,10 @@ class _AccountProfileState extends State<AccountProfile> {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
           if(widget.type == "admin") {
-            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString());
+            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), widget.posts['firstQuarter'].toString(), widget.posts['secondQuarter'].toString(), widget.posts['thirdQuarter'].toString(), widget.posts['fourthQuarter'].toString());
           }
           if(widget.type == "student") {
-            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString());
+            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), userData.firstQuarter.toString(), userData.secondQuarter.toString(), userData.thirdQuarter.toString(), userData.fourthQuarter.toString());
           }
           else {
             return CircularProgressIndicator();
@@ -237,7 +237,7 @@ class _AccountProfileState extends State<AccountProfile> {
     );
   }
 
-  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours) {
+  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
 
@@ -355,15 +355,15 @@ class _AccountProfileState extends State<AccountProfile> {
                             context: context,
                             builder: (BuildContext context) {
                               return Padding(
-                                padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 25, 0, SizeConfig.blockSizeVertical * 25),
+                                padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 15, 0, SizeConfig.blockSizeVertical * 15),
                                 child: AlertDialog(
                                   title: Text("Hours"),
                                   content: Column(
                                     children: <Widget> [
-                                      Text("Quarter 1: "),
-                                      Text("Quarter 2: "),
-                                      Text("Quarter 3: "),
-                                      Text("Quarter 4: "),
+                                      ListTile(title: Text("Quarter 1: " + q1Hours), trailing: int.parse(q1Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
+                                      ListTile(title: Text("Quarter 2: " + q2Hours), trailing: int.parse(q2Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Quarter 3: " + q3Hours), trailing: int.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Quarter 4: " + q4Hours), trailing: int.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
                                     ]
                                   ),
                                   actions: <Widget>[

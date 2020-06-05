@@ -43,7 +43,7 @@ class CurrentQuarter {
       return "fourthQuarter";
   }
 
-  Future<String> getQuarter() async {
+  Future<String> getQuarter() async { 
     await currentQuarter();
 
     if(date.isAfter(startOfFirstQuarter) && date.isBefore(firstQuarter))

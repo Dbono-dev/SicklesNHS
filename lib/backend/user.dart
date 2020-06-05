@@ -12,6 +12,10 @@ class UserData {
   final int permissions;
   final String date;
   final int hours;
+  final int firstQuarter;
+  final int secondQuarter;
+  final int thirdQuarter;
+  final int fourthQuarter;
 
-  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours});
+  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours, this.firstQuarter, this.secondQuarter, this.thirdQuarter, this.fourthQuarter});
 }
