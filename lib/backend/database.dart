@@ -9,19 +9,23 @@ class DatabaseService {
 
   final CollectionReference memberCollection = Firestore.instance.collection('members');
 
-  Future updateUserData(String firstName, String lastName, int hours, String studentNum, String grade, String uid) async {
+  Future updateUserData(String firstName, String lastName, String studentNum, String grade, String uid, String permissions) async {
     return await memberCollection.document(uid).setData({
       'first name': firstName,
       'last name': lastName,
-      'hours': hours,
+      'hours': 0,
       'student number': studentNum,
       'grade': grade,
-      'permissions': 2,
+      'permissions': int.parse(permissions),
       'date': "5/20/21",
       'uid': uid,
       'event title': "",
       'event date': "",
       'event hours': "",
+      'firstQuarter': 0,
+      'secondQuarter': 0,
+      'thirdQuarter': 0,
+      'fourthQuarter': 0
     });
   }
 

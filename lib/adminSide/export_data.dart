@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/backend/auth_service.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ExportDataPage extends StatelessWidget {
   Future getPosts() async {
@@ -12,14 +16,45 @@ class ExportDataPage extends StatelessWidget {
     return qn.documents;
   }
 
+  String firstName;
+  String lastName;
+  String grade;
+  String emailAddress;
+  String permissions;
+  String studentNum;
+
+  Future getAllDataForStudent() async {
+    List myList = new List ();
+    var firestore = FirebaseDatabase.instance.reference().child('members');
+    var result = await firestore.child('dGhlZHlsYW5yYm9ub0BnbWFpbC5jb20=-Dylan').once().then((DataSnapshot snapshot) => {
+      firstName = snapshot.value['firstName'],
+      lastName = snapshot.value['lastName'],
+      grade = snapshot.value['grade'].toString(),
+      emailAddress = snapshot.value['emailAddress'],
+      permissions = snapshot.value['permissions'].toString(),
+      studentNum = snapshot.value['studentNum'].toString()
+    });
+    String uid = await AuthService().createImportedUser(emailAddress, "password");
+    var resultTwo = await DatabaseService(uid: uid).updateUserData(firstName, lastName, studentNum, grade, uid, permissions);
+    var resultThree = await AuthService().logout();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: <Widget> [
           TopHalfViewStudentsPage(),
+          RaisedButton(
+            onPressed: () {
+              getAllDataForStudent();
+            },
+            child: Text("Import Data"),
+          ),
           Spacer(),
           Container(
             child: FutureBuilder(
