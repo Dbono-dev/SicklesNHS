@@ -211,8 +211,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     }
 
     String startingDate;
-    startingDate = _newDateTime == null || _newDateTime.toString().length > 10 ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
-    startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
+    startingDate = _newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+    //startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
 
     return Container(
       color: Colors.transparent,
@@ -273,7 +273,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             theme: ThemeData(primarySwatch: Colors.green),
                           );
                           setState(() {
-                            
+                            startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
                           });
                         },
                       ),
@@ -605,7 +605,16 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                 }
                               }
                               if(typeOfDate == "weeks") {
-
+                                DateTime tempDateTime = _newDateTime;
+                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                for(int i = 1; i < 999; i++) {
+                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                    break;
+                                  }
+                                  else {
+                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue + 7) * i));
+                                  }
+                                }
                               }
                               if(typeOfDate == "months") {
 
