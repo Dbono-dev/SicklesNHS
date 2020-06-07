@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
-import 'package:sickles_nhs_app/backend/user.dart';
 
 class ScannedData {
   
-  ScannedData({this.text, this.date, this.context});
+  ScannedData({this.text, this.date});
 
   String text;
   final String date;
@@ -17,6 +15,7 @@ class ScannedData {
   String name;
   String time;
   String type;
+  String uid;
   BuildContext context;
 
   void resisterScanData() async {
@@ -35,6 +34,7 @@ class ScannedData {
     name = qrCodeItems[1];
     time = qrCodeItems[2];
     type = qrCodeItems[3];
+    uid = qrCodeItems[4];
 
     if(type == "Check In") {
       await DatabaseQRCodeHours().submitPreHours(name, title, time, type);
@@ -90,9 +90,6 @@ class ScannedData {
       double modifiedStartTime = startTimeHour + modifiedStartTimeMinutes;
 
       differenceTime = modifiedEndTime - modifiedStartTime;
-
-      final user = Provider.of<User>(context);
-      String uid = user.uid;
 
       List titles = new List();
       List dates = new List();

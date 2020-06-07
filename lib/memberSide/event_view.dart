@@ -270,10 +270,9 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
           listWidgetDates.add(Text(alsoTheDates));
         }
       }
+      theShownDate = theDates[shownDate];
+      global.shownDate = theDates[shownDate];
     }
-
-    theShownDate = theDates[shownDate];
-    global.shownDate = theDates[shownDate];
 
     return Card(
       elevation: 8,
@@ -613,9 +612,8 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
           listWidgetDates.add(Text(alsoTheDates));
         }
       }
+      theShownDate = theDates[shownDate];
     }
-
-    theShownDate = theDates[shownDate];
 
     return Material(
       color: Colors.transparent,
@@ -625,7 +623,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,),
-            theDates != null ? GestureDetector(
+            participatesDate == null ? Container() : GestureDetector(
               onTap: () {
                 showCupertinoModalPopup(
                   context: context,
@@ -656,10 +654,10 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                   ],
                 ),
               )
-            ) : Container(),
+            ),
             Container(
               height: SizeConfig.blockSizeVertical * 45,
-              child: participatesDate.length == 0 ? ListView.builder(
+              child: participatesDate == null ? ListView.builder(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 itemCount: participatesList.length,
                 itemBuilder: (_, index) {

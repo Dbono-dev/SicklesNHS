@@ -6,6 +6,7 @@ import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
+import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
 import 'package:sickles_nhs_app/memberSide/settings_page.dart';
 import 'package:sickles_nhs_app/backend/messages_page.dart';
 import 'package:sickles_nhs_app/memberSide/leaderboard.dart';
@@ -61,7 +62,6 @@ class _AccountProfileState extends State<AccountProfile> {
   }
 
   Widget icons(BuildContext context) {
-    print(widget.uid);
     if(widget.type == "admin") {
       return Row(
         children: <Widget>[
@@ -139,7 +139,7 @@ class _AccountProfileState extends State<AccountProfile> {
             iconSize: 60,
             onPressed: () {
               Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewHours(name: widget.name, uid: widget.uid, hours: widget.hours,)));
+              MaterialPageRoute(builder: (context) => CreateNewHoursOptionsPage()));
             }
           ),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
