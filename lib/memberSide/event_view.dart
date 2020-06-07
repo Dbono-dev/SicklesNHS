@@ -12,6 +12,7 @@ import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
+import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class EventPageView extends StatelessWidget {
   EventPageView ({Key key, this.post}) : super (key: key);
@@ -252,12 +253,27 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
       }
     }
 
-    if(shownDate == 0) {
-      theShownDate = "04/29/2020";
+    List theDates = new List();
+    List<Widget> listWidgetDates = new List<Widget>();
+
+    if(widget.post.data['date'].toString().length > 10) {
+      String alsoTheDates = widget.post.data['date'];
+      for(int i = 0; i < alsoTheDates.length; i++) {
+        if(alsoTheDates.substring(0, i).contains("-")) {
+          theDates.add(alsoTheDates.substring(0, i - 1));
+          listWidgetDates.add(Text(alsoTheDates.substring(0, i - 1)));
+          alsoTheDates = alsoTheDates.substring(i);
+          i = 0;
+        }
+        else if(i == alsoTheDates.length - 1) {
+          theDates.add(alsoTheDates);
+          listWidgetDates.add(Text(alsoTheDates));
+        }
+      }
     }
-    if(shownDate == 1) {
-      theShownDate = "05/04/2020";
-    }
+
+    theShownDate = theDates[shownDate];
+    global.shownDate = theDates[shownDate];
 
     return Card(
       elevation: 8,
@@ -293,10 +309,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                                 shownDate = value;
                               });
                             },
-                            children: [
-                              Text(widget.post.data['date'].toString().substring(0, 10)),
-                              Text(widget.post.data['date'].toString().substring(11, 21)),
-                            ]
+                            children: listWidgetDates
                           ),
                         );
                       }
@@ -508,8 +521,10 @@ class BottomEventViewPage extends StatelessWidget {
                     }
                     if(differentSignUp == "Sign Up") {
                       var participates = post.data['participates'];
+                      var participateDate = post.data['participates dates'];
                       participates.add(userData.firstName + " " + userData.lastName);
-                      dynamic result = sendEventToDatabases(participates, title);
+                      participateDate.add(global.shownDate);
+                      dynamic result = sendEventToDatabases(participates, title, participateDate);
                       dynamic result2 = sendBugToEmail(title, post);
                     }
                   },
@@ -530,8 +545,8 @@ class BottomEventViewPage extends StatelessWidget {
   }
 
 
-  Future sendEventToDatabases(var participate, String title) async {
-    await DatabaseEvent().updateEvent(participate, title);
+  Future sendEventToDatabases(var participate, String title, var participateDate) async {
+    await DatabaseEvent().updateEvent(participate, title, participateDate);
   }
 
   Future sendBugToEmail(String title, DocumentSnapshot post) async {
@@ -559,16 +574,48 @@ class BottomEventViewPage extends StatelessWidget {
   }
 }
 
-class BottomBottomEventViewPage extends StatelessWidget {
+class BottomBottomEventViewPage extends StatefulWidget {
 
   BottomBottomEventViewPage({this.post});
 
   DocumentSnapshot post;
+
+  @override
+  _BottomBottomEventViewPageState createState() => _BottomBottomEventViewPageState();
+}
+
+class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
   List participatesList = new List();
+  List participatesDate = new List();
+
+  int shownDate = 0;
+  String theShownDate = "";
 
   @override
   Widget build(BuildContext context) {
-    participatesList = post.data['participates'];
+    participatesList = widget.post.data['participates'];
+    participatesDate = widget.post.data['participates dates'];
+
+    List theDates = new List();
+    List<Widget> listWidgetDates = new List<Widget>();
+
+    if(widget.post.data['date'].toString().length > 10) {
+      String alsoTheDates = widget.post.data['date'];
+      for(int i = 0; i < alsoTheDates.length; i++) {
+        if(alsoTheDates.substring(0, i).contains("-")) {
+          theDates.add(alsoTheDates.substring(0, i - 1));
+          listWidgetDates.add(Text(alsoTheDates.substring(0, i - 1)));
+          alsoTheDates = alsoTheDates.substring(i);
+          i = 0;
+        }
+        else if(i == alsoTheDates.length - 1) {
+          theDates.add(alsoTheDates);
+          listWidgetDates.add(Text(alsoTheDates));
+        }
+      }
+    }
+
+    theShownDate = theDates[shownDate];
 
     return Material(
       color: Colors.transparent,
@@ -578,23 +625,80 @@ class BottomBottomEventViewPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,),
+            theDates != null ? GestureDetector(
+              onTap: () {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: SizeConfig.blockSizeVertical * 33,
+                      child: CupertinoPicker(
+                        backgroundColor: Colors.white,
+                        itemExtent: 32,
+                        onSelectedItemChanged: (value) {
+                          setState(() {
+                            shownDate = value;
+                          });
+                        },
+                        children: listWidgetDates
+                      ),
+                    );
+                  }
+                );
+              },
+              child: Container(
+                width: SizeConfig.blockSizeHorizontal * 30,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text(theShownDate),
+                    Icon(Icons.keyboard_arrow_down)
+                  ],
+                ),
+              )
+            ) : Container(),
             Container(
               height: SizeConfig.blockSizeVertical * 45,
-              child: ListView.builder(
+              child: participatesDate.length == 0 ? ListView.builder(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 itemCount: participatesList.length,
                 itemBuilder: (_, index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
-                    child: Card(
-                      elevation: 10,
-                      child: ListTile(
-                        leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20),),
-                        title: Text(participatesList[index])
-                      )
-                    ),
-                  );
+                  if(participatesList.length == 0) {
+                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30),),);
+                  }
+                  else {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
+                      child: Card(
+                        elevation: 10,
+                        child: ListTile(
+                          leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20),),
+                          title: Text(participatesList[index])
+                        )
+                      ),
+                    );
+                  }
                 },
+              ) : ListView.builder(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                itemCount: participatesDate.length,
+                itemBuilder: (_, index) {
+                  if(participatesDate[index] == theShownDate) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
+                      child: Card(
+                        elevation: 10,
+                        child: ListTile(
+                          leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20)),
+                          title: Text(participatesList[index]),
+                        )
+                      ),
+                    );
+                  }
+                  else {
+                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30),),);
+                  }
+                }
               ),
             )
           ],

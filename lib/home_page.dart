@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:sickles_nhs_app/backend/scannedData.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
 import 'package:sickles_nhs_app/adminSide/approve_hours.dart';

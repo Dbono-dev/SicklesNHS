@@ -102,14 +102,16 @@ class DatabaseEvent {
       'address': address,
       'type': type,
       'participates': [],
+      'participates dates': [],
       'start time minutes': startTimeMinutes,
       'end time minutes': endTimeMinutes,
     });
   }
 
-  Future updateEvent(var participate, String title) async {
+  Future updateEvent(var participate, String title, var participateDate) async {
     return await eventsCollection.document(title).updateData({
       'participates': participate,
+      'participates dates': participateDate
     });
   }
 }
@@ -198,4 +200,24 @@ class DatabaseBugs {
       'summary': summary
     });
   }
+}
+
+class DatabaseQRCodeHours {
+  DatabaseQRCodeHours();
+
+  final CollectionReference qrCodeHours = Firestore.instance.collection("DatabaseQRCodeHours");
+
+  Future submitPreHours(String name, String title, String time, String type) async {
+    return await qrCodeHours.document(name + "-" + title).setData({
+      'title': title,
+      'name': name,
+      'time': time,
+      'type': type
+    });
+  }
+
+  Future deleteDoc(String name, String title) async {
+    return await qrCodeHours.document(name + "-" + title).delete();
+  }
+
 }

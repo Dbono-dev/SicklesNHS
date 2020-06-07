@@ -612,15 +612,51 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                     break;
                                   }
                                   else {
-                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue + 7) * i));
+                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue * 7) * i));
+                                    if(tempDateTime.isAfter(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                    }
                                   }
                                 }
                               }
                               if(typeOfDate == "months") {
-
+                                DateTime tempDateTime = _newDateTime;
+                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                for(int i = 1; i < 999; i++) {
+                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                    break;
+                                  }
+                                  else {
+                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month + (selectedValue * i), _newDateTime.day);
+                                    if(tempDateTime.isAfter(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                    }
+                                  }
+                                }
                               }
                               if(typeOfDate == "years") {
-
+                                DateTime tempDateTime = _newDateTime;
+                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                for(int i = 1; i < 999; i++) {
+                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                    break;
+                                  }
+                                  else {
+                                    tempDateTime = new DateTime(_newDateTime.year + (selectedValue * i), _newDateTime.month, _newDateTime.day);
+                                    if(tempDateTime.isAfter(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                    }
+                                  }
+                                }
                               }
                             }
                             else {
@@ -630,7 +666,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             if(form.validate()) {
                               try {
                                 try {
-                                _photoUrl = await firebaseStorageRef.getDownloadURL();
+                                  _photoUrl = await firebaseStorageRef.getDownloadURL();
                                 }
                                 catch (e) {
                                   
