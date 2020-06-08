@@ -26,12 +26,15 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
 
   @override
   Widget build(BuildContext context) {
+    print(SizeConfig.screenHeight);
+    print(SizeConfig.screenWidth);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(10)),
+          Padding(padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1.46, horizontal: SizeConfig.blockSizeHorizontal * 2.43)),
           Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

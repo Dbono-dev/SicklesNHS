@@ -11,6 +11,8 @@ import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 class ApproveHoursPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print(SizeConfig.screenHeight);
+    print(SizeConfig.screenWidth);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -103,14 +105,14 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                       }
                       if(snapshot.data[index].data['complete'] == false) {
                         return Container(
-                          margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                          margin: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 2.19, 0, 0),
                           child: GestureDetector(
                             onTap: () {
                               
                             },
                             child: Card(
                               elevation: 8,
-                              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 2.43, 0, SizeConfig.blockSizeHorizontal * 2.43, 0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)
                               ),

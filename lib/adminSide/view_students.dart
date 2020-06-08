@@ -207,7 +207,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
           Container(
             child: Card(
               elevation: 8,
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 2.43, 0, SizeConfig.blockSizeHorizontal * 2.43, 0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30)
               ),

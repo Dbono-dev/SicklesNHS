@@ -43,7 +43,7 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
           Column(
             children: <Widget> [
               TopHalfViewStudentsPage(),
-              Padding(padding: EdgeInsets.fromLTRB(0.0, 15, 0, 0)),
+              Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
               MiddleNewEventPage(title: widget.title, description: widget.description, startTime: widget.startTime, startTimeMinutes: widget.startTimeMinutes, endTime: widget.endTime, endTimeMinutes: widget.endTimeMinutes, address: widget.address, date: widget.date, max: widget.max, type: widget.type,),
             ]
           )
@@ -135,6 +135,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(SizeConfig.screenHeight);
+    print(SizeConfig.screenWidth);
+
     final _thirdformKey = GlobalKey<FormState>();
     String _bottomText = "Create Event";
 
@@ -227,7 +230,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                 children: <Widget> [
                   Material(
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
                         decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -238,10 +241,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       ),
                     )
                   ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
+                  Padding(padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
                   Material(
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
                         decoration: InputDecoration(
                           hintText: "Description",
@@ -254,7 +257,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       ),
                     )
                   ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0.0, 00)),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 00)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget> [
@@ -465,10 +468,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       child: Text(doesNotRepeat)
                     ),
                   ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0.0, 0.0)),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 0.0)),
                   Material(
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
                         decoration: InputDecoration(
                           hintText: "Address/Location",
@@ -479,10 +482,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       ),
                     )
                   ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, 5, 0, 0)),
+                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
                   Material(
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
                         onChanged: (val) => _max = val,
                         initialValue: _max,
@@ -543,7 +546,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                   ]
                 ),
               ),
-              Padding(padding: EdgeInsets.all(5),),
+              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.73),),
               Material(
                 type: MaterialType.transparency,
                 child: Container(
