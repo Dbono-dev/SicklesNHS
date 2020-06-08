@@ -121,7 +121,7 @@ class DatabaseSubmitHours {
 
   final CollectionReference submitHours = Firestore.instance.collection('Approving Hours');
 
- Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid, int currentHours) async {
+ Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid, int currentHours, String saveSubmit) async {
     return await submitHours.document(type).setData({
       'type': type,
       'location': location,
@@ -134,7 +134,8 @@ class DatabaseSubmitHours {
       'complete': complete,
       'url': url,
       'uid': uid,
-      'current hours': hours
+      'current hours': hours,
+      'save_submit': saveSubmit
     });
   }
 

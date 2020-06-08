@@ -278,7 +278,52 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                     )
                   ),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 25, 0, SizeConfig.blockSizeHorizontal * 25, 0),
+                    child: RaisedButton(
+                      elevation: 10,
+                      color: Colors.white,
+                      onPressed: () async {
+                        final form = _fourthformKey.currentState;
+                            form.save();
+                            if(form.validate() && _controller.isNotEmpty) {
+                              try {
+                                var signture = await _controller.toPngBytes();
+                                final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
+                                final StorageUploadTask task = firebaseStorageRef.putData(signture);
+                                var url = await firebaseStorageRef.getDownloadURL();
+
+                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "save");
+
+                                if(result == null) {
+                                  print("Fill in all the forms.");
+                                }
+                                if(result != null) {
+                                  setState(() {
+                                    _controller.clear();
+                                    _fourthformKey.currentState.reset();
+                                  });
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Saved Service Hour Form"),
+                                      backgroundColor: Colors.green,
+                                      duration: Duration(seconds: 3),
+                                    )
+                                  );
+                                }
+                              }
+                              catch (e) {
+                                return CircularProgressIndicator();
+                              }
+                        } else {
+                          return Container();
+                        }
+                      },
+                      child: Text("Save Service Hour Form"),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2.5),),
                   Builder(
                     builder: (context) {
                       return Material(
@@ -311,7 +356,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 final StorageUploadTask task = firebaseStorageRef.putData(signture);
                                 var url = await firebaseStorageRef.getDownloadURL();
 
-                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours);
+                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "submit");
 
                                 if(result == null) {
                                   print("Fill in all the forms.");
@@ -323,7 +368,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                   });
                                   Scaffold.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("Submitted Request"),
+                                      content: Text("Submitted Service Hour Form"),
                                       backgroundColor: Colors.green,
                                       duration: Duration(seconds: 3),
                                     )
@@ -356,7 +401,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
     );
   }
 
-  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, var url, String uid, int currentHours) async {
-    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false, url, uid, currentHours);
+  Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, var url, String uid, int currentHours, String saveSubmit) async {
+    await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false, url, uid, currentHours, saveSubmit);
   }
 }
