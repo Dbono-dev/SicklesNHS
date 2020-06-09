@@ -111,7 +111,6 @@ class MiddleHomePage extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data.length,
                       itemBuilder: (_, index) {
-                        print((DateTime.now().month.toString() + "/" + DateTime.now().day.toString() + "/" + DateTime.now().year.toString()));
                         if(format.parse(snapshot.data[index].data['date']).isAfter(DateTime.now()) || (int.parse(snapshot.data[index].data['date'].toString().substring(0, 2)) == DateTime.now().month && int.parse(snapshot.data[index].data['date'].toString().substring(3, 5)) == DateTime.now().day && int.parse(snapshot.data[index].data['date'].toString().substring(6)) == DateTime.now().year)) {
                           return MiddleHomePageCards(post: snapshot.data[index]);
                         }

@@ -5,11 +5,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 
 class QRCodePage extends StatelessWidget {
-QRCodePage ({Key key, this.title, this.name, this.type, this.date, this.uid}) : super (key: key);
+QRCodePage ({Key key, this.title, this.name, this.type, this.uid}) : super (key: key);
 
 final String title;
 final String name;
-final String date;
 final String type;
 final String uid;
 
@@ -20,9 +19,9 @@ Widget build(BuildContext context) {
       children: <Widget>[
         TopHalfViewStudentsPage(),
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, SizeConfig.blockSizeVertical * 10),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, SizeConfig.blockSizeVertical * 7),
         ),
-        QRCodePageContent(title: title, name: name, type: type, date: date, uid: uid),
+        QRCodePageContent(title: title, name: name, type: type, uid: uid),
       ],
     ),
   );
@@ -30,12 +29,11 @@ Widget build(BuildContext context) {
 }
 
 class QRCodePageContent extends StatelessWidget {
-QRCodePageContent ({Key key, this.title, this.name, this.type, this.date, this.uid}) : super (key: key);
+QRCodePageContent ({Key key, this.title, this.name, this.type, this.uid}) : super (key: key);
 
 final String title;
 final String name;
 final String type;
-final String date;
 final String uid;
 
 Widget build(BuildContext context) {

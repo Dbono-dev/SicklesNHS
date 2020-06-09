@@ -604,7 +604,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                       _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
                                     }
                                   }
-                                  print(_date);
                                 }
                               }
                               if(typeOfDate == "weeks") {

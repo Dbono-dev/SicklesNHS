@@ -208,12 +208,13 @@ class DatabaseQRCodeHours {
 
   final CollectionReference qrCodeHours = Firestore.instance.collection("DatabaseQRCodeHours");
 
-  Future submitPreHours(String name, String title, String time, String type) async {
+  Future submitPreHours(String name, String title, String time, String type, String uid) async {
     return await qrCodeHours.document(name + "-" + title).setData({
       'title': title,
       'name': name,
       'time': time,
-      'type': type
+      'type': type,
+      'uid': uid
     });
   }
 

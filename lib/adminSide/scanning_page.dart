@@ -1,5 +1,6 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/backend/scannedData.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 
@@ -11,7 +12,7 @@ class ScanningPage extends StatelessWidget {
       body: Column(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Spacer(),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
           ScanningPageBody()
         ]
       ),
@@ -26,11 +27,21 @@ class ScanningPageBody extends StatefulWidget {
 
 class _ScanningPageBodyState extends State<ScanningPageBody> {
 
+  String qrCodeResult;
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: SizeConfig.blockSizeVertical * 76,
       child: Column(
         children: <Widget> [
+          Card(
+            elevation: 10,
+            child: ListTile(
+              title: Text(qrCodeResult == null ? "" : qrCodeResult),
+            )
+          ),
+          Spacer(),
           Material(
             type: MaterialType.transparency,
             child: Container(
@@ -53,9 +64,11 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
             child: FlatButton(
               onPressed: () async {
                 var result = await BarcodeScanner.scan();
-                /*Navigator.push(context, 
-                  MaterialPageRoute(builder: (context) => QRCodeCamera()
-                ));*/
+                print(result.rawContent);
+                ScannedData(text: result.rawContent, date: "06/17/20").resisterScanData();
+                setState(() {
+                  qrCodeResult = result.rawContent;
+                });
               },
             child: Text("Start Scanning", textAlign: TextAlign.center,
               style: TextStyle(
@@ -68,53 +81,6 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
           )
         ]
       ),
-    );
-  }
-}
-
-class QRCodeCamera extends StatefulWidget {
-
-  @override
-  _QRCodeCameraState createState() => _QRCodeCameraState();
-}
-
-class _QRCodeCameraState extends State<QRCodeCamera> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
-  var qrText = "";
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget> [
-          Container(
-            child: IconButton(
-              alignment: Alignment.topLeft,
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.green,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              }
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              
-            )
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Text('Scan result: $qrText'),
-            )
-          )
-        ]
-      )
     );
   }
 }

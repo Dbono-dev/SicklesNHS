@@ -107,7 +107,7 @@ class TopHalfViewEventsPage extends StatelessWidget {
                     },
                   ),
                   Padding(
-                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 22),
+                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 19),
                   ),
                   editIcon(),
                   Spacer(),
@@ -515,14 +515,14 @@ class BottomEventViewPage extends StatelessWidget {
               children: <Widget>[
                 FlatButton(
                   onPressed: () {
-                    if(differentSignUp == "Check In") {
+                    if(differentSignUp == "Check In") { 
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In",)
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid),
                         ));
                     }
                     if(differentSignUp == "Check Out") {
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out",)
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid,)
                         ));
                     }
                     if(differentSignUp == "Sign Up") {

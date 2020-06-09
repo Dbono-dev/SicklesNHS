@@ -185,7 +185,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                   ),
                   Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                   Container(
-                    width: SizeConfig.blockSizeHorizontal * 50,
+                    width: SizeConfig.blockSizeHorizontal * 90,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(

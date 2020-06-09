@@ -10,7 +10,7 @@ class ScannedData {
 
   String text;
   final String date;
-  List<String> qrCodeItems = new List<String>();
+  List<String> qrCodeItems = new List<String>(); 
   String title;
   String name;
   String time;
@@ -37,7 +37,7 @@ class ScannedData {
     uid = qrCodeItems[4];
 
     if(type == "Check In") {
-      await DatabaseQRCodeHours().submitPreHours(name, title, time, type);
+      await DatabaseQRCodeHours().submitPreHours(name, title, time, type, uid);
     }
     else {
       String oldTime;
@@ -52,11 +52,11 @@ class ScannedData {
 
       double differenceTime;
 
-      double startTimeHour = double.parse(oldTime.toString().substring(0, 2));
+      int startTimeHour = int.parse(oldTime.toString().substring(0, 2));
       int startTimeMinutes = int.parse(oldTime.toString().substring(3));
       double modifiedStartTimeMinutes;
 
-      double endTimeHour = double.parse(oldTime.toString().substring(0, 2));
+      int endTimeHour = int.parse(time.toString().substring(0, 2));
       int endTimeMinutes = int.parse(time.toString().substring(3));
       double modifiedEndTimeMinutes;
 
@@ -101,8 +101,8 @@ class ScannedData {
       DateFormat _format = new DateFormat("MM/dd/yyyy");
       String quarter = await CurrentQuarter(_format.parse(date)).getQuarter();
 
-      QuerySnapshot result2 = await Firestore.instance.collection("DatabaseQRCodeHours").getDocuments();
-      List<DocumentSnapshot> snapshot2 = result2.documents;
+      QuerySnapshot result2 = await Firestore.instance.collection("members").getDocuments();
+      var snapshot2 = result2.documents;
       for (int i = 0; i < snapshot2.length; i++) {
         var a = snapshot2[i];
         if(a.data['uid'] == uid) {
