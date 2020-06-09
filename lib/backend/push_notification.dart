@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -11,12 +11,12 @@ class PushNotificationService {
 
 final String serverToken = "AAAA9shRjdo:APA91bHA80_mP4XBXY0dUXG87CdVKjcFX3fuCXft8CAVLq8v5HjT66slVysGB1-VNGaPv5sA4vYwBBNfjf1ncKHXZ6lhDhIvAgRKVD6LiKyqEtIt1KnpR5RlSlZWrbV0qUlOFRCYDCJy";
 
-final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+//final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
  Future<Map<String, dynamic>> sendAndRetrieveMessage(String title, String body, BuildContext context) async {
-  await firebaseMessaging.requestNotificationPermissions(
+  /*await firebaseMessaging.requestNotificationPermissions(
     const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
-  );
+  );*/
 
   await http.post(
     'https://fcm.googleapis.com/fcm/send',
@@ -44,9 +44,9 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   final Completer<Map<String, dynamic>> completer =
      Completer<Map<String, dynamic>>();
 
-  firebaseMessaging.subscribeToTopic('all');
+  //firebaseMessaging.subscribeToTopic('all');
 
-  firebaseMessaging.configure(
+  /*firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) async {
       completer.complete(message);
       print(message);
@@ -64,7 +64,7 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
         print(e);
       }
     },
-  );
+  );*/
 
   return completer.future;
 }

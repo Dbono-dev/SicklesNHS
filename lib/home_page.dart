@@ -721,7 +721,7 @@ Widget adminTags(BuildContext context, Widget location, IconData theIcon, String
               ),
               Padding(padding: EdgeInsets.all(7)),
               Text(theText, textAlign: TextAlign.center, style: TextStyle(
-                fontSize: SizeConfig.blockSizeVertical * 5,
+                fontSize: 30,
                 fontWeight: FontWeight.w600,
               ),),
             ]

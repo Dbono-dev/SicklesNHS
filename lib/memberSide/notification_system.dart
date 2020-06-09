@@ -66,6 +66,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
         child: Form(
           key: _fourthformKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),

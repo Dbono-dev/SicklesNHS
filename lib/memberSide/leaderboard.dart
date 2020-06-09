@@ -58,7 +58,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
         child: Container(
               child: SingleChildScrollView(
                 child: Material(
-                  color: Colors.transparent,
+                  color: Colors.white,
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -188,6 +188,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                     }
                     else {
                       return Material(
+                        color: Colors.transparent,
                         child: Container(
                           height: SizeConfig.blockSizeVertical * 75,
                           child: ListView.builder(

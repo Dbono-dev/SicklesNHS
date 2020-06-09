@@ -75,11 +75,13 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Material(
+          color: Colors.white,
           child: Form(
             key: _fourthformKey,
             child: ListView(
               children: <Widget>[
                 Material(
+                  color: Colors.transparent,
                     child: Container(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
@@ -100,6 +102,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                   ),
                   Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                   Material(
+                    color: Colors.transparent,
                     child: Container(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
@@ -150,6 +153,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       ),
                       Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                       Material(
+                        color: Colors.transparent,
                         child: Container(
                           width: SizeConfig.blockSizeHorizontal * 35,
                           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -219,6 +223,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                   ),
                   Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                   Material(
+                    color: Colors.transparent,
                     child: Container(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
@@ -239,6 +244,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                   ),
                   Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                   Material(
+                    color: Colors.transparent,
                     child: Container(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
@@ -260,6 +266,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                   ),
                   Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                   Material(
+                    color: Colors.transparent,
                     child: Container(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(

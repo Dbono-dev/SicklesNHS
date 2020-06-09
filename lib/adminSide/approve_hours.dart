@@ -11,8 +11,6 @@ import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 class ApproveHoursPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(SizeConfig.screenHeight);
-    print(SizeConfig.screenWidth);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -69,6 +67,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
             }
             else if(snapshot.data.length == 0) {
               return Material(
+                color: Colors.transparent,
                   child: Center(
                     child: Text("NO HOURS TO APPROVE", 
                     textAlign: TextAlign.center,
@@ -91,6 +90,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                         x++;
                         if(x == snapshot.data.length - 1) {
                           return Material(
+                            color: Colors.white,
                             child: Center(
                               child: Text("NO HOURS TO APPROVE", 
                               textAlign: TextAlign.center,

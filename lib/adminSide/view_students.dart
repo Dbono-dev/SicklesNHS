@@ -80,7 +80,7 @@ class TopHalfViewStudentsPage extends StatelessWidget {
                       },
                       child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
                         color: Colors.white,
-                        fontSize: SizeConfig.blockSizeVertical * 5.5
+                        fontSize: 35
                       ),),
                     ),
                   )
@@ -276,6 +276,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                     child: Container(
                       height: SizeConfig.blockSizeVertical * 59,
                       child: ListView.builder(
+                        padding: EdgeInsets.all(0),
                         itemCount: snapshot.data.length,
                         itemBuilder: (_, index) {
                           if(search != "") {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sickles_nhs_app/adminSide/message.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 
@@ -26,16 +26,16 @@ class MessagesMiddlePage extends StatefulWidget {
 }
 
 class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  //final FirebaseMessaging _fcm = FirebaseMessaging();
 
   final List<Message> messages = [];
 
   void initState() {
     if(Platform.isIOS) {
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
+      //_fcm.requestNotificationPermissions(IosNotificationSettings());
     }
 
-    _fcm.getToken();
+    /*_fcm.getToken();
 
     _fcm.subscribeToTopic('all');
 
@@ -62,7 +62,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
           messages.add(Message(title: notification['title'], body: notification['body']));
         });
       }
-    );
+    );*/
   }
 
   @override

@@ -32,6 +32,7 @@ class SettingsPageBody extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Material(
+            color: Colors.transparent,
             child: GestureDetector(
               onTap: () {
                 resetPassword(context);
@@ -48,6 +49,7 @@ class SettingsPageBody extends StatelessWidget {
           ),
           Padding(padding: EdgeInsets.all(5)),
           Material(
+            color: Colors.transparent,
             child: GestureDetector(
               onTap: () {
                 showDialog(

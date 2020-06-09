@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1059922742746:ios:ea0a957daac1137a1e84e3</string>
+	<string>1:1059922742746:ios:56fa277e0f1459b31e84e3</string>
 	<key>DATABASE_URL</key>
 	<string>https://sickles-nhs-app.firebaseio.com</string>
 </dict>

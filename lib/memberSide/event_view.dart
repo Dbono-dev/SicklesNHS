@@ -14,6 +14,9 @@ import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
+import '../backend/size_config.dart';
+import '../backend/size_config.dart';
+
 class EventPageView extends StatelessWidget {
   EventPageView ({Key key, this.post}) : super (key: key);
 
@@ -121,7 +124,7 @@ class TopHalfViewEventsPage extends StatelessWidget {
                         },
                         child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
                           color: Colors.white,
-                          fontSize: SizeConfig.blockSizeVertical * 5.5
+                          fontSize: 30
                         ),),
                       ),
                     ),
@@ -284,6 +287,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                 color: Colors.white,
               ),
               Container(
+                height: SizeConfig.blockSizeVertical * 66,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -356,10 +360,11 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                         Card(
                          elevation: 8,
                          child: Container(
-                           height: 42,
+                           height: SizeConfig.blockSizeVertical * 6.14,
                            width: 200,
                            child: Center(
                              child: Material(
+                               color: Colors.transparent,
                                child: Text(
                                  startTime.toString() + ":" + theStartTimeMinutes + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
                                ),
@@ -370,10 +375,11 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                     Card(
                       elevation: 8,
                       child: Container(
-                        height: 42,
+                        height: SizeConfig.blockSizeVertical * 6.14,
                         width: 150,
                           child: Center(
                             child: Material(
+                              color: Colors.transparent,
                             child: Text(
                               differenceTime.toString() + " hours", style: TextStyle(fontSize: 20),
                             ),
@@ -488,7 +494,7 @@ class BottomEventViewPage extends StatelessWidget {
           return Material(
             type: MaterialType.transparency,
             child: Container(
-            height: 50,
+            height: SizeConfig.blockSizeVertical * 7.316,
             decoration: BoxDecoration(
               boxShadow: [BoxShadow(
                 color: Colors.black,

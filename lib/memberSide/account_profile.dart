@@ -291,6 +291,7 @@ class _AccountProfileState extends State<AccountProfile> {
           ),
           Padding(padding: EdgeInsets.all(4),),
           Material(
+            color: Colors.transparent,
             child: editing != true ? Text(
               firstName + " " + lastName, style: TextStyle(fontSize: 35),
               ) : SizedBox(
@@ -304,6 +305,7 @@ class _AccountProfileState extends State<AccountProfile> {
           ),
           Padding(padding: EdgeInsets.all(1),),
           Material(
+            color: Colors.transparent,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -412,6 +414,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
+                              color: Colors.transparent,
                             child: Align(alignment: Alignment.center, child: Text(title.length.toString() + " Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
@@ -422,6 +425,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           height: SizeConfig.blockSizeVertical * 7,
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
+                              color: Colors.transparent,
                             child: Align(alignment: Alignment.center, child: Text("0 Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
@@ -445,6 +449,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           else {
                             if(title.length == 0) {
                               return Material(
+                                color: Colors.transparent,
                                 child: Center(
                                   child: Text("NO EVENTS", style: TextStyle(
                                     color: Colors.green,
@@ -613,6 +618,7 @@ class _AccountProfileState extends State<AccountProfile> {
 
   Widget quarterPages(String quarter) {
     return Material(
+      color: Colors.transparent,
       child: Container(
         height: SizeConfig.blockSizeVertical * 6,
         width: SizeConfig.blockSizeHorizontal * 90,
@@ -633,6 +639,7 @@ class _AccountProfileState extends State<AccountProfile> {
 
 Widget accountProfileCards({Key key, String title, String date, String hours, bool editing, int index}) {
     return Material(
+      color: Colors.transparent,
       child: Container(
         height: SizeConfig.blockSizeVertical * 6,
         width: SizeConfig.blockSizeHorizontal * 90,
