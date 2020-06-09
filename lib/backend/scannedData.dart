@@ -18,7 +18,7 @@ class ScannedData {
   String uid;
   BuildContext context;
 
-  void resisterScanData() async {
+  Future<String> resisterScanData() async {
     for(int i = 0; i < text.length; i++) {
       if(text.substring(0, i).contains("/")) {
         qrCodeItems.add(text.substring(0, i - 1));
@@ -123,5 +123,6 @@ class ScannedData {
       await DatabaseService(uid: uid).updateCompetedEvents(titles, dates, hours);
       await DatabaseQRCodeHours().deleteDoc(name, title);
     }
+    return name;
   }
 }

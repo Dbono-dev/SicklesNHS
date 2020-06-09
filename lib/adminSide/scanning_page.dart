@@ -65,9 +65,9 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
               onPressed: () async {
                 var result = await BarcodeScanner.scan();
                 print(result.rawContent);
-                ScannedData(text: result.rawContent, date: "06/17/20").resisterScanData();
+                String name = await ScannedData(text: result.rawContent, date: "06/17/20").resisterScanData();
                 setState(() {
-                  qrCodeResult = result.rawContent;
+                  qrCodeResult = name;
                 });
               },
             child: Text("Start Scanning", textAlign: TextAlign.center,
