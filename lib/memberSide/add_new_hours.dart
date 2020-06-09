@@ -78,7 +78,8 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
           color: Colors.white,
           child: Form(
             key: _fourthformKey,
-            child: ListView(
+            child: SingleChildScrollView(
+              child: Column(
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
@@ -327,7 +328,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                           return Container();
                         }
                       },
-                      child: Text("Save Service Hour Form"),
+                      child: Text("Save Service Hour Form", textAlign: TextAlign.center),
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2.5),),
@@ -401,6 +402,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                     },
                   )
               ],
+              )
              ),
           )
         ),

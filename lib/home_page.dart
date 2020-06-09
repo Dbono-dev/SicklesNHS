@@ -722,7 +722,7 @@ Widget adminTags(BuildContext context, Widget location, IconData theIcon, String
               ),
               Padding(padding: EdgeInsets.all(7)),
               Text(theText, textAlign: TextAlign.center, style: TextStyle(
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: FontWeight.w600,
               ),),
             ]

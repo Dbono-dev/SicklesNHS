@@ -136,7 +136,7 @@ class _AccountProfileState extends State<AccountProfile> {
           IconButton(
             icon: Icon(Icons.add_circle_outline),
             color: Colors.white,
-            iconSize: 60,
+            iconSize: 55,
             onPressed: () {
               Navigator.push(context,
               MaterialPageRoute(builder: (context) => CreateNewHoursOptionsPage()));
@@ -146,7 +146,7 @@ class _AccountProfileState extends State<AccountProfile> {
           IconButton(
             icon: Icon(Icons.format_list_numbered),
             color: Colors.white,
-            iconSize: 60,
+            iconSize: 55,
             onPressed: () {
               Navigator.push(context, 
                 MaterialPageRoute(builder: (context) => Leaderboard())
@@ -157,7 +157,7 @@ class _AccountProfileState extends State<AccountProfile> {
           IconButton(
             icon: Icon(Icons.inbox),
             color: Colors.white,
-            iconSize: 60,
+            iconSize: 55,
             onPressed: () {
               Navigator.push(context, 
                 MaterialPageRoute(builder: (context) => MessagesPage()
@@ -169,7 +169,7 @@ class _AccountProfileState extends State<AccountProfile> {
                   child: IconButton(
                     icon: Icon(Icons.settings),
                     color: Colors.white,
-                    iconSize: 60,
+                    iconSize: 55,
                     onPressed: () {
                       Navigator.push(context, 
                         MaterialPageRoute(builder: (context) => SettingsPage()

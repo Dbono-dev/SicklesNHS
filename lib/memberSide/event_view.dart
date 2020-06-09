@@ -335,13 +335,14 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                   child: _image,
                 ),
                 Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
-                Container(
-                  height: 140,
-                  child: SingleChildScrollView(
-                    child:
-                      Text(description,
-                        textAlign: TextAlign.center,
-                      ),                  
+                Expanded(
+                  child: Container(
+                    child: SingleChildScrollView(
+                      child:
+                        Text(description,
+                          textAlign: TextAlign.center,
+                        ),                  
+                    ),
                   ),
                 ),
                 Row(

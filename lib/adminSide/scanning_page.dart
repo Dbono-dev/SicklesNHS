@@ -1,3 +1,4 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
@@ -50,10 +51,11 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
               color: Colors.green,
             ),
             child: FlatButton(
-              onPressed: () {
-                Navigator.push(context, 
+              onPressed: () async {
+                var result = await BarcodeScanner.scan();
+                /*Navigator.push(context, 
                   MaterialPageRoute(builder: (context) => QRCodeCamera()
-                ));
+                ));*/
               },
             child: Text("Start Scanning", textAlign: TextAlign.center,
               style: TextStyle(
@@ -101,7 +103,9 @@ class _QRCodeCameraState extends State<QRCodeCamera> {
           ),
           Expanded(
             flex: 5,
-            child: Container()
+            child: Container(
+              
+            )
           ),
           Expanded(
             flex: 1,

@@ -61,7 +61,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
   }
 
     return Container(
-      height: SizeConfig.blockSizeVertical * 74.1,
+      height: SizeConfig.blockSizeVertical * 74,
       child: Material(
         child: Form(
           key: _fourthformKey,

@@ -26,9 +26,6 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
 
   @override
   Widget build(BuildContext context) {
-    print(SizeConfig.screenHeight);
-    print(SizeConfig.screenWidth);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -281,7 +278,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(number + " Quarter"),
+            Text(number == "Start of School" ? number : number + " Quarter"),
             Text(
               date,
               textAlign: TextAlign.center,

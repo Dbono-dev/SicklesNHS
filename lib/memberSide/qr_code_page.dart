@@ -1,7 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
-//import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 
 class QRCodePage extends StatelessWidget {
@@ -63,11 +63,11 @@ Widget build(BuildContext context) {
             fontSize: SizeConfig.blockSizeHorizontal * 10,
           ),
           ),
-        /*QrImage(
+        QrImage(
           data: title  + "/" + name + "/" + time + "/" + type + "/" + uid,
           version: QrVersions.auto,
           size: SizeConfig.blockSizeVertical * 45,
-        ),*/
+        ),
         Container(
           child: Column(
             children: <Widget>[

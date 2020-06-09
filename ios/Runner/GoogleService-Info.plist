@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1059922742746-l8ls7gpdbr5dk4k35np3cg63ol10jki7.apps.googleusercontent.com</string>
+	<string>1059922742746-e0np31ddmd9unb3e17n6qg04vgtsi7s0.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1059922742746-l8ls7gpdbr5dk4k35np3cg63ol10jki7</string>
+	<string>com.googleusercontent.apps.1059922742746-e0np31ddmd9unb3e17n6qg04vgtsi7s0</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBur3cbrY8iX5HuO2G33ZGgoghn-R9c8II</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.sicklesNhsApp</string>
+	<string>com.theSicklesNHSApp.sicklesNhsApp</string>
 	<key>PROJECT_ID</key>
 	<string>sickles-nhs-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1059922742746:ios:56fa277e0f1459b31e84e3</string>
+	<string>1:1059922742746:ios:ed4db2ae055a46181e84e3</string>
 	<key>DATABASE_URL</key>
 	<string>https://sickles-nhs-app.firebaseio.com</string>
 </dict>

@@ -124,7 +124,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 33,
+      height: SizeConfig.blockSizeVertical * 40,
           child: Form(
             key: _formKey,
             child: Column(
