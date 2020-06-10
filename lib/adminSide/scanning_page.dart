@@ -42,6 +42,29 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
             )
           ),
           Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                elevation: 10,
+                color: Colors.white,
+                onPressed: () {
+
+                },
+                child: Text("Save"),
+              ),
+              RaisedButton(
+                elevation: 10,
+                color: Colors.white,
+                onPressed: () {
+
+                },
+                child: Text("Submit"),
+              )
+            ],
+          ),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5),),
           Material(
             type: MaterialType.transparency,
             child: Container(
@@ -70,7 +93,7 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
                   qrCodeResult = name;
                 });
               },
-            child: Text("Start Scanning", textAlign: TextAlign.center,
+            child: Text("Scan", textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,

@@ -49,7 +49,10 @@ class ExportDataPage extends StatelessWidget {
       body: Column(
         children: <Widget> [
           TopHalfViewStudentsPage(),
+          Padding(padding: EdgeInsets.all(7),),
           RaisedButton(
+            elevation: 10,
+            color: Colors.white,
             onPressed: () {
               getAllDataForStudent();
             },

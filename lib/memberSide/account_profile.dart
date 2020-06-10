@@ -407,14 +407,55 @@ class _AccountProfileState extends State<AccountProfile> {
                           ),
                         ),
                       ),
-                      Card(
-                        elevation: 8,
-                        child: Container(
-                          height: SizeConfig.blockSizeVertical * 7,
-                          width: SizeConfig.blockSizeHorizontal * 25,
-                            child: Material(
-                              color: Colors.transparent,
-                            child: Align(alignment: Alignment.center, child: Text(title.length.toString() + " Events", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                      GestureDetector(
+                        onTap: () async {
+                          QuerySnapshot qn = await Firestore.instance.collection('Important Dates').getDocuments();
+                          var result = qn.documents;
+                          List<Widget> clubDates = new List<Widget>();
+                          for(int i = 0; i < result.length; i++) {
+                            DocumentSnapshot theResult = result[i];
+                            if(theResult.data['type'] == "clubDates") {
+                              clubDates.add(
+                                ListTile(
+                                  title: Text(theResult['date'].toString()),
+                                  trailing: Icon(Icons.close, color: Colors.red,),
+                                )
+                              );
+                            }
+                          }
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Club Meeting Attendence"),
+                                content: Container(
+                                  height: SizeConfig.blockSizeVertical * 40,
+                                  child: Column(
+                                    children: clubDates,
+                                  )
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("OK"),
+                                  )
+                                ],
+                              );
+                            }
+                          );
+                        },
+                        child: Card(
+                          elevation: 8,
+                          child: Container(
+                            height: SizeConfig.blockSizeVertical * 7,
+                            width: SizeConfig.blockSizeHorizontal * 25,
+                              child: Material(
+                                color: Colors.transparent,
+                              child: Align(alignment: Alignment.center, child: Text("0 Meetings", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                            ),
                           ),
                         ),
                       ),

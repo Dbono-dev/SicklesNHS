@@ -14,9 +14,6 @@ import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
-import '../backend/size_config.dart';
-import '../backend/size_config.dart';
-
 class EventPageView extends StatelessWidget {
   EventPageView ({Key key, this.post}) : super (key: key);
 
@@ -38,7 +35,7 @@ class EventPageView extends StatelessWidget {
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
                   BottomEventViewPage(post: post,),
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-                  BottomBottomEventViewPage(post: post,)
+                  post.data['type'] == "clubDates" ? Container() : BottomBottomEventViewPage(post: post,)
         ], ),
               ),
           )
@@ -179,8 +176,8 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
       description= "";
       startTime = 10;
       endTime = 11;
-      startTimeMinutes = 56;
-      endTimeMinutes = 31;
+      theStartTimeMinutes = "56";
+      theEndTimeMinutes = "31";
       differenceTime = 0.5;
       _image = Image.asset("SicklesNHS.jpg");
     }
@@ -347,6 +344,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(location),
                     Text("Remaining Spots: " + remainingSpots)
@@ -367,7 +365,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                              child: Material(
                                color: Colors.transparent,
                                child: Text(
-                                 startTime.toString() + ":" + theStartTimeMinutes + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
+                                 startTime.toString() + ":" + theStartTimeMinutes.toString() + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
                                ),
                              ),
                            ),
@@ -489,8 +487,13 @@ class BottomEventViewPage extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
-          if(post.data['participates'].contains(userData.firstName + " " + userData.lastName) && (differentSignUp != "Check In" || differentSignUp != "Check Out")) {
-            differentSignUp = "";
+          if(post.data['type'] == "clubDates") {
+
+          }
+          else {
+            if(post.data['participates'].contains(userData.firstName + " " + userData.lastName) && (differentSignUp != "Check In" || differentSignUp != "Check Out")) {
+              differentSignUp = "";
+            }
           }
           return Material(
             type: MaterialType.transparency,
