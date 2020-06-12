@@ -16,6 +16,7 @@ class UserData {
   final int secondQuarter;
   final int thirdQuarter;
   final int fourthQuarter;
+  final int numClub;
 
-  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours, this.firstQuarter, this.secondQuarter, this.thirdQuarter, this.fourthQuarter});
+  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours, this.firstQuarter, this.secondQuarter, this.thirdQuarter, this.fourthQuarter, this.numClub});
 }

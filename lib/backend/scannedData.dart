@@ -17,16 +17,26 @@ class ScannedData {
   String type;
   String uid;
   BuildContext context;
+  String oldDate;
+  List participates = new List();
+  String theText = "";
 
   Future<String> resisterScanData() async {
     for(int i = 0; i < text.length; i++) {
-      if(text.substring(0, i).contains("/")) {
-        qrCodeItems.add(text.substring(0, i - 1));
-        text = text.substring(i);
+      var char = text[i];
+      int temp = char.codeUnitAt(0) - 5;
+      String theTemp = String.fromCharCode(temp);
+      theText += theTemp;
+    }
+
+    for(int i = 0; i < theText.length; i++) {
+      if(theText.substring(0, i).contains("/")) {
+        qrCodeItems.add(theText.substring(0, i - 1));
+        theText = theText.substring(i);
         i = 0;
       }
-      else if(i == text.length - 1) {
-        qrCodeItems.add(text);
+      else if(i == theText.length - 1) {
+        qrCodeItems.add(theText);
       }
     }
 
@@ -35,9 +45,50 @@ class ScannedData {
     time = qrCodeItems[2];
     type = qrCodeItems[3];
     uid = qrCodeItems[4];
+    oldDate = qrCodeItems[5];
+
+    List titles = new List();
+    List dates = new List();
+    List hours = new List();
+
+    int currentHours;
+    int currentQuarterHours;
+    int numClub;
+
+    DateFormat _format = new DateFormat("MM/dd/yyyy");
+    String quarter = await CurrentQuarter(_format.parse(date)).getQuarter();
+
+    QuerySnapshot result2 = await Firestore.instance.collection("members").getDocuments();
+      var snapshot2 = result2.documents;
+      for (int i = 0; i < snapshot2.length; i++) {
+        var a = snapshot2[i];
+        if(a.data['uid'] == uid) {
+          titles = a.data['event title'];
+          dates = a.data['event date'];
+          hours = a.data['event hours'];
+          currentHours = a.data['hours'];
+          currentQuarterHours = a.data[quarter];
+          numClub = a.data['numClub'];
+        }
+      }
 
     if(type == "Check In") {
-      await DatabaseQRCodeHours().submitPreHours(name, title, time, type, uid);
+      if(title == "Club Meeting") {
+        QuerySnapshot result = await Firestore.instance.collection("Important Dates").getDocuments();
+        List<DocumentSnapshot> snapshot = result.documents;
+        for (int i = 0; i < snapshot.length; i++) {
+          var a = snapshot[i];
+          if(a.data['type'] == "clubDates" && oldDate == a.data['date']) {
+            participates = a.data['participates'];
+          }
+        }
+        participates.add(uid);
+        await DatabaseImportantDates().addParticipates(participates, "clubDates", oldDate);
+        await DatabaseService(uid: uid).updateNumOfClub(numClub + 1);
+      }
+      else {
+        await DatabaseQRCodeHours().submitPreHours(name, title, time, type, uid);
+      }
     }
     else {
       String oldTime;
@@ -90,29 +141,6 @@ class ScannedData {
       double modifiedStartTime = startTimeHour + modifiedStartTimeMinutes;
 
       differenceTime = modifiedEndTime - modifiedStartTime;
-
-      List titles = new List();
-      List dates = new List();
-      List hours = new List();
-
-      int currentHours;
-      int currentQuarterHours;
-
-      DateFormat _format = new DateFormat("MM/dd/yyyy");
-      String quarter = await CurrentQuarter(_format.parse(date)).getQuarter();
-
-      QuerySnapshot result2 = await Firestore.instance.collection("members").getDocuments();
-      var snapshot2 = result2.documents;
-      for (int i = 0; i < snapshot2.length; i++) {
-        var a = snapshot2[i];
-        if(a.data['uid'] == uid) {
-          titles = a.data['event title'];
-          dates = a.data['event date'];
-          hours = a.data['event hours'];
-          currentHours = a.data['hours'];
-          currentQuarterHours = a.data[quarter];
-        }
-      }
 
       titles.add(title);
       dates.add(date);

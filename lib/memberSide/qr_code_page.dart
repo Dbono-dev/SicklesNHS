@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'dart:convert';
 
 class QRCodePage extends StatelessWidget {
-QRCodePage ({Key key, this.title, this.name, this.type, this.uid}) : super (key: key);
+QRCodePage ({Key key, this.title, this.name, this.type, this.uid, this.date}) : super (key: key);
 
 final String title;
 final String name;
 final String type;
 final String uid;
+final String date;
 
 Widget build(BuildContext context) {
   return Scaffold(
@@ -21,7 +23,7 @@ Widget build(BuildContext context) {
         Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, SizeConfig.blockSizeVertical * 7),
         ),
-        QRCodePageContent(title: title, name: name, type: type, uid: uid),
+        QRCodePageContent(title: title, name: name, type: type, uid: uid, date: date),
       ],
     ),
   );
@@ -29,12 +31,13 @@ Widget build(BuildContext context) {
 }
 
 class QRCodePageContent extends StatelessWidget {
-QRCodePageContent ({Key key, this.title, this.name, this.type, this.uid}) : super (key: key);
+QRCodePageContent ({Key key, this.title, this.name, this.type, this.uid, this.date}) : super (key: key);
 
 final String title;
 final String name;
 final String type;
 final String uid;
+final String date;
 
 Widget build(BuildContext context) {
   DateTime now = DateTime.now();
@@ -49,6 +52,20 @@ Widget build(BuildContext context) {
 
   String theUpdatedTime = updatedTime.toString() + minutes;
 
+  String theQrContent = title  + "/" + name + "/" + time + "/" + type + "/" + uid + "/" + date;
+  String qrContent = "";
+
+  List<int> theListOfInts = new List<int> ();
+
+  for(int i = 0; i < theQrContent.length; i++) {
+    var char = theQrContent[i];
+    int temp = char.codeUnitAt(0) + 5;
+    theListOfInts.add(temp);
+    String theTemp = String.fromCharCode(temp);
+    qrContent += theTemp;
+  }
+
+
   return Container(
     height: SizeConfig.blockSizeVertical * 70,
     width: SizeConfig.blockSizeHorizontal * 100,
@@ -61,8 +78,9 @@ Widget build(BuildContext context) {
             fontSize: SizeConfig.blockSizeHorizontal * 10,
           ),
           ),
+          Text(date, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         QrImage(
-          data: title  + "/" + name + "/" + time + "/" + type + "/" + uid,
+          data: qrContent,
           version: QrVersions.auto,
           size: SizeConfig.blockSizeVertical * 45,
         ),

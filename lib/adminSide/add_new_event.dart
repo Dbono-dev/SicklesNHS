@@ -134,9 +134,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(SizeConfig.screenHeight);
-    print(SizeConfig.screenWidth);
-
     final _thirdformKey = GlobalKey<FormState>();
     String _bottomText = "Create Event";
 

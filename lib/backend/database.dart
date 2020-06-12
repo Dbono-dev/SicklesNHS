@@ -25,7 +25,14 @@ class DatabaseService {
       'firstQuarter': 0,
       'secondQuarter': 0,
       'thirdQuarter': 0,
-      'fourthQuarter': 0
+      'fourthQuarter': 0,
+      'numClub': 0
+    });
+  }
+
+  Future updateNumOfClub(int number) async {
+    return await memberCollection.document(uid).updateData({
+      'numClub': number
     });
   }
 
@@ -74,7 +81,8 @@ class DatabaseService {
       firstQuarter: snapshot.data['firstQuarter'],
       secondQuarter: snapshot.data['secondQuarter'],
       thirdQuarter: snapshot.data['thirdQuarter'],
-      fourthQuarter: snapshot.data['fourthQuarter']
+      fourthQuarter: snapshot.data['fourthQuarter'],
+      numClub: snapshot.data['numClub']
     );
   }
 
@@ -105,6 +113,12 @@ class DatabaseEvent {
       'participates dates': [],
       'start time minutes': startTimeMinutes,
       'end time minutes': endTimeMinutes,
+    });
+  }
+
+  Future updateOneDateEvent(String title, var participate) async {
+    return await eventsCollection.document(title).updateData({
+      'participates': participate
     });
   }
 
@@ -159,13 +173,20 @@ class DatabaseImportantDates {
     return await submitHours.document(type + date).setData({
       'type': type,
       'date': date,
-      'inital date': date
+      'inital date': date,
+      'participates': []
     });
   }
 
   Future updateImportantDates(String type, String oldDate, String newDate) async {
     return await submitHours.document(type + oldDate).updateData({
       'date': newDate
+    });
+  }
+
+  Future addParticipates(var participates, String type, String oldDate) async {
+    return await submitHours.document(type + oldDate).updateData({
+      'participates': participates
     });
   }
 

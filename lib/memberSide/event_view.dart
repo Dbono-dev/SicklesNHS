@@ -166,16 +166,18 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
   Widget _image;
   int shownDate = 0;
   String theShownDate = "";
+  String theDate = "";
 
   @override
   Widget build(BuildContext context) {
     if(widget.post.data['type'] == "clubDates") {
       location = "Sickles High School";
       remainingSpots = "";
-      title = "Club Meeting" + " " + widget.post.data['date'].toString().substring(0, 5);
+      title = "Club Meeting";
       description= "";
       startTime = 10;
       endTime = 11;
+      theDate = widget.post.data['date'].toString().substring(0, 5);
       theStartTimeMinutes = "56";
       theEndTimeMinutes = "31";
       differenceTime = 0.5;
@@ -185,6 +187,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
       location = widget.post.data['address'];
       remainingSpots = (int.parse(widget.post.data["max participates"]) - widget.post.data["participates"].length).toString();
       title = widget.post.data['title'];
+      theDate = "";
       description = widget.post.data['description'];
       startTimeMinutes = widget.post.data["start time minutes"];
       endTimeMinutes = widget.post.data["end time minutes"];
@@ -407,13 +410,15 @@ class BottomEventViewPage extends StatelessWidget {
   int newTime;
   double timing = 0.0;
   String title; 
+  String theDate;
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
     if(post.data['type'] == "clubDates") {
-      title = "Club Dates " + post.data['date'].toString().substring(0, 5);
+      title = "Club Meeting";
+      theDate = post.data['date'];
     }
     else {
       DateTime now = DateTime.now();
@@ -422,6 +427,7 @@ class BottomEventViewPage extends StatelessWidget {
       String year = formatDate(now, [yyyy]);
       String date = month + "/" + day + "/" + year;
       newTime = int.parse(formatDate(now, [HH]));
+      theDate = "";
 
       int modifiedStartMinutes = post.data['start time minutes'];
       int modifiedEndMinutes = post.data['end time minutes'];
@@ -520,12 +526,12 @@ class BottomEventViewPage extends StatelessWidget {
                   onPressed: () {
                     if(differentSignUp == "Check In") { 
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid),
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate,),
                         ));
                     }
                     if(differentSignUp == "Check Out") {
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid,)
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate,)
                         ));
                     }
                     if(differentSignUp == "Sign Up") {
@@ -633,7 +639,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,),
-            participatesDate == null ? Container() : GestureDetector(
+            participatesDate.length == 0 ? Container() : GestureDetector(
               onTap: () {
                 showCupertinoModalPopup(
                   context: context,
@@ -667,7 +673,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
             ),
             Container(
               height: SizeConfig.blockSizeVertical * 45,
-              child: participatesDate == null ? ListView.builder(
+              child: participatesDate.length == 0 ? ListView.builder(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 itemCount: participatesList.length,
                 itemBuilder: (_, index) {
