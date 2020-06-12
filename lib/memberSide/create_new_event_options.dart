@@ -6,6 +6,12 @@ import 'package:sickles_nhs_app/memberSide/saved_service_hour.dart';
 import 'package:sickles_nhs_app/memberSide/submitted_service_hour_forms.dart';
 
 class CreateNewHoursOptionsPage extends StatelessWidget {
+  CreateNewHoursOptionsPage({Key key, this.tile1, this.tile2, this.tile3}) : super(key: key);
+
+  final String tile1;
+  final String tile2;
+  final String tile3;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,9 +20,9 @@ class CreateNewHoursOptionsPage extends StatelessWidget {
         children: <Widget> [
           TopHalfViewStudentsPage(),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-          theTiles("Create New Service Hour Form", AddNewHours(), context),
-          theTiles("View Saved Service Hour Forms", ViewSavedServiceHourForms(), context),
-          theTiles("View Submitted Service Hour Forms", SubmittedServiceHourForms(), context),
+          theTiles(tile1, AddNewHours(), context),
+          theTiles(tile2, ViewSavedServiceHourForms(), context),
+          theTiles(tile3, SubmittedServiceHourForms(), context),
         ]
       ),
     );

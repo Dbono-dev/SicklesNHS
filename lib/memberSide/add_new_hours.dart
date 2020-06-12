@@ -1,33 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:signature/signature.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewHours extends StatelessWidget {
-  AddNewHours({Key key, this.name, this.uid, this.hours}) : super (key: key);
-
-  final String name;
-  final String uid;
-  final int hours;
+  AddNewHours({Key key}) : super (key: key);
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+
     return Scaffold( 
       backgroundColor: Colors.white,
-      body: Container(
-        height: SizeConfig.blockSizeVertical * 100,
-        width: SizeConfig.blockSizeHorizontal * 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget> [
-            TopHalfViewStudentsPage(),
-            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-            AddNewHoursMiddle(name: name, uid: uid, hours: hours),
-          ]
-        ),
+      body: StreamBuilder<UserData>(
+        stream: DatabaseService(uid: user.uid).userData,
+        builder: (context, snapshot) {
+          if(snapshot.hasData) {
+            UserData userData = snapshot.data;
+
+            return Container(
+              height: SizeConfig.blockSizeVertical * 100,
+              width: SizeConfig.blockSizeHorizontal * 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget> [
+                  TopHalfViewStudentsPage(),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+                  AddNewHoursMiddle(name: userData.firstName + userData.lastName, uid: user.uid, hours: userData.hours),
+                ]
+              ),
+            );
+          }
+        }
       ),
     );
   }
@@ -293,7 +303,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       elevation: 10,
                       color: Colors.white,
                       onPressed: () async {
-                        final form = _fourthformKey.currentState;
+                          final form = _fourthformKey.currentState;
                             form.save();
                             if(form.validate() && _controller.isNotEmpty) {
                               try {
