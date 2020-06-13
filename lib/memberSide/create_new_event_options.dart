@@ -4,6 +4,7 @@ import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/memberSide/add_new_hours.dart';
 import 'package:sickles_nhs_app/memberSide/saved_service_hour.dart';
 import 'package:sickles_nhs_app/memberSide/submitted_service_hour_forms.dart';
+import 'package:sickles_nhs_app/adminSide/scanning_page.dart';
 
 class CreateNewHoursOptionsPage extends StatelessWidget {
   CreateNewHoursOptionsPage({Key key, this.tile1, this.tile2, this.tile3}) : super(key: key);
@@ -20,9 +21,9 @@ class CreateNewHoursOptionsPage extends StatelessWidget {
         children: <Widget> [
           TopHalfViewStudentsPage(),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-          theTiles(tile1, AddNewHours(), context),
-          theTiles(tile2, ViewSavedServiceHourForms(), context),
-          theTiles(tile3, SubmittedServiceHourForms(), context),
+          theTiles(tile1, tile1 == "Create New Scanning Session" ? ScanningPage() : AddNewHours(), context),
+          theTiles(tile2, tile2 == "View Saved Scanning Sessions" ? ViewSavedServiceHourForms() : ViewSavedServiceHourForms(), context),
+          theTiles(tile3, tile3 == "View Submitted Scanning Sessions" ? SubmittedServiceHourForms() : SubmittedServiceHourForms(), context),
         ]
       ),
     );

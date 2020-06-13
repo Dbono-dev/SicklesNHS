@@ -21,7 +21,7 @@ class ScannedData {
   List participates = new List();
   String theText = "";
 
-  Future<String> resisterScanData() async {
+  Future<List> resisterScanData() async {
     for(int i = 0; i < text.length; i++) {
       var char = text[i];
       int temp = char.codeUnitAt(0) - 5;
@@ -39,6 +39,8 @@ class ScannedData {
         qrCodeItems.add(theText);
       }
     }
+
+    qrCodeItems.add(date);
 
     title = qrCodeItems[0];
     name = qrCodeItems[1];
@@ -151,6 +153,6 @@ class ScannedData {
       await DatabaseService(uid: uid).updateCompetedEvents(titles, dates, hours);
       await DatabaseQRCodeHours().deleteDoc(name, title);
     }
-    return name;
+    return qrCodeItems;
   }
 }

@@ -56,7 +56,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
       return Container(
         height: SizeConfig.blockSizeVertical * 76,
         child: FutureBuilder(
-          future: getPosts(),
+          future: getPosts(), 
           builder: (_, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
               return Center(

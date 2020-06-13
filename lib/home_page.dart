@@ -7,6 +7,7 @@ import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
 import 'package:sickles_nhs_app/adminSide/approve_hours.dart';
 import 'package:sickles_nhs_app/backend/auth_service.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
 import 'package:sickles_nhs_app/memberSide/event_view.dart';
 import 'package:date_format/date_format.dart';
 import 'package:sickles_nhs_app/adminSide/important_dates.dart';
@@ -690,7 +691,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                     adminTags(context, AddNewEvent(), Icons.add_circle, "Add New Event"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),
                     adminTags(context, Notifications(), Icons.notifications, "Send Notification"),
-                    adminTags(context, ScanningPage(), Icons.photo_camera, "Start Scanning"),
+                    adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions",), Icons.photo_camera, "Start Scanning"),
                     adminTags(context, ApproveHoursPage(), Icons.check_circle, "Approve Hours"),
                     adminTags(context, ExportDataPage(), Icons.import_export, "Export Data"),
                     adminTags(context, ImportantDateMain(), Icons.date_range, "Set Important Dates"),

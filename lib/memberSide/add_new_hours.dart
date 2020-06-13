@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
@@ -36,6 +35,9 @@ class AddNewHours extends StatelessWidget {
                 ]
               ),
             );
+          }
+          else {
+            return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green));
           }
         }
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/scannedData.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'package:flutter/services.dart';
 
 class ScanningPage extends StatelessWidget {
   @override
@@ -28,6 +29,9 @@ class ScanningPageBody extends StatefulWidget {
 class _ScanningPageBodyState extends State<ScanningPageBody> {
 
   String qrCodeResult;
+  List theScanUID = new List();
+  List theScanName = new List();
+  List theScanDate = new List();
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +39,17 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
       height: SizeConfig.blockSizeVertical * 76,
       child: Column(
         children: <Widget> [
-          Card(
-            elevation: 10,
-            child: ListTile(
-              title: Text(qrCodeResult == null ? "" : qrCodeResult),
-            )
+          ListView.builder(
+            itemCount: theScanUID.length,
+            itemBuilder: (_, index) {
+              return Card(
+                elevation: 10,
+                child: ListTile(
+                  title: Text(theScanName[index]),
+                  trailing: Text(theScanDate[index]),
+                )
+              );
+            }
           ),
           Spacer(),
           Row(
@@ -87,10 +97,12 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
             child: FlatButton(
               onPressed: () async {
                 var result = await BarcodeScanner.scan();
-                print(result.rawContent);
-                String name = await ScannedData(text: result.rawContent, date: "06/17/20").resisterScanData();
+                HapticFeedback.vibrate();
+                List theListOfData = await ScannedData(text: result.rawContent, date: DateTime.now().month.toString() + "/" + DateTime.now().day.toString() + "/" + DateTime.now().year.toString()).resisterScanData();
                 setState(() {
-                  qrCodeResult = name;
+                  theScanUID.add(theListOfData[4]);
+                  theScanName.add(theListOfData[1]); 
+                  theScanDate.add(theListOfData[6]); 
                 });
               },
             child: Text("Scan", textAlign: TextAlign.center,
