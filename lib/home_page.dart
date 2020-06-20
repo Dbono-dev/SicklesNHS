@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:sickles_nhs_app/backend/scannedData.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
 import 'package:sickles_nhs_app/adminSide/approve_hours.dart';
@@ -19,7 +18,6 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/memberSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
-import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class TheOpeningPage extends StatelessWidget {
   TheOpeningPage({Key key}) : super (key: key);
@@ -471,7 +469,7 @@ class BottomPageCards extends StatelessWidget {
         child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: BorderRadius.circular(10),
             side: BorderSide(width: 3, color: Colors.transparent)
           ),
           child: Container(
@@ -563,6 +561,9 @@ class _StudentMyEvents extends State<StudentMyEvents> {
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5)),
             Container(
               width: SizeConfig.blockSizeHorizontal * 25,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10)
+              ),
               child: RaisedButton(
                 color: Colors.white,
                       elevation: 8,
@@ -629,6 +630,9 @@ class _StudentMyEvents extends State<StudentMyEvents> {
         }
         return Container(
               width: SizeConfig.blockSizeHorizontal * 25,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10)
+              ),
               child: RaisedButton(
                 color: Colors.white,
                       elevation: 8,
@@ -672,6 +676,9 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                     Padding(padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 25, 0.0, 0.0, 0.0)),
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10)
+                      ),
                       child: RaisedButton(
                         color: Colors.white,
                               elevation: 8,
@@ -712,6 +719,7 @@ Widget adminTags(BuildContext context, Widget location, IconData theIcon, String
         },
         child: Card(
           elevation: 8,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget> [
