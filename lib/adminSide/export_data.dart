@@ -195,8 +195,13 @@ class _ExportDataPageState extends State<ExportDataPage> {
             child: Text("Cancel")
           ),
           FlatButton(
-            onPressed: () {
-
+            onPressed: () async  {
+              QuerySnapshot qn = await Firestore.instance.collection('members').getDocuments();
+              var result = qn.documents;
+              for(int i = 0; i < result.length; i++) {
+                DocumentSnapshot theResult = result[i];
+                _submitForm(theResult, numOfTimes: result.length);
+              }
             },
             child: Text("Confirm")
           )
@@ -216,8 +221,16 @@ class _ExportDataPageState extends State<ExportDataPage> {
                   List<Widget> theEvents = new List<Widget> ();
                   for(int i = 0; i < snapshot.data.length; i++) {
                     theEvents.add(
-                      ListTile(
-                        title: Text(snapshot.data[i].data['title']),
+                      GestureDetector(
+                        onTap: () {
+                          _submitEventForm(snapshot.data[i]);
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: ListTile(
+                            title: Text(snapshot.data[i].data['title']),
+                          ),
+                        ),
                       )
                     );
                   }
@@ -249,10 +262,115 @@ class _ExportDataPageState extends State<ExportDataPage> {
       );
     }
     else if (choice == ExportDataOptions.specificClass) {
-
+      return Container(
+        height: SizeConfig.blockSizeVertical * 45,
+        child: AlertDialog(
+          title: Text("Please Choose One!"),
+          content: Container(
+            child: FutureBuilder(
+              future: getPosts(),
+              builder: (_, snapshot) {
+                if(snapshot.hasData) {
+                  List<Widget> theGrades = new List<Widget> ();
+                  for(int i = 10; i < 13; i++) {
+                    theGrades.add(
+                      GestureDetector(
+                        onTap: () {
+                          for(int a = 0; a < snapshot.data.length; a++) {
+                            if(int.parse(snapshot.data[a].data['grade']) == i) {
+                              _submitForm(snapshot.data[a]);
+                            }
+                          }
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: ListTile(
+                            title: Text("Grade: $i")
+                          ),
+                        ),
+                      )
+                    );
+                  }
+            
+                  return Container(
+                    height: SizeConfig.blockSizeVertical * 45,
+                    width: SizeConfig.blockSizeHorizontal * 75,
+                    child: ListView(
+                      children: theGrades,
+                    ),
+                  );
+                }
+                else {
+                  return CircularProgressIndicator(
+                    value: SizeConfig.blockSizeVertical * 45,
+                  );
+                }
+              }
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Back")
+            )
+          ],
+        ),
+      );
     }
     else if (choice == ExportDataOptions.specificPerson) {
-
+      return Container(
+        height: SizeConfig.blockSizeVertical * 45,
+        child: AlertDialog(
+          title: Text("Please Choose One!"),
+          content: Container(
+            child: FutureBuilder(
+              future: getPosts(),
+              builder: (_, snapshot) {
+                if(snapshot.hasData) {
+                  List<Widget> theEvents = new List<Widget> ();
+                  for(int i = 0; i < snapshot.data.length; i++) {
+                    theEvents.add(
+                      GestureDetector(
+                        onTap: () {
+                          _submitForm(snapshot.data[i], numOfTimes: 1);
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: ListTile(
+                            title: Text(snapshot.data[i].data['first name'] + " " + snapshot.data[i].data["last name"]),
+                          ),
+                        ),
+                      )
+                    );
+                  }
+                  return Container(
+                    height: SizeConfig.blockSizeVertical * 45,
+                    width: SizeConfig.blockSizeHorizontal * 75,
+                    child: ListView(
+                      children: theEvents,
+                    ),
+                  );
+                }
+                else {
+                  return CircularProgressIndicator(
+                    value: SizeConfig.blockSizeVertical * 45,
+                  );
+                }
+              }
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Back")
+            )
+          ],
+        ),
+      );
     }
     else {
       return AlertDialog(
@@ -271,7 +389,8 @@ class _ExportDataPageState extends State<ExportDataPage> {
   }
 
 
-  Future _submitForm(DocumentSnapshot snapshot) async {
+  Future _submitForm(DocumentSnapshot snapshot, {int numOfTimes}) async {
+    int x = 0;
 
     FeedbackForm feedbackForm = FeedbackForm(
       snapshot.data['last name'].toString(),
@@ -280,15 +399,50 @@ class _ExportDataPageState extends State<ExportDataPage> {
       snapshot.data['student number'].toString()
     );
 
-    FormController formController = FormController((String response) {
+    ExportPersonFormController formController = ExportPersonFormController((String response) {
       print("Response: $response");
       if(response == FormController.STATUS_SUCCESS) {
-
+        x++;
+        if(x == numOfTimes) {
+          Navigator.of(context).pop();
+        }
       }
     });
 
     await formController.submitForm(feedbackForm);
   }
+
+  Future _submitEventForm(DocumentSnapshot snapshot) async {
+    EventForm theEventForm = EventForm(
+      snapshot.data['title'].toString(),
+      snapshot.data['date'].toString().substring(0, 10),
+      snapshot.data['start time'].toString() + ":" + snapshot.data['start time minutes'].toString(),
+      snapshot.data['end time'].toString() + ":" + snapshot.data['end time minutes'].toString(),
+      snapshot.data['type'].toString()
+    );
+
+
+    FormController eventForm = FormController((String response) {
+      print("Response: $response");
+      if(response == FormController.STATUS_SUCCESS) {
+        Navigator.of(context).pop();
+      }
+    });
+
+    await eventForm.submitEvent(theEventForm);
+  }
+}
+
+class EventForm {
+  String _title;
+  String _date;
+  String _startTime;
+  String _endTime;
+  String _type;
+
+  EventForm(this._title, this._date, this._startTime, this._endTime, this._type);
+
+  String toParams() => "?title=$_title&date=$_date&startTime=$_startTime&endTime=$_endTime&type=$_type";
 }
 
 
@@ -310,6 +464,26 @@ class FormController {
   static const STATUS_SUCCESS = "SUCCESS";
 
   FormController(this.callback);
+
+  Future submitEvent(EventForm eventForm) async {
+    try {
+      await http.get(URL + eventForm.toParams()).then((response) {
+        callback(convert.jsonDecode(response.body)['status']);
+      });
+    }
+    catch (e) {
+      print(e);
+    }
+  }
+}
+
+class ExportPersonFormController {
+  final void Function(String) callback;
+  static const String URL = "https://script.google.com/macros/s/AKfycbyrDN8nw3eEBfIb84Yx-OVuzUj3i3EKfhv-DK3A-_qr015Yb-DR/exec";
+
+  static const STATUS_SUCCESS = "SUCCESS";
+
+  ExportPersonFormController(this.callback);
 
   Future submitForm(FeedbackForm feedbackForm) async {
     try {

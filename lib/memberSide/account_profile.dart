@@ -426,6 +426,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                               setState(() {
                                                 
                                               });
+                                              super.setState(() { });
                                             }
                                             else {
                                               participatesList.add(uid);
