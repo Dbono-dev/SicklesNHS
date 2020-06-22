@@ -39,17 +39,20 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
       height: SizeConfig.blockSizeVertical * 76,
       child: Column(
         children: <Widget> [
-          ListView.builder(
-            itemCount: theScanUID.length,
-            itemBuilder: (_, index) {
-              return Card(
-                elevation: 10,
-                child: ListTile(
-                  title: Text(theScanName[index]),
-                  trailing: Text(theScanDate[index]),
-                )
-              );
-            }
+          Container(
+            height: SizeConfig.blockSizeVertical * 55,
+            child: ListView.builder(
+              itemCount: theScanUID.length,
+              itemBuilder: (_, index) {
+                return Card(
+                  elevation: 10,
+                  child: ListTile(
+                    title: Text(theScanName[index]),
+                    trailing: Text(theScanDate[index]),
+                  )
+                );
+              }
+            ),
           ),
           Spacer(),
           Row(

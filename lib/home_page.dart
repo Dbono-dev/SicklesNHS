@@ -141,23 +141,18 @@ class TopHalfHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
   SizeConfig().init(context);
 
-  DateTime now = DateTime.now();
-  String time = formatDate(now, [HH]).trim();
-  int theTiming = int.parse(time);
-
-  if(4 < theTiming && theTiming <= 11)
-  {
+  String timeOfDay = "";
+  int currentTime = DateTime.now().hour;
+  
+  if(currentTime > 4 && currentTime < 12) {
     timeOfDay = "Good Morning ";
   }
-  if(theTiming >= 12 && theTiming <= 16)
-  {
+  else if(currentTime >= 12 && currentTime < 16) {
     timeOfDay = "Good Afternoon ";
   }
   else {
     timeOfDay = "Good Evening ";
   }
-
-  
 
     final user = Provider.of<User>(context);
 

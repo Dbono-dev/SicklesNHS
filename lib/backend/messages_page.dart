@@ -13,7 +13,17 @@ class MessagesPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           TopHalfViewStudentsPage(),
-          Container(height: SizeConfig.blockSizeVertical * 80, child: MessagesMiddlePage())
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 5),
+            child: Card(
+              elevation: 10,
+              child: ListTile(
+                leading: Icon(Icons.assignment),
+                title: Text("View Newsletter"),
+              ),
+            ),
+          ),
+          Container(height: SizeConfig.blockSizeVertical * 65, child: MessagesMiddlePage())
         ],
       ),
     );

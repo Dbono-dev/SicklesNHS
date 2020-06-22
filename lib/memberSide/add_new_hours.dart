@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
@@ -9,7 +10,9 @@ import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AddNewHours extends StatelessWidget {
-  AddNewHours({Key key}) : super (key: key);
+  AddNewHours({Key key, this.fromSaved}) : super (key: key);
+
+  final List fromSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class AddNewHours extends StatelessWidget {
                 children: <Widget> [
                   TopHalfViewStudentsPage(),
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-                  AddNewHoursMiddle(name: userData.firstName + userData.lastName, uid: user.uid, hours: userData.hours),
+                  AddNewHoursMiddle(name: userData.firstName + userData.lastName, uid: user.uid, hours: userData.hours, fromSaved: fromSaved),
                 ]
               ),
             );
@@ -46,11 +49,12 @@ class AddNewHours extends StatelessWidget {
 }
 
 class AddNewHoursMiddle extends StatefulWidget {
-  AddNewHoursMiddle({Key key, this.name, this.uid, this.hours}) : super (key: key);
+  AddNewHoursMiddle({Key key, this.name, this.uid, this.hours, this.fromSaved}) : super (key: key);
 
   final String name;
   final String uid;
   final int hours;
+  final List fromSaved;
 
   @override
   _AddNewHoursMiddleState createState() => _AddNewHoursMiddleState();
@@ -70,6 +74,8 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
     return thenewDate;
   }
 
+  DateTime startDate = DateTime.now();
+
   final SignatureController _controller = SignatureController(penStrokeWidth: 3, penColor: Colors.green);
   String _typeOfActivity;
   String _location;
@@ -79,9 +85,23 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
   String _emailSup;
   String _date;
   final _fourthformKey = GlobalKey<FormState>();
+  DateTime _newDateTime;
 
   @override
   Widget build(BuildContext context) {
+    String startingDate;
+    startingDate = _newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+
+    if(widget.fromSaved != null) {
+      _typeOfActivity = widget.fromSaved[0];
+      _location = widget.fromSaved[1];
+      startingDate = widget.fromSaved[2];
+      _hours = widget.fromSaved[3];
+      _nameOfSup = widget.fromSaved[4];
+      _supPhone = widget.fromSaved[5];
+      _emailSup = widget.fromSaved[6];
+    }
+
     return Container(
       height: SizeConfig.blockSizeVertical * 78,
       child: Scaffold(
@@ -146,20 +166,17 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                         highlightColor: Colors.green,
                         shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
                         borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                        child: Text("Date"),
-                        onPressed: () {
-                          showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                            return Container(
-                              height: MediaQuery.of(context).copyWith().size.height / 3,
-                              child: CupertinoDatePicker(
-                                initialDateTime: newDateTime(),
-                                onDateTimeChanged: (DateTime newDate) {
-                                  _date = newDate.toString().substring(5, 7) + "/" + newDate.toString().substring(8, 10) + "/" + newDate.toString().substring(0, 4);
-                                },
-                                mode: CupertinoDatePickerMode.date,
-                                maximumDate: new DateTime(2030, 12, 30)
-                              ),
-                            );
+                        child: Text(startingDate),
+                        onPressed: () async {
+                          _newDateTime = await showRoundedDatePicker (
+                            context: context,
+                            initialDate: startDate,
+                            lastDate: DateTime(DateTime.now().year + 1),
+                            borderRadius: 16,
+                            theme: ThemeData(primarySwatch: Colors.green),
+                          );
+                          setState(() {
+                            startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
                           });
                         },
                     ),
@@ -322,6 +339,10 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 if(result != null) {
                                   setState(() {
                                     _controller.clear();
+                                    _typeOfActivity = "";
+                                    _location = "";
+                                    _newDateTime = null;
+                                    _hours = "";
                                     _fourthformKey.currentState.reset();
                                   });
                                   Scaffold.of(context).showSnackBar(

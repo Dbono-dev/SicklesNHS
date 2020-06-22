@@ -153,6 +153,12 @@ class DatabaseSubmitHours {
     });
   }
 
+  Future fromSaveToSubmit(String type) async {
+    return await submitHours.document(type).updateData({
+      'save_submit': "submit"
+    });
+  }
+
   Future updateCompleteness(String type, bool complete) async {
     return await submitHours.document(type).updateData({
       'complete': complete

@@ -159,7 +159,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                           sendEventToDatabase(pastTitles, pastDates, pastHours, snapshot.data[index].data['uid'].toString());
                                           sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), int.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
                                           sendMessage("Hour Approval Update", "Your hours have been approved", context);
-                                          sendDeleteHourRequest(snapshot.data[index].data['type']);
+                                          sendUpdateComplete(snapshot.data[index].data['type']);
                                         });
                                       },
                                     ),
@@ -168,8 +168,8 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                       color: Colors.red,
                                       onPressed: () {
                                         setState(() {
-                                          sendDeleteHourRequest(snapshot.data[index].data['type']);
                                           sendMessage("Hour Approval Update", "Your hours have been declined", context);
+                                          sendUpdateDecline(snapshot.data[index].data['type']);
                                         });
                                       },
                                     )
@@ -213,12 +213,15 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
   }
 
   Future sendHoursRequestUpdate(int hours, String uid, int currentHours) async {
-    print(currentHours);
     await DatabaseService(uid: uid).updateHoursRequest(hours, currentHours);
   }
 
-  Future sendDeleteHourRequest(String type) async {
-    await DatabaseSubmitHours().deleteCompleteness(type);
+  Future sendUpdateComplete(String type) async {
+    await DatabaseSubmitHours().updateCompleteness(type, true);
+  }
+
+  Future sendUpdateDecline(String type) async {
+    await DatabaseSubmitHours().updateCompleteness(type, false);
   }
 
   Future sendHoursQuarterUpdate(String uid, int hours, int currentHours, String quarter) async {
