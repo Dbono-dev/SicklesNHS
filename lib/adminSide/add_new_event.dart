@@ -680,6 +680,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                     _description = "";
                                     _address = "";
                                     _max = "";
+                                    startingDate = "";
+                                    theEndTime = "";
+                                    theStartTime = "";
                                     communityServiceEventValue = false;
                                     serviceEventValue = false;
                                   });

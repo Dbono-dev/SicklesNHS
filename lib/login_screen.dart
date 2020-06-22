@@ -124,7 +124,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 40,
+      height: SizeConfig.blockSizeVertical * 60,
           child: Form(
             key: _formKey,
             child: Column(
@@ -177,7 +177,6 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                   },
                 ),
               ),
-              Padding(padding: EdgeInsets.all(1),),
               Material(
                 elevation: 8.0,
                 borderRadius: BorderRadius.circular(30.0),
@@ -202,6 +201,11 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                     }
                     }
                   })
+              ),
+              Spacer(),
+              Material(
+                color: Colors.transparent,
+                child: Text("Developed by Dylan Bono", style: TextStyle(color: Colors.white, fontSize: 25),)
               )
             ],
       ),
