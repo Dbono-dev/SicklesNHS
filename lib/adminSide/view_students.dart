@@ -25,8 +25,9 @@ class ViewStudents extends StatelessWidget {
 }
 
 class TopHalfViewStudentsPage extends StatelessWidget {
-  TopHalfViewStudentsPage({Key key}) : super (key: key);
+  TopHalfViewStudentsPage({Key key, this.text}) : super (key: key);
 
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,7 @@ class TopHalfViewStudentsPage extends StatelessWidget {
                   ),
                   Container(
                     child: FloatingActionButton(
+                      heroTag: text == null ? "" : text,
                       backgroundColor: Colors.grey,
                       elevation: 8,
                       onPressed: () {

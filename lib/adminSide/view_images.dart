@@ -86,7 +86,18 @@ class ViewImages extends StatelessWidget {
                   itemBuilder: (_, i) {
                     return Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, SizeConfig.blockSizeHorizontal * 2, 0),
-                      child: Image.network(theImages[i], fit: BoxFit.fitHeight, height: 180,),
+                      child: Image.network(
+                        theImages[i],
+                        fit: BoxFit.fitHeight, height: 180,
+                        loadingBuilder:(BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.white)
+                              ),
+                            );
+                          },
+                      ),
                     );
                   },
                 ),

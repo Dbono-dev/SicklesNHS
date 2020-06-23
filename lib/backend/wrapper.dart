@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/home_page.dart';
 import 'package:sickles_nhs_app/login_screen.dart';
 import 'package:sickles_nhs_app/backend/push_notification.dart';
@@ -22,7 +23,32 @@ class Wrapper extends StatelessWidget {
       return LoginScreen();
     }
     else {
-      return TheOpeningPage();
+      return StreamBuilder<UserData>(
+        stream: DatabaseService(uid: user.uid).userData,
+        builder: (context, snapshot) {
+          if(snapshot.hasData) {
+            return TheOpeningPage();
+          }
+          else {
+            return Material(
+              child: Center(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Sickles NHS", style: TextStyle(color: Colors.green, fontSize: 45)),
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.green),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+        },
+      );
     }
   }
 }

@@ -14,7 +14,7 @@ import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
-import 'package:sickles_nhs_app/memberSide/notification_system.dart';
+import 'package:sickles_nhs_app/adminSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
 
@@ -49,7 +49,7 @@ class MiddleHomePage extends StatefulWidget {
 class _MiddleHomePageState extends State<MiddleHomePage> {
     Future getPosts() async {
       var firestore = Firestore.instance;
-      QuerySnapshot qn = await firestore.collection("events").getDocuments();
+      QuerySnapshot qn = await firestore.collection("events").orderBy('date').getDocuments();
       return qn.documents;
     }
 
@@ -86,6 +86,7 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                 }
                 else if (snapshot.data.length == 0) {
                   return Material(
+                    color: Colors.transparent,
                       child: Center(
                       child: Text("NO EVENTS", style: TextStyle(
                         color: Colors.green,
@@ -97,15 +98,25 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                 else {
                   int theLength = snapshot.data.length;
                   for(int i = 0; i < snapshot.data.length; i++) {
-                    if(format.parse(snapshot.data[i].data['date'].toString().substring(0, 10)).isBefore(DateTime.now())) {
+                    int numberOfTimesThrough = 0;
+                    int a = 0;
+                    for(int k = a; a < snapshot.data[i].data['date'].toString().length; k + 1) {
+                      numberOfTimesThrough = numberOfTimesThrough + 1;
+                      if(!format.parse(snapshot.data[i].data['date'].toString().substring(a, a + 10)).isAfter(DateTime.now()) || format.parse(snapshot.data[i].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
+                        numberOfTimesThrough--;
+                      }
+                      a = a + 11;
+                    }
+                    if(numberOfTimesThrough == 0) {
                       theLength = theLength - 1;
                     }
-                    else if(snapshot.data[i].data['participates'].contains(userData.firstName + " " + userData.lastName)) {
+                    if(snapshot.data[i].data['participates'].contains(userData.firstName + " " + userData.lastName)) {
                       theLength = theLength - 1;
                     }
                   }
                   if(theLength == 0) {
                     return Material(
+                      color: Colors.transparent,
                       child: Center(
                         child: Text("NO EVENTS", style: TextStyle(
                           color: Colors.green,
@@ -119,8 +130,17 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data.length,
                       itemBuilder: (_, index) {
-                        if(format.parse(snapshot.data[index].data['date']).isAfter(DateTime.now()) || (int.parse(snapshot.data[index].data['date'].toString().substring(0, 2)) == DateTime.now().month && int.parse(snapshot.data[index].data['date'].toString().substring(3, 5)) == DateTime.now().day && int.parse(snapshot.data[index].data['date'].toString().substring(6, 10)) == DateTime.now().year)) {
-                          return MiddleHomePageCards(post: snapshot.data[index]);
+                        int numberOfTimesThrough = 0;
+                        int a = 0;
+                        for(int i = a; a < snapshot.data[index].data['date'].toString().length; i + 1) {
+                          numberOfTimesThrough = numberOfTimesThrough + 1;
+                          if(!format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAfter(DateTime.now()) || format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
+                            numberOfTimesThrough--;
+                          }
+                          a = a + 11;
+                        }
+                        if(numberOfTimesThrough > 0) {
+                          return MiddleHomePageCards(post: snapshot.data[index],);
                         }
                         else {
                           return Container();
@@ -156,7 +176,7 @@ class TopHalfHomePage extends StatelessWidget {
   if(currentTime > 4 && currentTime < 12) {
     timeOfDay = "Good Morning ";
   }
-  else if(currentTime >= 12 && currentTime < 16) {
+  else if(currentTime >= 12 && currentTime < 17) {
     timeOfDay = "Good Afternoon ";
   }
   else {
@@ -172,6 +192,7 @@ class TopHalfHomePage extends StatelessWidget {
           UserData userData = snapshot.data;
 
             return Material(
+              color: Colors.transparent,
                 child: Container(
                 height: SizeConfig.blockSizeVertical * 20,
                 decoration: BoxDecoration(
@@ -208,6 +229,7 @@ class TopHalfHomePage extends StatelessWidget {
                     Material(
                       color: Colors.transparent,
                       child: FloatingActionButton(
+                        heroTag: "homePage",
                         backgroundColor: Colors.grey,
                         elevation: 8,
                         onPressed: () {

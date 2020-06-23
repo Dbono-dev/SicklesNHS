@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
 import 'package:sickles_nhs_app/memberSide/send_images.dart';
 import 'package:sickles_nhs_app/memberSide/settings_page.dart';
-import 'package:sickles_nhs_app/backend/messages_page.dart';
+import 'package:sickles_nhs_app/memberSide/messages_page.dart';
 import 'package:sickles_nhs_app/memberSide/leaderboard.dart';
 import 'package:intl/intl.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;

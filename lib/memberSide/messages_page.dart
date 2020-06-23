@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:io';
 //import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:sickles_nhs_app/adminSide/message.dart';
+import 'package:sickles_nhs_app/backend/message.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 
 class MessagesPage extends StatelessWidget {
@@ -40,6 +40,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
 
   final List<Message> messages = [];
 
+  @override
   void initState() {
     if(Platform.isIOS) {
       //_fcm.requestNotificationPermissions(IosNotificationSettings());

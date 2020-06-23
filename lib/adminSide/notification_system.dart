@@ -9,7 +9,7 @@ class Notifications extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Column( 
           children: <Widget> [
             TopHalfViewStudentsPage(),
             Padding(padding: EdgeInsets.all(20)),

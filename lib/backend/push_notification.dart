@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sickles_nhs_app/backend/messages_page.dart';
+import 'package:sickles_nhs_app/memberSide/messages_page.dart';
 
 
 class PushNotificationService {

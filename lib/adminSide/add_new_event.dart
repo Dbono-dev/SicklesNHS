@@ -41,7 +41,7 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
           ),
           Column(
             children: <Widget> [
-              TopHalfViewStudentsPage(),
+              TopHalfViewStudentsPage(text: "addEvent"),
               Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
               MiddleNewEventPage(title: widget.title, description: widget.description, startTime: widget.startTime, startTimeMinutes: widget.startTimeMinutes, endTime: widget.endTime, endTimeMinutes: widget.endTimeMinutes, address: widget.address, date: widget.date, max: widget.max, type: widget.type,),
             ]
@@ -87,14 +87,15 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   DateTime startDate = new DateTime.now();
 
   Future getImage(String eventTitle) async {
-    var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var tempImage = await ImagePicker().getImage(source: ImageSource.gallery);
+    File theFile = File(tempImage.path);
 
     setState(() {
       fileSelect = "File Selected";
     });
 
     firebaseStorageRef = FirebaseStorage.instance.ref().child(eventTitle + '.jpg');
-    final StorageUploadTask task = firebaseStorageRef.putFile(tempImage);
+    final StorageUploadTask task = firebaseStorageRef.putFile(theFile);
   }
 
   DateTime newDateTime () {
