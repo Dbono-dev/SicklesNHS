@@ -7,7 +7,6 @@ import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 enum ExportDataOptions {specificEvent, specificClass, specificPerson, allStudents}
 
@@ -35,22 +34,6 @@ class _ExportDataPageState extends State<ExportDataPage> {
   String emailAddress;
   String permissions;
   String studentNum;
-
-  Future getAllDataForStudent() async {
-    List myList = new List ();
-    var firestore = FirebaseDatabase.instance.reference().child('members');
-    var result = await firestore.child('dGhlZHlsYW5yYm9ub0BnbWFpbC5jb20=-Dylan').once().then((DataSnapshot snapshot) => {
-      firstName = snapshot.value['firstName'],
-      lastName = snapshot.value['lastName'],
-      grade = snapshot.value['grade'].toString(),
-      emailAddress = snapshot.value['emailAddress'],
-      permissions = snapshot.value['permissions'].toString(),
-      studentNum = snapshot.value['studentNum'].toString()
-    });
-    String uid = await AuthService().createImportedUser(emailAddress, "password");
-    var resultTwo = await DatabaseService(uid: uid).updateUserData(firstName, lastName, studentNum, grade, uid, permissions);
-    var resultThree = await AuthService().logout();
-  }
 
   ExportDataOptions _choice;
 
@@ -124,15 +107,6 @@ class _ExportDataPageState extends State<ExportDataPage> {
             ),
           ),
           Spacer(),
-          RaisedButton(
-            elevation: 10,
-            color: Colors.white,
-            onPressed: () {
-              getAllDataForStudent();
-            },
-            child: Text("Import Data"),
-          ),
-          Padding(padding: EdgeInsets.all(7)),
           Material(
             type: MaterialType.transparency,
             child: Container(
