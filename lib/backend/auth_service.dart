@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,12 @@ class AuthService {
     try {
       var result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
+      if(Firestore.instance.collection('members').document(user.uid).get() == null) {
+        //await DatabaseService(uid: user.uid).updateUserData(firstName, lastName, studentNum, grade, user.uid, "0");
+      }
+      else {
+
+      }
       return user;
     }
     catch(error) {

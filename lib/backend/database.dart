@@ -19,9 +19,9 @@ class DatabaseService {
       'permissions': int.parse(permissions),
       'date': "5/20/21",
       'uid': uid,
-      'event title': "",
-      'event date': "",
-      'event hours': "",
+      'event title': [],
+      'event date': [],
+      'event hours': [],
       'firstQuarter': 0,
       'secondQuarter': 0,
       'thirdQuarter': 0,
@@ -249,4 +249,24 @@ class DatabaseQRCodeHours {
     return await qrCodeHours.document(name + "-" + title).delete();
   }
 
+}
+
+class UploadedPictures {
+  final CollectionReference uploadPics = Firestore.instance.collection('upload pics');
+
+  Future addPic(dynamic url, String name) async {
+    return await uploadPics.document(name + DateTime.now().toString()).setData({
+      'url': url,
+      'dateTime': DateTime.now(),
+      'name': name
+    });
+  }
+
+  Future addPics(List url, String name) async {
+    return await uploadPics.document(name + DateTime.now().toString()).setData({
+      'url': url,
+      'dateTime': DateTime.now(),
+      'name': name
+    });
+  }
 }

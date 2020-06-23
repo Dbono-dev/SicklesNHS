@@ -6,6 +6,7 @@ import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
+import 'package:sickles_nhs_app/memberSide/send_images.dart';
 import 'package:sickles_nhs_app/memberSide/settings_page.dart';
 import 'package:sickles_nhs_app/backend/messages_page.dart';
 import 'package:sickles_nhs_app/memberSide/leaderboard.dart';
@@ -132,56 +133,33 @@ class _AccountProfileState extends State<AccountProfile> {
     if(widget.type == "student") {
       return Row(
         children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add_circle_outline),
-            color: Colors.white,
-            iconSize: 55,
-            onPressed: () {
-              Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CreateNewHoursOptionsPage(tile1: "Create New Service Hour Form", tile2: "View Saved Service Hour Forms", tile3: "View Submitted Service Hour Forms")));
-            }
-          ),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
-          IconButton(
-            icon: Icon(Icons.format_list_numbered),
-            color: Colors.white,
-            iconSize: 55,
-            onPressed: () {
-              Navigator.push(context, 
-                MaterialPageRoute(builder: (context) => Leaderboard())
-              );
-            }
-          ),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25)),
-          IconButton(
-            icon: Icon(Icons.inbox),
-            color: Colors.white,
-            iconSize: 55,
-            onPressed: () {
-              Navigator.push(context, 
-                MaterialPageRoute(builder: (context) => MessagesPage()
-                ));
-            },
-          ),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 0.25),),
-          Container(
-                  child: IconButton(
-                    icon: Icon(Icons.settings),
-                    color: Colors.white,
-                    iconSize: 55,
-                    onPressed: () {
-                      Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => SettingsPage()
-                        ));
-                    },
-                  )
-                ),
+          iconsForTopAccountProfile(Icons.add_circle_outline, CreateNewHoursOptionsPage(tile1: "Create New Service Hour Form", tile2: "View Saved Service Hour Forms", tile3: "View Submitted Service Hour Forms")),
+          iconsForTopAccountProfile(Icons.format_list_numbered, Leaderboard()),
+          iconsForTopAccountProfile(Icons.image, SendImages(name: widget.name,)),
+          iconsForTopAccountProfile(Icons.inbox, MessagesPage()),
+          iconsForTopAccountProfile(Icons.settings, SettingsPage())
         ],
       );
     }
     else {
       return Container();
     }
+  }
+
+  Widget iconsForTopAccountProfile(IconData icon, Widget location) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, SizeConfig.blockSizeHorizontal * 0.05, 0),
+      child: IconButton(
+        icon: Icon(icon),
+        color: Colors.white,
+        iconSize: 50,
+        onPressed: () {
+          Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => location)
+          );
+        }
+      ),
+    );
   }
 
   Widget topHalfOfAccountProfile(BuildContext context) {
@@ -548,12 +526,16 @@ class _AccountProfileState extends State<AccountProfile> {
                           itemBuilder: (_, index) {
                             if(thenewDate[index].isAfter(startOfSchool) && thenewDate[index].isBefore(firstQuarter)) {
                               if(thefirstQuarter == true) {
-                                return accountProfileCards(
-                                  title: title[index],
-                                  date: date[index].toString().substring(0, 10),
-                                  hours: theHours[index],
-                                      editing: editing,
-                                      index: index
+                                return Column(
+                                  children: <Widget>[
+                                    accountProfileCards(
+                                      title: title[index],
+                                      date: date[index].toString().substring(0, 10),
+                                      hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                    ),
+                                  ],
                                 );
                               }
                               else {
@@ -574,12 +556,16 @@ class _AccountProfileState extends State<AccountProfile> {
                             }
                             if(thenewDate[index].isAfter(firstQuarter) && thenewDate[index].isBefore(secondQuarter)) {
                               if(thesecondQuarter == true) {
-                                return accountProfileCards(
-                                  title: title[index],
-                                  date: date[index].toString().substring(0, 10),
-                                  hours: theHours[index],
-                                  editing: editing,
-                                  index: index
+                                return Column(
+                                  children: <Widget>[
+                                    accountProfileCards(
+                                      title: title[index],
+                                      date: date[index].toString().substring(0, 10),
+                                      hours: theHours[index],
+                                      editing: editing,
+                                      index: index
+                                    ),
+                                  ],
                                 );
                               }
                               else {
@@ -600,12 +586,16 @@ class _AccountProfileState extends State<AccountProfile> {
                             }
                             if(thenewDate[index].isAfter(secondQuarter) && thenewDate[index].isBefore(thirdQuarter)) {
                               if(thethirdQuarter == true) {
-                                return accountProfileCards(
-                                  title: title[index],
-                                  date: date[index].toString().substring(0, 10),
-                                  hours: theHours[index],
+                                return Column(
+                                  children: <Widget>[
+                                    accountProfileCards(
+                                      title: title[index],
+                                      date: date[index].toString().substring(0, 10),
+                                      hours: theHours[index],
                                       editing: editing,
                                       index: index
+                                    ),
+                                  ],
                                 );
                               }
                               else {
@@ -626,12 +616,16 @@ class _AccountProfileState extends State<AccountProfile> {
                             }
                             if(thenewDate[index].isAfter(thirdQuarter) && thenewDate[index].isBefore(forthQuarter)) {
                               if(theforthQuarter == true) {
-                                return accountProfileCards(
-                                  title: title[index],
-                                  date: date[index].toString().substring(0, 10),
-                                  hours: theHours[index],
-                                  editing: editing,
-                                  index: index
+                                return Column(
+                                  children: <Widget>[
+                                    accountProfileCards(
+                                      title: title[index],
+                                      date: date[index].toString().substring(0, 10),
+                                      hours: theHours[index],
+                                      editing: editing,
+                                      index: index
+                                    ),
+                                  ],
                                 );
                               }
                               else {

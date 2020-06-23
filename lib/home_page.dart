@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:sickles_nhs_app/adminSide/view_images.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
 import 'package:sickles_nhs_app/adminSide/approve_hours.dart';
@@ -8,9 +9,7 @@ import 'package:sickles_nhs_app/backend/auth_service.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
 import 'package:sickles_nhs_app/memberSide/event_view.dart';
-import 'package:date_format/date_format.dart';
 import 'package:sickles_nhs_app/adminSide/important_dates.dart';
-import 'package:sickles_nhs_app/adminSide/scanning_page.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
@@ -40,9 +39,14 @@ class TheOpeningPage extends StatelessWidget {
   }
 }
 
-class MiddleHomePage extends StatelessWidget {
+class MiddleHomePage extends StatefulWidget {
   MiddleHomePage({Key key}) : super (key: key);
 
+  @override
+  _MiddleHomePageState createState() => _MiddleHomePageState();
+}
+
+class _MiddleHomePageState extends State<MiddleHomePage> {
     Future getPosts() async {
       var firestore = Firestore.instance;
       QuerySnapshot qn = await firestore.collection("events").getDocuments();
@@ -50,6 +54,11 @@ class MiddleHomePage extends StatelessWidget {
     }
 
     DateFormat format = new DateFormat("MM/dd/yyyy");
+
+  @override
+  void initState() {
+    super.setState(() { });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,13 +171,7 @@ class TopHalfHomePage extends StatelessWidget {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
 
-          return Stack(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              height: SizeConfig.blockSizeVertical * 20,
-            ),
-            Material(
+            return Material(
                 child: Container(
                 height: SizeConfig.blockSizeVertical * 20,
                 decoration: BoxDecoration(
@@ -218,9 +221,7 @@ class TopHalfHomePage extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
-        );
+            );
         } else {
           return CircularProgressIndicator();
         }
@@ -695,6 +696,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                     adminTags(context, Notifications(), Icons.notifications, "Send Notification"),
                     adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions",), Icons.photo_camera, "Start Scanning"),
                     adminTags(context, ApproveHoursPage(), Icons.check_circle, "Approve Hours"),
+                    adminTags(context, ViewImages(), Icons.image, "View Images"),
                     adminTags(context, ExportDataPage(), Icons.import_export, "Export Data"),
                     adminTags(context, ImportantDateMain(), Icons.date_range, "Set Important Dates"),
                   ],
@@ -779,7 +781,14 @@ class _OfficerMyEvents extends State<OfficerMyEvents> {
               Container(
                 height: SizeConfig.blockSizeVertical * 25,
                 width: SizeConfig.blockSizeHorizontal * 90,
-                child: adminTags(context, ScanningPage(), Icons.photo_camera, "Start Scanning"),
+                child: ListView(
+                  children: <Widget>[
+                    adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions",), Icons.photo_camera, "Start Scanning"),
+                    adminTags(context, ViewStudents(), Icons.people, "View Students"),
+                    adminTags(context, ViewImages(), Icons.image, "View Images"),
+                    adminTags(context, ExportDataPage(), Icons.import_export, "Export Data"),
+                  ],
+                ),
                 )
             ],
           ),

@@ -177,6 +177,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                           );
                           setState(() {
                             startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+                            _date = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
                           });
                         },
                     ),

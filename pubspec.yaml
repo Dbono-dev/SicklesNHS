@@ -29,7 +29,7 @@ dependencies:
   provider: ^4.0.3
   qr_flutter: ^3.1.0
   firebase_database: ^3.1.6
-  image_picker: ^0.6.4
+  image_picker: ^0.6.7+2
   firebase_storage: ^3.1.6
   # firebase_messaging: ^6.0.13
   barcode_scan: ^3.0.1
