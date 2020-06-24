@@ -104,7 +104,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                                 ),
                                 onPressed: () {
                                   showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                                    return SetClubDates("edit", "clubDates", snapshot.data[index].data['date'].toString(), "");
+                                    return SetClubDates("edit", "clubDates", snapshot.data[index].data['inital date'].toString(), "");
                                   });
                                 }
                               ),

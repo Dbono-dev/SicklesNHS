@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:provider/provider.dart';
@@ -258,21 +259,32 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
 
     List theDates = new List();
     List<Widget> listWidgetDates = new List<Widget>();
+    DateFormat format = new DateFormat("MM/dd/yyyy");
 
     if(widget.post.data['date'].toString().length > 10) {
       String alsoTheDates = widget.post.data['date'];
       for(int i = 0; i < alsoTheDates.length; i++) {
         if(alsoTheDates.substring(0, i).contains("-")) {
-          theDates.add(alsoTheDates.substring(0, i - 1));
-          listWidgetDates.add(Text(alsoTheDates.substring(0, i - 1)));
-          alsoTheDates = alsoTheDates.substring(i);
-          i = 0;
+          DateTime theDateTimeVersion = format.parse(alsoTheDates.substring(0, i - 1));
+          if(format.parse(alsoTheDates.substring(0, i - 1)).isAfter(DateTime.now()) || (theDateTimeVersion.month == DateTime.now().month && theDateTimeVersion.day == DateTime.now().day && theDateTimeVersion.year == DateTime.now().year)) {
+            theDates.add(alsoTheDates.substring(0, i - 1));
+            listWidgetDates.add(Text(alsoTheDates.substring(0, i - 1)));
+            alsoTheDates = alsoTheDates.substring(i);
+            i = 0;
+          }
+          else {
+            alsoTheDates = alsoTheDates.substring(i);
+            i = 0;
+          }
         }
         else if(i == alsoTheDates.length - 1) {
-          theDates.add(alsoTheDates);
-          listWidgetDates.add(Text(alsoTheDates));
+          if(format.parse(alsoTheDates).isAfter(DateTime.now())) {
+            theDates.add(alsoTheDates);
+            listWidgetDates.add(Text(alsoTheDates));
+          }
         }
       }
+      
       theShownDate = theDates[shownDate];
       global.shownDate = theDates[shownDate];
     }

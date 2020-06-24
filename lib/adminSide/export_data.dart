@@ -249,10 +249,11 @@ class _ExportDataPageState extends State<ExportDataPage> {
                   for(int i = 10; i < 13; i++) {
                     theGrades.add(
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           for(int a = 0; a < snapshot.data.length; a++) {
                             if(int.parse(snapshot.data[a].data['grade']) == i) {
                               _submitForm(snapshot.data[a]);
+                              await Future.delayed(Duration(seconds: 8));
                             }
                           }
                         },
@@ -370,7 +371,15 @@ class _ExportDataPageState extends State<ExportDataPage> {
       snapshot.data['last name'].toString(),
       snapshot.data['first name'].toString(),
       snapshot.data['grade'].toString(),
-      snapshot.data['student number'].toString()
+      snapshot.data['student number'].toString(),
+      snapshot.data['hours'].toString(),
+      snapshot.data['firstQuarter'].toString(),
+      snapshot.data['secondQuarter'].toString(),
+      snapshot.data['thirdQuarter'].toString(),
+      snapshot.data['fourthQuarter'].toString(),
+      snapshot.data['event title'],
+      snapshot.data['event date'],
+      snapshot.data['event hours']
     );
 
     ExportPersonFormController formController = ExportPersonFormController((String response) {
@@ -425,15 +434,23 @@ class FeedbackForm {
   String _lastName;
   String _grade;
   String _studentNum;
+  String _hours;
+  String _firstQuarter;
+  String _secondQuarter;
+  String _thirdQuarter;
+  String _fourthQuarter;
+  List _eventTitle;
+  List _eventDate;
+  List _eventHours;
 
-  FeedbackForm(this._lastName, this._firstName, this._grade, this._studentNum);
+  FeedbackForm(this._lastName, this._firstName, this._grade, this._studentNum, this._hours, this._firstQuarter, this._secondQuarter, this._thirdQuarter, this._fourthQuarter, this._eventTitle, this._eventDate, this._eventHours);
 
-  String toParams() => "?lastName=$_lastName&firstName=$_firstName&grade=$_grade&studentNum=$_studentNum";
+  String toParams() => "?lastName=$_lastName&firstName=$_firstName&grade=$_grade&studentNum=$_studentNum&hours=$_hours&firstQuarter=$_firstQuarter&secondQuarter=$_secondQuarter&thirdQuarter=$_thirdQuarter&fourthQuarter=$_fourthQuarter&eventTitle=$_eventTitle&eventDate=$_eventDate&eventHours=$_eventHours";
 }
 
 class FormController {
   final void Function(String) callback;
-  static const String URL = "https://script.google.com/macros/s/AKfycbyqXO_XC-JTSmLS7DYb-oRyAYQBO7wBV_L9UnLaJxTP4i4E9Akh/exec";
+  static const String URL = "https://script.google.com/macros/s/AKfycbyrDN8nw3eEBfIb84Yx-OVuzUj3i3EKfhv-DK3A-_qr015Yb-DR/exec";
 
   static const STATUS_SUCCESS = "SUCCESS";
 

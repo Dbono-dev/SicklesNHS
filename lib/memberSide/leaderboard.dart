@@ -50,6 +50,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      backgroundColor: Colors.transparent,
       key: _scaffoldKey,
       body: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (overscroll) {
@@ -58,7 +59,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
         child: Container(
               child: SingleChildScrollView(
                 child: Material(
-                  color: Colors.white,
+                  color: Colors.transparent,
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -157,6 +158,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
 
   Widget theLeaderBoard(String quarter) {
     return Container(
+      color: Colors.transparent,
       child: Column(
         children: <Widget> [
           Padding(padding: EdgeInsets.all(5)),
