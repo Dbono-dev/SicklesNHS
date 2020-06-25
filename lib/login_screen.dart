@@ -22,8 +22,6 @@ class LoginScreen extends StatelessWidget {
             TopHalfLoginPage(),
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
             LoginPage(),
-            //Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 8.5),),
-            //BottonHalfLoginPage()
           ],
         )
       ],

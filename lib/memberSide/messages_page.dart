@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:io';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sickles_nhs_app/backend/message.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/backend/user.dart';
 
 class MessagesPage extends StatelessWidget {
   @override
@@ -76,13 +78,16 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
     );*/
   }
 
-  @override
-  Widget build(BuildContext context) => ListView(
-    children: messages.map(buildMessage).toList(),
-  );
+  Future getMessages() async {
+    var firestone = Firestore.instance;
+    QuerySnapshot qn = await firestone.collection("messages").getDocuments();
+    return qn.documents;
+  }
 
-  Widget buildMessage(Message message) => ListTile(
-    title: Text(message.title),
-    subtitle: Text(message.body),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
+  }
 }

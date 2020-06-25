@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/push_notification.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
+import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class Notifications extends StatelessWidget {
   @override
@@ -20,14 +22,14 @@ class Notifications extends StatelessWidget {
   }
 }
 
+  enum Options {all, specificEvent, specificPerson, specificGroup}
+
+  enum SpecificGroup {members, officers, admin, justToDylan}
+
 class MiddlePageNotification extends StatefulWidget {
   @override
   _MiddlePageNotificationState createState() => _MiddlePageNotificationState();
 }
-
-  enum Options { all, specificEvent, specificPerson, specificGroup }
-
-  enum SpecificGroup {members, officers, admin, justToDylan}
 
 class _MiddlePageNotificationState extends State<MiddlePageNotification> {
 
@@ -60,11 +62,14 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
     return qn.documents;
   }
 
-    return Container(
+    return SingleChildScrollView(
+      child: Container(
       height: SizeConfig.blockSizeVertical * 74,
       child: Material(
-        child: Form(
-          key: _fourthformKey,
+      child: Form(
+        key: _fourthformKey,
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 80,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -72,6 +77,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: TextFormField(
                     onSaved: (value) => _title = value,
+                    validator: (val) => val.isEmpty ? 'Enter a Title' : null,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15))
@@ -85,6 +91,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextFormField(
                     onSaved: (value) => _body = value,
+                    validator: (val) => val.isEmpty ? 'Enter a Message' : null,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15))
@@ -125,6 +132,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                             ),
                           ),
                         ),
+                        Text(global.selectedEvent),
                         IconButton(
                           icon: Icon(Icons.more_vert),
                           onPressed: () {
@@ -160,8 +168,17 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                                                           return Center(child: Text("No Events"),);
                                                         }
                                                         else {
-                                                          return ListTile(
-                                                            title: Text(snapshot.data[index].data["title"].toString())
+                                                          return GestureDetector(
+                                                            onTap: () {
+                                                              global.selectedEvent = snapshot.data[index].data["title"].toString();
+                                                              Navigator.of(context).pop();
+                                                              setState(() {
+                                                                
+                                                              });
+                                                            },
+                                                            child: ListTile(
+                                                              title: Text(snapshot.data[index].data["title"].toString())
+                                                            ),
                                                           );
                                                         }
                                                       }
@@ -180,12 +197,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                                                 },
                                                 child: Text("CANCEL")
                                               ),
-                                              FlatButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text("DONE")
-                                              ),
+                                              
                                             ],
                                           ),
                                         ]
@@ -214,8 +226,25 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                             ),
                           ),
                         ),
+                        Text(global.selectedGroup),
                         PopupMenuButton<SpecificGroup>(
-                          onSelected: (SpecificGroup result) { setState(() { _selection = result; }); },
+                          onSelected: (SpecificGroup result) { 
+                            setState(() {
+                                _selection = result;
+                                if(_selection == SpecificGroup.members) {
+                                  global.selectedGroup = "Members";
+                                }
+                                if(_selection == SpecificGroup.officers) {
+                                  global.selectedGroup = "Officers";
+                                }
+                                if(_selection == SpecificGroup.admin) {
+                                  global.selectedGroup = "Sponsors";
+                                }
+                                if(_selection == SpecificGroup.justToDylan) {
+                                  global.selectedGroup = "Dylan";
+                                }
+                              });
+                            },
                           itemBuilder: (BuildContext context) => <PopupMenuEntry<SpecificGroup>>[
                             const CheckedPopupMenuItem<SpecificGroup>(
                               value: SpecificGroup.members,
@@ -252,6 +281,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                             ),
                           ),
                         ),
+                        Text(global.selectedPerson),
                         Material(
                           child: IconButton(
                             icon: Icon(Icons.more_vert),
@@ -305,14 +335,14 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                                                             itemBuilder: (_, index) {
                                                               if(search != "") {
                                                                 if(snapshot.data[index].data['first name'].toString().contains(search) || snapshot.data[index].data['last name'].toString().contains(search) || (snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"]).toString().contains(search)) {
-                                                                  return TheViewStudents(snapshot.data[index], context);
+                                                                  return personCards(snapshot.data[index], context);
                                                                 }
                                                                 else {
                                                                   return Container();
                                                                 }
                                                               }
                                                               else {
-                                                                return TheViewStudents(snapshot.data[index], context);
+                                                                return personCards(snapshot.data[index], context);
                                                               }
                                                             }
                                                           )
@@ -377,14 +407,48 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                 ),
                 child: GestureDetector(
                   onTap: () async {
-                    _fourthformKey.currentState.save();
-                    final response = await PushNotificationService().sendAndRetrieveMessage(
-                      _title, _body, context
-                    );
-                    if(response == true) {
-                      print("works");
+                    var result = _fourthformKey.currentState;
+                    result.save();
+                    if(result.validate()) {
+                      try {
+                        String toWho = "";
+                        if(_character == Options.all) {
+                          toWho = "all";
+                        }
+                        if(_character == Options.specificEvent) {
+                          toWho = global.selectedEvent;
+                        }
+                        if(_character == Options.specificGroup) {
+                          toWho = global.selectedGroup;
+                        }
+                        if(_character == Options.specificPerson) {
+                          toWho = global.selectedPerson;
+                        }
+                        var result = await MessageDatabase().addMessage(_title, _body, toWho);
+                        /*final response = await PushNotificationService().sendAndRetrieveMessage(
+                          _title, _body, context
+                        );*/
+                        setState(() {
+                          _fourthformKey.currentState.reset();
+                          _title = "";
+                          _body = "";
+                          global.selectedEvent = "";
+                          global.selectedGroup = "";
+                          global.selectedPerson = "";
+                          _character = Options.all;
+                        });   
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Submitted Notification"),
+                            backgroundColor: Colors.green,
+                            duration: Duration(seconds: 3),
+                          )
+                        );
+                      }
+                      catch (e) {
+                        return CircularProgressIndicator();
+                      } 
                     }
-                    _fourthformKey.currentState.reset();
                   },
                 child: Center(
                   child: Text("Send", style: TextStyle(
@@ -396,13 +460,54 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                     ),
                 ))
             ],
-          )
-        ),
+          ),
+        )
       ),
+          ),
+        ),
     );
   }
 
   Future sendMessage(String title, String body, BuildContext context) async {
     await PushNotificationService().sendAndRetrieveMessage(title, body, context);
+  }
+
+  Widget personCards(DocumentSnapshot snapshot, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        global.selectedPerson = snapshot.data["first name"] + " " + snapshot.data["last name"];
+        Navigator.of(context).pop();
+        setState(() {
+          
+        });
+      },
+      child: Container(
+        width: SizeConfig.blockSizeHorizontal * 75,
+          child: Card(
+            color: Colors.white,
+            elevation: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(2.5),
+              child: Row(
+                children: <Widget> [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(snapshot.data["first name"] + " " + snapshot.data["last name"], style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 25
+                        ),),
+                        Text("Hours: " + snapshot.data["hours"].toString() + "\t Grade: " + snapshot.data["grade"], style: TextStyle(color: Colors.black),)
+                    ],  
+                  ),
+                  Spacer(),
+                  Icon(Icons.arrow_forward, size: 35,),
+                ]
+              ),
+            )
+        )
+      ),
+    );
   }
 }

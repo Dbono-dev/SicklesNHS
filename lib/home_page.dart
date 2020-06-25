@@ -17,6 +17,7 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/adminSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
+import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class TheOpeningPage extends StatelessWidget {
   TheOpeningPage({Key key}) : super (key: key);
@@ -217,7 +218,7 @@ class TopHalfHomePage extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 63,
                         child: FittedBox(
                         fit: BoxFit.fitWidth,
-                          child: Text(timeOfDay + userData.firstName, style: TextStyle(
+                          child: Text(timeOfDay + global.userData.firstName, style: TextStyle(
                           fontStyle: FontStyle.normal,
                           color: Colors.white
                         )),

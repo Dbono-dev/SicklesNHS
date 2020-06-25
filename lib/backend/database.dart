@@ -270,3 +270,15 @@ class UploadedPictures {
     });
   }
 }
+
+class MessageDatabase {
+  final CollectionReference messageDatabase = Firestore.instance.collection('messages');
+
+  Future addMessage(String title, String message, String toWho) async {
+    return await messageDatabase.document(title + toWho).setData({
+      'title': title,
+      'message': message,
+      'toWho': toWho
+    });
+  }
+}
