@@ -26,7 +26,8 @@ class DatabaseService {
       'secondQuarter': 0,
       'thirdQuarter': 0,
       'fourthQuarter': 0,
-      'numClub': 0
+      'numClub': 0,
+      'signed up event title': []
     });
   }
 
@@ -69,6 +70,12 @@ class DatabaseService {
       'event hours': hours
     });
   }
+
+  Future updateEventTitleSignedUp(var eventTitle) async {
+    return await memberCollection.document(uid).updateData({
+      'signed up event title': eventTitle
+    });
+  }
   
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
@@ -82,7 +89,8 @@ class DatabaseService {
       secondQuarter: snapshot.data['secondQuarter'],
       thirdQuarter: snapshot.data['thirdQuarter'],
       fourthQuarter: snapshot.data['fourthQuarter'],
-      numClub: snapshot.data['numClub']
+      numClub: snapshot.data['numClub'],
+      eventTitleSignedUp: snapshot.data['signed up event title']
     );
   }
 
@@ -278,7 +286,19 @@ class MessageDatabase {
     return await messageDatabase.document(title + toWho).setData({
       'title': title,
       'message': message,
-      'toWho': toWho
+      'toWho': toWho,
+      'dateTime': DateTime.now()
+    });
+  }
+}
+
+class NewsLetterData {
+  final CollectionReference newsletter = Firestore.instance.collection('newsletter');
+
+  Future addURL(String dateTime, String url) async {
+    return await newsletter.document(dateTime).setData({
+      'dateTime': dateTime,
+      'url': url
     });
   }
 }

@@ -553,6 +553,9 @@ class BottomEventViewPage extends StatelessWidget {
                       participateDate.add(global.shownDate);
                       dynamic result = sendEventToDatabases(participates, title, participateDate);
                       dynamic result2 = sendBugToEmail(title, post);
+                      var eventTitle = userData.eventTitleSignedUp;
+                      eventTitle.add(title);
+                      dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
                     }
                   },
                     child: Text(differentSignUp, style: TextStyle(
@@ -574,6 +577,10 @@ class BottomEventViewPage extends StatelessWidget {
 
   Future sendEventToDatabases(var participate, String title, var participateDate) async {
     await DatabaseEvent().updateEvent(participate, title, participateDate);
+  }
+
+  Future sendEventToMembersDatabase(var eventTitle, String uid) async {
+    await DatabaseService(uid: uid).updateEventTitleSignedUp(eventTitle);
   }
 
   Future sendBugToEmail(String title, DocumentSnapshot post) async {
