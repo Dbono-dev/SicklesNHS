@@ -132,11 +132,16 @@ class TopMiddleViewStudentPage extends StatelessWidget {
                 }
                 else {
                   for(int i = 0; i < snapshot2.data.length; i++) {
-                    if(snapshot2.data[i].data[currentQuarter] >= 6) {
-                      yes = yes + 1;
+                    if(int.tryParse(snapshot2.data[i].data['grade']) == null) {
+
                     }
-                    else { 
-                      no = no + 1;
+                    else {
+                      if(snapshot2.data[i].data[currentQuarter] >= 6) {
+                        yes = yes + 1;
+                      }
+                      else { 
+                        no = no + 1;
+                      }
                     }
                   }
                   return Card(
@@ -281,9 +286,12 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                         padding: EdgeInsets.all(0),
                         itemCount: snapshot.data.length,
                         itemBuilder: (_, index) {
-                          if(search != "") {
+                          if(int.tryParse(snapshot.data[index].data['grade']) == null) {
+                            return Container();
+                          }
+                          else if(search != "") {
                             if(snapshot.data[index].data['first name'].toString().contains(search) || snapshot.data[index].data['last name'].toString().contains(search) || (snapshot.data[index].data["first name"] + " " + snapshot.data[index].data["last name"]).toString().contains(search)) {
-                              return TheViewStudents(snapshot.data[index], context);
+                              return theViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
@@ -291,7 +299,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                           }
                           else if(firstCheck == true) {
                             if(int.parse(snapshot.data[index].data['grade']) == 10) {
-                              return TheViewStudents(snapshot.data[index], context);
+                              return theViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
@@ -299,7 +307,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                           }
                           else if(secondCheck == true) {
                             if(int.parse(snapshot.data[index].data["grade"]) == 11) {
-                              return TheViewStudents(snapshot.data[index], context);
+                              return theViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
@@ -307,14 +315,14 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                           }
                           else if(thirdCheck == true) {
                             if(int.parse(snapshot.data[index].data['grade']) == 12) {
-                              return TheViewStudents(snapshot.data[index], context);
+                              return theViewStudents(snapshot.data[index], context);
                             }
                             else {
                               return Container();
                             }
                           }
                           else {
-                            return TheViewStudents(snapshot.data[index], context);
+                            return theViewStudents(snapshot.data[index], context);
                           }
                         },
                       ),
@@ -331,7 +339,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
   }
 }
 
-Widget TheViewStudents(DocumentSnapshot snapshot, BuildContext context) {
+Widget theViewStudents(DocumentSnapshot snapshot, BuildContext context) {
     Color backgroundColor;
     Color fontColorOne;
     Color fontColorTwo;

@@ -6,13 +6,14 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:convert';
 
 class QRCodePage extends StatelessWidget {
-QRCodePage ({Key key, this.title, this.name, this.type, this.uid, this.date}) : super (key: key);
+QRCodePage ({Key key, this.title, this.name, this.type, this.uid, this.date, this.event}) : super (key: key);
 
 final String title;
 final String name;
 final String type;
 final String uid;
 final String date;
+final String event;
 
 Widget build(BuildContext context) {
   return Scaffold(
@@ -23,7 +24,7 @@ Widget build(BuildContext context) {
         Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, SizeConfig.blockSizeVertical * 7),
         ),
-        QRCodePageContent(title: title, name: name, type: type, uid: uid, date: date),
+        QRCodePageContent(title: title, name: name, type: type, uid: uid, date: date, event: event),
       ],
     ),
   );
@@ -31,13 +32,14 @@ Widget build(BuildContext context) {
 }
 
 class QRCodePageContent extends StatelessWidget {
-QRCodePageContent ({Key key, this.title, this.name, this.type, this.uid, this.date}) : super (key: key);
+QRCodePageContent ({Key key, this.title, this.name, this.type, this.uid, this.date, this.event}) : super (key: key);
 
 final String title;
 final String name;
 final String type;
 final String uid;
 final String date;
+final String event;
 
 Widget build(BuildContext context) {
   DateTime now = DateTime.now();
@@ -52,7 +54,7 @@ Widget build(BuildContext context) {
 
   String theUpdatedTime = updatedTime.toString() + minutes;
 
-  String theQrContent = title  + "/" + name + "/" + time + "/" + type + "/" + uid + "/" + date;
+  String theQrContent = title  + "/" + name + "/" + time + "/" + type + "/" + uid + "/" + date + "/" + event;
   String qrContent = "";
 
   List<int> theListOfInts = new List<int> ();

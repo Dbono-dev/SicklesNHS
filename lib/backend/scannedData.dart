@@ -16,6 +16,7 @@ class ScannedData {
   String time;
   String type;
   String uid;
+  String event;
   BuildContext context;
   String oldDate;
   List participates = new List();
@@ -48,6 +49,7 @@ class ScannedData {
     type = qrCodeItems[3];
     uid = qrCodeItems[4];
     oldDate = qrCodeItems[5];
+    event = qrCodeItems[6];
 
     List titles = new List();
     List dates = new List();
@@ -56,6 +58,7 @@ class ScannedData {
     int currentHours;
     int currentQuarterHours;
     int numClub;
+    int numCommunity;
 
     DateFormat _format = new DateFormat("MM/dd/yyyy");
     String quarter = await CurrentQuarter(_format.parse(date)).getQuarter();
@@ -71,6 +74,7 @@ class ScannedData {
           currentHours = a.data['hours'];
           currentQuarterHours = a.data[quarter];
           numClub = a.data['numClub'];
+          numCommunity = a.data['num of community service events'];
         }
       }
 
@@ -87,6 +91,13 @@ class ScannedData {
         participates.add(uid);
         await DatabaseImportantDates().addParticipates(participates, "clubDates", oldDate);
         await DatabaseService(uid: uid).updateNumOfClub(numClub + 1);
+      }
+      else if(event == "Community Service Project") {
+        titles.add(title);
+        dates.add(date);
+        hours.add("0");
+        await DatabaseService(uid: uid).updateCompetedEvents(titles, dates, hours);
+        await DatabaseService(uid: uid).updateCommunityServiceEvents(numCommunity + 1);
       }
       else {
         await DatabaseQRCodeHours().submitPreHours(name, title, time, type, uid);

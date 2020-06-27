@@ -331,7 +331,7 @@ class MiddleHomePageCards extends StatelessWidget {
                               ),
                             ),
                             Text(post.data["title"], style: TextStyle(
-                              fontSize: SizeConfig.blockSizeHorizontal * 6.5,
+                              fontSize: SizeConfig.blockSizeHorizontal * 6,
                               fontWeight: FontWeight.bold, 
                               color: Colors.black
                             ),
@@ -376,6 +376,8 @@ class BottonHalfHomePage extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
+          DateFormat format = new DateFormat('MM/dd/yyyy');
+          
           if(userData.permissions == 0) {
             return Stack(
                 children: <Widget>[
@@ -428,7 +430,7 @@ class BottonHalfHomePage extends StatelessWidget {
         ]
        );
           }
-          if(userData.permissions == 2) { //&& (int.parse(userData.date.substring(0, 2)) == DateTime.now().month || int.parse(userData.date.substring(0, 2)) < DateTime.now().month) && int.parse(userData.date.substring(3, 5)) < DateTime.now().day) {
+          if(userData.permissions == 2 && format.parse(userData.date).isAfter(DateTime.now())) {
             return Stack(
                 children: <Widget>[
                 Material(
@@ -453,6 +455,9 @@ class BottonHalfHomePage extends StatelessWidget {
           OfficerMyEvents()
         ]
        );
+          }
+          else {
+            return Container();
           }
     }
       return CircularProgressIndicator();
@@ -805,6 +810,7 @@ class _OfficerMyEvents extends State<OfficerMyEvents> {
                 height: SizeConfig.blockSizeVertical * 25,
                 width: SizeConfig.blockSizeHorizontal * 90,
                 child: ListView(
+                  padding: EdgeInsets.zero,
                   children: <Widget>[
                     adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions",), Icons.photo_camera, "Start Scanning"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),

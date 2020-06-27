@@ -208,10 +208,10 @@ class _AccountProfileState extends State<AccountProfile> {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
           if(widget.type == "admin") {
-            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), widget.posts['firstQuarter'].toString(), widget.posts['secondQuarter'].toString(), widget.posts['thirdQuarter'].toString(), widget.posts['fourthQuarter'].toString(), widget.posts['numClub']);
+            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), widget.posts['firstQuarter'].toString(), widget.posts['secondQuarter'].toString(), widget.posts['thirdQuarter'].toString(), widget.posts['fourthQuarter'].toString(), widget.posts['numClub'], widget.posts['num of community service events']);
           }
           if(widget.type == "student") {
-            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), userData.firstQuarter.toString(), userData.secondQuarter.toString(), userData.thirdQuarter.toString(), userData.fourthQuarter.toString(), userData.numClub);
+            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), userData.firstQuarter.toString(), userData.secondQuarter.toString(), userData.thirdQuarter.toString(), userData.fourthQuarter.toString(), userData.numClub, userData.numOfCommunityServiceEvents);
           }
           else {
             return CircularProgressIndicator();
@@ -224,7 +224,7 @@ class _AccountProfileState extends State<AccountProfile> {
     );
   }
 
-  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub) {
+  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
 
@@ -281,7 +281,7 @@ class _AccountProfileState extends State<AccountProfile> {
               )
           ),
           Padding(padding: EdgeInsets.all(1),),
-          Material(
+          int.tryParse(grade) == null ? Material(child: Text(grade, style: TextStyle(fontSize: 20),),) :Material(
             color: Colors.transparent,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -478,7 +478,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
                               color: Colors.transparent,
-                            child: Align(alignment: Alignment.center, child: Text("0 Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                            child: Align(alignment: Alignment.center, child: Text(numOfCommunityServiceEvents.toString() + " Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
                       )
@@ -686,9 +686,10 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
     return Material(
       color: Colors.transparent,
       child: Container(
-        height: SizeConfig.blockSizeVertical * 6,
+        height: SizeConfig.blockSizeVertical * 8,
         width: SizeConfig.blockSizeHorizontal * 90,
         child: Card(
+          color: int.parse(hours) == 0 ? Colors.yellow[400] : Colors.white,
           elevation: 8,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)
@@ -698,28 +699,47 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(title, style: TextStyle(fontSize: 20),),
+                  Container(
+                    width: SizeConfig.blockSizeHorizontal * 40,
+                    child: Text(title, style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)
+                  ),
+                  Padding(padding: EdgeInsets.all(2)),
                   Text(date, style: TextStyle(fontSize: 20),),
-                  editing == true ? SizedBox(
-                    width: SizeConfig.blockSizeHorizontal * 7.5,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                      child: Form(
-                        child: TextFormField(
-                          onChanged: (val) {
-                            Map<int, String> details = {index: val.toString()};
-                            global.theMap = details;
-                          },
-                          initialValue: hours,
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ) : Text("+" + hours, style: TextStyle(color: Colors.green, fontSize: 20),)
+                  endOfHoursCard(editing, hours, index),
                 ],
               ),
             ),
         ),
       ),
     );
+  }
+
+  Widget endOfHoursCard(bool editing, String hours, int index) {
+    if(int.parse(hours) == 0) {
+      return Icon(Icons.check, color: Colors.green, size: 25,);
+    }
+    else if(editing == true) {
+      return SizedBox(
+        width: SizeConfig.blockSizeHorizontal * 7.5,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+          child: Form(
+            child: TextFormField(
+              onChanged: (val) {
+                Map<int, String> details = {index: val.toString()};
+                global.theMap = details;
+              },
+              initialValue: hours,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+      );
+    }
+    else {
+      return Text(
+        "+" + hours,
+        style: TextStyle(color: Colors.green, fontSize: 20),
+      );
+    }
   }

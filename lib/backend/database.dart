@@ -17,7 +17,7 @@ class DatabaseService {
       'student number': studentNum,
       'grade': grade,
       'permissions': int.parse(permissions),
-      'date': "5/20/21",
+      'date': int.parse(permissions) == 2 ? "06/01/2021" : "",
       'uid': uid,
       'event title': [],
       'event date': [],
@@ -77,6 +77,11 @@ class DatabaseService {
     });
   }
   
+  Future updateCommunityServiceEvents(int communityServiceEventNum) async {
+    return await memberCollection.document(uid).updateData({
+      'num of community service events': communityServiceEventNum
+    });
+  }
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
@@ -84,13 +89,15 @@ class DatabaseService {
       lastName: snapshot.data['last name'],
       grade: snapshot.data['grade'],
       permissions: snapshot.data['permissions'],
+      date: snapshot.data['date'],
       hours: snapshot.data['hours'],
       firstQuarter: snapshot.data['firstQuarter'],
       secondQuarter: snapshot.data['secondQuarter'],
       thirdQuarter: snapshot.data['thirdQuarter'],
       fourthQuarter: snapshot.data['fourthQuarter'],
       numClub: snapshot.data['numClub'],
-      eventTitleSignedUp: snapshot.data['signed up event title']
+      eventTitleSignedUp: snapshot.data['signed up event title'],
+      numOfCommunityServiceEvents: snapshot.data['num of community service events']
     );
   }
 

@@ -308,6 +308,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                   fontSize: 35,
                   fontWeight: FontWeight.bold
                 ),
+                textAlign: TextAlign.center,
                 ),
                 widget.post.data['date'].toString().length > 10 ? GestureDetector(
                   onTap: () {
@@ -538,12 +539,12 @@ class BottomEventViewPage extends StatelessWidget {
                   onPressed: () {
                     if(differentSignUp == "Check In") { 
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate,),
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: post.data['type']),
                         ));
                     }
                     if(differentSignUp == "Check Out") {
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate,)
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: post.data['type'])
                         ));
                     }
                     if(differentSignUp == "Sign Up") {
