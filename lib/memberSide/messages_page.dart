@@ -276,7 +276,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
                           ),
                         ) : Container(),
                         Container(
-                          height: SizeConfig.blockSizeVertical * 55,
+                          height: SizeConfig.blockSizeVertical * 57,
                           child: ListView.builder(
                             padding: EdgeInsets.all(0),
                             itemCount: snapshot.data.length,

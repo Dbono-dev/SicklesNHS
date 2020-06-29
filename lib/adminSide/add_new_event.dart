@@ -86,7 +86,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   var listOfDates = new List<DateTime> ();
   DateTime startDate = new DateTime.now();
 
-  Future getImage(String eventTitle) async {
+  Future<String> getImage(String eventTitle) async {
     var tempImage = await ImagePicker().getImage(source: ImageSource.gallery);
     File theFile = File(tempImage.path);
 
@@ -96,6 +96,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
 
     firebaseStorageRef = FirebaseStorage.instance.ref().child(eventTitle + '.jpg');
     final StorageUploadTask task = firebaseStorageRef.putFile(theFile);
+    var testing = await (await task.onComplete).ref.getDownloadURL();
+    return testing;
   }
 
   DateTime newDateTime () {
@@ -234,6 +236,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         hintText: 'Title',
                       ),
                         onChanged: (val) => _title = (val),
+                        validator: (val) => val.isEmpty ? 'Enter Title' : null,
                         initialValue: _title,
                       ),
                     )
@@ -249,6 +252,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         ),
                         minLines: 3,
                         maxLines: 6,
+                        validator: (val) => val.isEmpty ? 'Enter Description' : null,
                         onChanged: (val) => _description = (val),
                         initialValue: _description,
                       ),
@@ -475,6 +479,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           border: OutlineInputBorder()
                       ),
                         onChanged: (val) => _address = val,
+                        validator: (val) => val.isEmpty ? 'Enter Location' : null,
                         initialValue: _address,
                       ),
                     )
@@ -485,6 +490,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
                         onChanged: (val) => _max = val,
+                        validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
                         initialValue: _max,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -502,7 +508,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         backgroundColor: Colors.green,
                         elevation: 8,
                         onPressed: () {
-                          getImage(_title);
+                          _photoUrl = getImage(_title);
                         },
                         child: Icon(
                           Icons.photo_library,
@@ -574,137 +580,149 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             color: Colors.white
                           )),
                           onPressed: () async {
-                            print("clicked");
                             final form = _thirdformKey.currentState;
                             form.save();
 
-                            if(communityServiceEventValue == true) {
-                              _type = "Community Service Project";
-                            }
-                            if(serviceEventValue == true) {
-                              _type = "Service Event";
-                            }
-                            if(doesNotRepeat != "Does Not Repeat" && theDate != null) {
-                              if(typeOfDate == "days") {
-                                DateTime tempDateTime = _newDateTime;
-                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                for(int i = 1; i < 999; i++) {
-                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                    break;
-                                  }
-                                  else {
-                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + (selectedValue * i));
-                                    if(tempDateTime.isAfter(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                    }
-                                  }
-                                }
-                              }
-                              if(typeOfDate == "weeks") {
-                                DateTime tempDateTime = _newDateTime;
-                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                for(int i = 1; i < 999; i++) {
-                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                    break;
-                                  }
-                                  else {
-                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue * 7) * i));
-                                    if(tempDateTime.isAfter(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                    }
-                                  }
-                                }
-                              }
-                              if(typeOfDate == "months") {
-                                DateTime tempDateTime = _newDateTime;
-                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                for(int i = 1; i < 999; i++) {
-                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                    break;
-                                  }
-                                  else {
-                                    tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month + (selectedValue * i), _newDateTime.day);
-                                    if(tempDateTime.isAfter(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                    }
-                                  }
-                                }
-                              }
-                              if(typeOfDate == "years") {
-                                DateTime tempDateTime = _newDateTime;
-                                _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                for(int i = 1; i < 999; i++) {
-                                  if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                    break;
-                                  }
-                                  else {
-                                    tempDateTime = new DateTime(_newDateTime.year + (selectedValue * i), _newDateTime.month, _newDateTime.day);
-                                    if(tempDateTime.isAfter(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                            else {
-                              _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                            }
-
                             if(form.validate()) {
-                              try {
+                              bool keepGoing = true;
+                              if(communityServiceEventValue == true) {
+                                _type = "Community Service Project";
+                              }
+                              if(serviceEventValue == true) {
+                                _type = "Service Event";
+                              }
+                              if(communityServiceEventValue == false && serviceEventValue == false) {
+                                keepGoing = false;
+                                await showDialogBox(context, "Please enter a type of event.");
+                              }
+                              if(doesNotRepeat != "Does Not Repeat" && theDate != null) {
+                                if(typeOfDate == "days") {
+                                  DateTime tempDateTime = _newDateTime;
+                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                  for(int i = 1; i < 999; i++) {
+                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + (selectedValue * i));
+                                      if(tempDateTime.isAfter(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                      }
+                                    }
+                                  }
+                                }
+                                if(typeOfDate == "weeks") {
+                                  DateTime tempDateTime = _newDateTime;
+                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                  for(int i = 1; i < 999; i++) {
+                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue * 7) * i));
+                                      if(tempDateTime.isAfter(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                      }
+                                    }
+                                  }
+                                }
+                                if(typeOfDate == "months") {
+                                  DateTime tempDateTime = _newDateTime;
+                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                  for(int i = 1; i < 999; i++) {
+                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month + (selectedValue * i), _newDateTime.day);
+                                      if(tempDateTime.isAfter(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                      }
+                                    }
+                                  }
+                                }
+                                if(typeOfDate == "years") {
+                                  DateTime tempDateTime = _newDateTime;
+                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                  for(int i = 1; i < 999; i++) {
+                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                      break;
+                                    }
+                                    else {
+                                      tempDateTime = new DateTime(_newDateTime.year + (selectedValue * i), _newDateTime.month, _newDateTime.day);
+                                      if(tempDateTime.isAfter(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                              else {
+                                if(_newDateTime == null) {
+                                  keepGoing = false;
+                                  await showDialogBox(context, "Please add a date.");
+                                }
+                                else {
+                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                }
+                              }
+                              if(theStartTime == "Start Time") {
+                                keepGoing = false;
+                                await showDialogBox(context, "Please Enter a Start Time");
+                              }
+                              if(theEndTime == "End Time") {
+                                keepGoing = false;
+                                await showDialogBox(context, "Please Enter a End Time");
+                              }
+                              if(keepGoing == true) {
                                 try {
-                                  _photoUrl = await firebaseStorageRef.getDownloadURL();
+                                  dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
+                                  if(result == null) {
+                                    print("Fill in all the forms.");
+                                  }
+                                  if(result != null) {
+                                    setState(() {
+                                      _thirdformKey.currentState.reset();
+                                      _title = "";
+                                      _description = "";
+                                      _address = "";
+                                      _max = "";
+                                      startingDate = "";
+                                      theEndTime = "End Time";
+                                      theStartTime = "Start Time";
+                                      _startTime = null;
+                                      _endTime = null;
+                                      communityServiceEventValue = false;
+                                      serviceEventValue = false;
+                                    });
+                                    Scaffold.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Event Created"),
+                                        backgroundColor: Colors.green,
+                                        elevation: 8,
+                                        duration: Duration(seconds: 3),
+                                      )
+                                    );
+                                  }
                                 }
                                 catch (e) {
-                                  
-                                }
-                                dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
-                                if(result == null) {
-                                  print("Fill in all the forms.");
-                                }
-                                if(result != null) {
-                                  setState(() {
-                                    _thirdformKey.currentState.reset();
-                                    _title = "";
-                                    _description = "";
-                                    _address = "";
-                                    _max = "";
-                                    startingDate = "";
-                                    theEndTime = "";
-                                    theStartTime = "";
-                                    communityServiceEventValue = false;
-                                    serviceEventValue = false;
-                                  });
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Event Created"),
-                                      backgroundColor: Colors.green,
-                                      elevation: 8,
-                                      duration: Duration(seconds: 3),
-                                    )
-                                  );
+                                  return CircularProgressIndicator();
                                 }
                               }
-                              catch (e) {
-                                return CircularProgressIndicator();
-                              }
-                            } 
-                            else {
-                              print("failed");
-                              return Container();
-                            }}
+                            }
+                          } 
                         );
                       },
                     ),
@@ -720,6 +738,38 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   }
 
   Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
-  await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
-}
+    await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
+  }
+
+  Future showDialogBox(BuildContext context, String errorMessage) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if(Platform.isIOS) {
+          return CupertinoAlertDialog(
+            title: Text("Error"),
+            content: Text(errorMessage),
+            actions: <Widget>[
+              CupertinoButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("BACK")
+              )
+            ],
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(errorMessage),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("BACK")
+              )
+            ],
+          );
+        }
+      }
+    );
+  }
 }

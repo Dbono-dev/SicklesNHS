@@ -99,9 +99,13 @@ class TopHalfViewStudentsPage extends StatelessWidget {
 }
 
 class TopMiddleViewStudentPage extends StatelessWidget {
+
+  String currentQuarter = "";
+
   Future getPosts() async {
     var firestore = Firestore.instance;
     QuerySnapshot qn = await firestore.collection("members").getDocuments();
+    currentQuarter = await CurrentQuarter(DateTime.now()).currentQuarter();
     return qn.documents;
   }
 
@@ -109,12 +113,6 @@ class TopMiddleViewStudentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int yes = 0;
     int no = 0;
-
-    String currentQuarter = "";
-
-    Future getQuarter() async {
-      currentQuarter = await CurrentQuarter(DateTime.now()).currentQuarter();
-    }
 
     return Container(
       child: FutureBuilder(
@@ -124,44 +122,34 @@ class TopMiddleViewStudentPage extends StatelessWidget {
             return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green),);
           }
           else {
-            return FutureBuilder(
-              future: getQuarter(),
-              builder: (context, snapshot) {
-                if(snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green),);
-                }
-                else {
-                  for(int i = 0; i < snapshot2.data.length; i++) {
-                    if(int.tryParse(snapshot2.data[i].data['grade']) == null) {
+            for(int i = 0; i < snapshot2.data.length; i++) {
+              if(int.tryParse(snapshot2.data[i].data['grade']) == null) {
 
-                    }
-                    else {
-                      if(snapshot2.data[i].data[currentQuarter] >= 6) {
-                        yes = yes + 1;
-                      }
-                      else { 
-                        no = no + 1;
-                      }
-                    }
-                  }
-                  return Card(
-                    child: Column(
-                      children: <Widget>[
-                        Text("Current Status of this Quarter"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Icon(Icons.check, color: Colors.green,),
-                            Text("Completed: " + yes.toString()),
-                            Icon(Icons.close, color: Colors.red,),
-                            Text("Not Completed: " + no.toString())
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
+              }
+              else {
+                if(snapshot2.data[i].data[currentQuarter] >= 6) {
+                  yes = yes + 1;
+                }
+                else { 
+                  no = no + 1;
                 }
               }
+            }
+            return Card(
+              child: Column(
+                children: <Widget>[
+                  Text("Current Status of this Quarter"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Icon(Icons.check, color: Colors.green,),
+                      Text("Completed: " + yes.toString()),
+                      Icon(Icons.close, color: Colors.red,),
+                      Text("Not Completed: " + no.toString())
+                    ],
+                  ),
+                ],
+              ),
             );
           }
         },
