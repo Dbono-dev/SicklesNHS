@@ -251,7 +251,7 @@ class _ExportDataPageState extends State<ExportDataPage> {
                       GestureDetector(
                         onTap: () async {
                           for(int a = 0; a < snapshot.data.length; a++) {
-                            if(int.parse(snapshot.data[a].data['grade']) == i) {
+                            if(int.tryParse(snapshot.data[a].data['grade']) == i) {
                               _submitForm(snapshot.data[a]);
                               await Future.delayed(Duration(seconds: 8));
                             }

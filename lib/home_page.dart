@@ -235,7 +235,7 @@ class TopHalfHomePage extends StatelessWidget {
                         elevation: 8,
                         onPressed: () {
                           Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + userData.lastName, uid: user.uid, hours: userData.hours),
+                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + " " + userData.lastName, uid: user.uid, hours: userData.hours),
                             ));
                         },
                         child: FittedBox(fit: BoxFit.fitWidth, child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(color: Colors.white, fontSize: SizeConfig.blockSizeHorizontal * 9))),
@@ -691,7 +691,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),),
                   Container(
-                    child: Text("Admin", style: TextStyle(
+                    child: Text("Sponsor", style: TextStyle(
                       color: Colors.white,
                       fontSize: 40,
                       fontWeight: FontWeight.bold

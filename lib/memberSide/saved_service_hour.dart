@@ -43,7 +43,7 @@ class _ViewSavedServiceHourFormsState extends State<ViewSavedServiceHourForms> {
                         return Card(
                           elevation: 10,
                           child: ListTile(
-                            title: Text(snapshot.data[index].data['type']),
+                            title: Text(snapshot.data[index].data['type'], textAlign: TextAlign.center,),
                             trailing: Container(
                               width: SizeConfig.blockSizeHorizontal * 43,
                               child: Row(

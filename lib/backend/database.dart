@@ -27,7 +27,8 @@ class DatabaseService {
       'thirdQuarter': 0,
       'fourthQuarter': 0,
       'numClub': 0,
-      'signed up event title': []
+      'signed up event title': [],
+      'num of community service events': 0
     });
   }
 
@@ -151,7 +152,7 @@ class DatabaseSubmitHours {
   final CollectionReference submitHours = Firestore.instance.collection('Approving Hours');
 
  Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid, int currentHours, String saveSubmit) async {
-    return await submitHours.document(type).setData({
+    return await submitHours.document(type + " " + uid).setData({
       'type': type,
       'location': location,
       'hours': hours,

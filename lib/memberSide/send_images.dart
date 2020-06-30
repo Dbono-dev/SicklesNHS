@@ -46,88 +46,102 @@ class _SendImagesState extends State<SendImages> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TopHalfViewStudentsPage(),
-          Center(
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                height: 475,
-                width: SizeConfig.blockSizeHorizontal * 85,
-                child: Column(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.all(5)),
-                    FlatButton(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        color: Colors.green,
-                        onPressed: () async {
-                          await getImage();
-                        },
-                        child: Text("Add Images", style: TextStyle(color: Colors.white),)
-                      ),
-                      Padding(padding: EdgeInsets.all(15)),
-                      theImages.length == 0 ? Center(child: Text("NO IMAGES", style: TextStyle(color: Colors.green, fontSize: 35))) : SizedBox(
-                        height: 375,
-                        child: ListView.builder(
-                          padding: EdgeInsets.all(0),
-                          itemCount: theImages.length,
-                          itemBuilder: (_, i) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                              child: Image.file(theImages[i], height: 150,),
-                            );
-                          }
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TopHalfViewStudentsPage(),
+            Center(
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  height: 475,
+                  width: SizeConfig.blockSizeHorizontal * 85,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.all(5)),
+                      FlatButton(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          color: Colors.green,
+                          onPressed: () async {
+                            await getImage();
+                          },
+                          child: Text("Add Images", style: TextStyle(color: Colors.white),)
                         ),
-                      )
-                  ],
-                )
-              ),
-            ),
-          ),
-          Spacer(),
-          Material(
-            type: MaterialType.transparency,
-            child: Container(
-            height: SizeConfig.blockSizeVertical * 7.316,
-            decoration: BoxDecoration(
-              boxShadow: [BoxShadow(
-                color: Colors.black,
-                blurRadius: 15.0,
-                spreadRadius: 2.0,
-                offset: Offset(0, 10.0)
-                )
-              ],
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30)
-              ),
-              color: Colors.green,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () async {
-                    await sendImages();
-                    setState(() {
-                      theImages.clear();
-                    });
-                  },
-                    child: Text("Send Images", style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  )),
+                        Padding(padding: EdgeInsets.all(15)),
+                        theImages.length == 0 ? Center(child: Text("NO IMAGES", style: TextStyle(color: Colors.green, fontSize: 35))) : SizedBox(
+                          height: 375,
+                          child: ListView.builder(
+                            padding: EdgeInsets.all(0),
+                            itemCount: theImages.length,
+                            itemBuilder: (_, i) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                child: Image.file(theImages[i], height: 150,),
+                              );
+                            }
+                          ),
+                        )
+                    ],
+                  )
                 ),
-              ],
+              ),
             ),
-          ),
-          )
-        ],
+            Spacer(),
+            Material(
+              type: MaterialType.transparency,
+              child: Container(
+              height: SizeConfig.blockSizeVertical * 7.316,
+              decoration: BoxDecoration(
+                boxShadow: [BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 15.0,
+                  spreadRadius: 2.0,
+                  offset: Offset(0, 10.0)
+                  )
+                ],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30)
+                ),
+                color: Colors.green,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Builder(
+                    builder: (context) {
+                      return FlatButton(
+                        onPressed: () async {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Images Sent"),
+                              backgroundColor: Colors.green,
+                              elevation: 8,
+                              duration: Duration(seconds: 3),
+                            )
+                          );
+                          await sendImages();
+                          setState(() {
+                            theImages.clear();
+                          });
+                        },
+                          child: Text("Send Images", style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        )),
+                      );
+                    }
+                  ),
+                ],
+              ),
+            ),
+            )
+          ],
+        ),
       ),
     );
   }

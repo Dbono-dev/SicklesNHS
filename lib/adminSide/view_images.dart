@@ -29,7 +29,7 @@ class ViewImages extends StatelessWidget {
                 }
                 else {
                   return SizedBox(
-                    height: 450,
+                    height: SizeConfig.blockSizeVertical * 75.5,
                     child: ListView.builder(
                       itemCount: snapshot.data.length,
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),

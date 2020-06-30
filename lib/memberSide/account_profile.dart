@@ -316,8 +316,10 @@ class _AccountProfileState extends State<AccountProfile> {
                     date = snapshot.data[theIndex].data['event date'];
                     theHours = snapshot.data[theIndex].data['event hours'];
 
-                    for(int i = 0; i < date.length; i++) {
-                      thenewDate.add(format.parse(date[i]));
+                    if(date != null) {
+                      for(int i = 0; i < date.length; i++) {
+                        thenewDate.add(format.parse(date[i]));
+                      }
                     }
                   }
                 }

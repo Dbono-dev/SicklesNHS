@@ -84,6 +84,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                 future: getMembers(),
                 builder: (_, notTheSnapshot) {
                   return ListView.builder(
+                    padding: EdgeInsets.zero,
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
                       if(snapshot.data[index].data['complete'] == true) {
@@ -112,7 +113,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                             },
                             child: Card(
                               elevation: 8,
-                              margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 2.43, 0, SizeConfig.blockSizeHorizontal * 2.43, 0),
+                              margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 2, 0, SizeConfig.blockSizeHorizontal * 2, 0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)
                               ),
@@ -121,9 +122,10 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Material(
+                                      color: Colors.transparent,
                                       child: Column(
                                         children: <Widget>[
-                                          Text(snapshot.data[index].data['type'],),
+                                          Text(snapshot.data[index].data['type'], overflow: TextOverflow.ellipsis,),
                                           Text(snapshot.data[index].data['date'],),
                                           Text(snapshot.data[index].data['hours'] + " hours",)
                                         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
@@ -201,7 +202,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 return 'Enter number';
                               }
                               try {
-                                int.parse(value);
+                                double.parse(value);
                               }
                               catch(e) {
                                 return 'Enter number';
@@ -281,10 +282,11 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       child: TextFormField(
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                        hintText: 'Supervisor Phone Number',
-                      ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                          hintText: 'Supervisor Phone Number',
+                        ),
                         onChanged: (val) => _supPhone = (val),
+                        
                         initialValue: _supPhone,
                         validator: (value) {
                           if(value.isEmpty) {
@@ -323,42 +325,45 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                       elevation: 10,
                       color: Colors.white,
                       onPressed: () async {
-                          final form = _fourthformKey.currentState;
-                            form.save();
-                            if(form.validate() && _controller.isNotEmpty) {
-                              try {
-                                var signture = await _controller.toPngBytes();
-                                final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
-                                final StorageUploadTask task = firebaseStorageRef.putData(signture);
-                                var url = await firebaseStorageRef.getDownloadURL();
+                        final form = _fourthformKey.currentState;
+                          form.save();
+                          if(form.validate() && _controller.isNotEmpty) {
+                            try {
+                              var signture = await _controller.toPngBytes();
+                              final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + '.jpg');
+                              final StorageUploadTask task = firebaseStorageRef.putData(signture);
+                              var url = await (await task.onComplete).ref.getDownloadURL();
 
-                                dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "save");
+                              dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "save");
 
-                                if(result == null) {
-                                  print("Fill in all the forms.");
-                                }
-                                if(result != null) {
-                                  setState(() {
-                                    _controller.clear();
-                                    _typeOfActivity = "";
-                                    _location = "";
-                                    _newDateTime = null;
-                                    _hours = "";
-                                    _fourthformKey.currentState.reset();
-                                  });
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Saved Service Hour Form"),
-                                      backgroundColor: Colors.green,
-                                      duration: Duration(seconds: 3),
-                                    )
-                                  );
-                                }
+                              if(result == null) {
+                                print("Fill in all the forms.");
                               }
-                              catch (e) {
-                                return CircularProgressIndicator();
+                              if(result != null) {
+                                setState(() {
+                                  _controller.clear();
+                                  _typeOfActivity = "";
+                                  _location = "";
+                                  _newDateTime = null;
+                                  _hours = "";
+                                  _typeOfActivity = "";
+                                  _location = "";
+                                  _fourthformKey.currentState.reset();
+                                });
+                                Scaffold.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Saved Service Hour Form"),
+                                    backgroundColor: Colors.green,
+                                    duration: Duration(seconds: 3),
+                                  )
+                                );
                               }
-                        } else {
+                            }
+                            catch (e) {
+                              return CircularProgressIndicator();
+                            }
+                        } 
+                        else {
                           return Container();
                         }
                       },
@@ -396,7 +401,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 var signture = await _controller.toPngBytes();
                                 final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
                                 final StorageUploadTask task = firebaseStorageRef.putData(signture);
-                                var url = await firebaseStorageRef.getDownloadURL();
+                                var url = await (await task.onComplete).ref.getDownloadURL();
 
                                 dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "submit");
 
