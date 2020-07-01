@@ -45,7 +45,7 @@ class _ViewSavedServiceHourFormsState extends State<ViewSavedServiceHourForms> {
                           child: ListTile(
                             title: Text(snapshot.data[index].data['type'], textAlign: TextAlign.center,),
                             trailing: Container(
-                              width: SizeConfig.blockSizeHorizontal * 43,
+                              width: SizeConfig.blockSizeHorizontal * 49,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[

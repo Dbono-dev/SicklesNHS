@@ -180,7 +180,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 70.5,
+      height: SizeConfig.blockSizeVertical * 69.75,
       child: Column(
         children: <Widget>[
           Container(
@@ -269,7 +269,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                 else {
                   return Material(
                     child: Container(
-                      height: SizeConfig.blockSizeVertical * 59,
+                      height: SizeConfig.blockSizeVertical * 57,
                       child: ListView.builder(
                         padding: EdgeInsets.all(0),
                         itemCount: snapshot.data.length,

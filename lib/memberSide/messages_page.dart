@@ -187,6 +187,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
     final user = Provider.of<User>(context);
  
     return Container(
+      height: SizeConfig.blockSizeVertical * 50,
       child: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
@@ -204,7 +205,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
                 }
                 else {
                   return Container(
-                    height: SizeConfig.blockSizeVertical * 60,
+                    height: SizeConfig.blockSizeVertical * 55,
                     child: Column(
                       children: <Widget>[
                         userData.permissions == 0 || userData.permissions == 2 ? Padding(
@@ -276,7 +277,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
                           ),
                         ) : Container(),
                         Container(
-                          height: SizeConfig.blockSizeVertical * 57,
+                          height: SizeConfig.blockSizeVertical * 53,
                           child: ListView.builder(
                             padding: EdgeInsets.all(0),
                             itemCount: snapshot.data.length,

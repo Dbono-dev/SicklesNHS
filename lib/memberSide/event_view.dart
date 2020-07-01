@@ -366,43 +366,46 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                     Text("Remaining Spots: " + remainingSpots)
                   ],
                 ),
-                Align(
-                  alignment: Alignment.center,
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget> [
-                        Card(
-                         elevation: 8,
-                         child: Container(
-                           height: SizeConfig.blockSizeVertical * 6.14,
-                           width: 200,
-                           child: Center(
-                             child: Material(
-                               color: Colors.transparent,
-                               child: Text(
-                                 startTime.toString() + ":" + theStartTimeMinutes.toString() + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
+                Container(
+                  width: SizeConfig.blockSizeHorizontal * 100,
+                  child: Align(
+                    alignment: Alignment.center,
+                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget> [
+                          Card(
+                           elevation: 8,
+                           child: Container(
+                             height: SizeConfig.blockSizeVertical * 6,
+                             width: 175,
+                             child: Center(
+                               child: Material(
+                                 color: Colors.transparent,
+                                 child: Text(
+                                   startTime.toString() + ":" + theStartTimeMinutes.toString() + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
+                                 ),
                                ),
                              ),
                            ),
-                         ),
-                    ),
-                    Card(
-                      elevation: 8,
-                      child: Container(
-                        height: SizeConfig.blockSizeVertical * 6.14,
-                        width: 150,
-                          child: Center(
-                            child: Material(
-                              color: Colors.transparent,
-                            child: Text(
-                              differenceTime.toString() + " hours", style: TextStyle(fontSize: 20),
+                      ),
+                      Card(
+                        elevation: 8,
+                        child: Container(
+                          height: SizeConfig.blockSizeVertical * 6,
+                          width: 125,
+                            child: Center(
+                              child: Material(
+                                color: Colors.transparent,
+                              child: Text(
+                                differenceTime.toString() + " hours", style: TextStyle(fontSize: 20),
+                              ),
+                          ),
                             ),
                         ),
-                          ),
                       ),
+                      ]
                     ),
-                    ]
                   ),
                 ),
               ],
@@ -633,19 +636,29 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
 
     List theDates = new List();
     List<Widget> listWidgetDates = new List<Widget>();
+    DateFormat format = new DateFormat("MM/dd/yyyy");
 
     if(widget.post.data['date'].toString().length > 10) {
       String alsoTheDates = widget.post.data['date'];
       for(int i = 0; i < alsoTheDates.length; i++) {
         if(alsoTheDates.substring(0, i).contains("-")) {
-          theDates.add(alsoTheDates.substring(0, i - 1));
-          listWidgetDates.add(Text(alsoTheDates.substring(0, i - 1)));
-          alsoTheDates = alsoTheDates.substring(i);
-          i = 0;
+          DateTime theDateTimeVersion = format.parse(alsoTheDates.substring(0, i - 1));
+          if(format.parse(alsoTheDates.substring(0, i - 1)).isAfter(DateTime.now()) || (theDateTimeVersion.month == DateTime.now().month && theDateTimeVersion.day == DateTime.now().day && theDateTimeVersion.year == DateTime.now().year)) {
+            theDates.add(alsoTheDates.substring(0, i - 1));
+            listWidgetDates.add(Text(alsoTheDates.substring(0, i - 1)));
+            alsoTheDates = alsoTheDates.substring(i);
+            i = 0;
+          }
+          else {
+            alsoTheDates = alsoTheDates.substring(i);
+            i = 0;
+          }
         }
         else if(i == alsoTheDates.length - 1) {
-          theDates.add(alsoTheDates);
-          listWidgetDates.add(Text(alsoTheDates));
+          if(format.parse(alsoTheDates).isAfter(DateTime.now())) {
+            theDates.add(alsoTheDates);
+            listWidgetDates.add(Text(alsoTheDates));
+          }
         }
       }
       theShownDate = theDates[shownDate];

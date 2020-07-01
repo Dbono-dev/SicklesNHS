@@ -152,7 +152,7 @@ class _AccountProfileState extends State<AccountProfile> {
       child: IconButton(
         icon: Icon(icon),
         color: Colors.white,
-        iconSize: 50,
+        iconSize: 40,
         onPressed: () {
           Navigator.push(context, 
             MaterialPageRoute(builder: (context) => location)
@@ -336,7 +336,7 @@ class _AccountProfileState extends State<AccountProfile> {
                             context: context,
                             builder: (BuildContext context) {
                               return Padding(
-                                padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 15, 0, SizeConfig.blockSizeVertical * 15),
+                                padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 10, 0, SizeConfig.blockSizeVertical * 10),
                                 child: AlertDialog(
                                   title: Text("Hours"),
                                   content: Column(
@@ -468,7 +468,7 @@ class _AccountProfileState extends State<AccountProfile> {
                             width: SizeConfig.blockSizeHorizontal * 25,
                               child: Material(
                                 color: Colors.transparent,
-                              child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                              child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)),
                             ),
                           ),
                         ),

@@ -64,12 +64,12 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
 
     return SingleChildScrollView(
       child: Container(
-      height: SizeConfig.blockSizeVertical * 74,
+      height: SizeConfig.blockSizeVertical * 73,
       child: Material(
       child: Form(
         key: _fourthformKey,
         child: Container(
-          height: SizeConfig.blockSizeVertical * 80,
+          height: SizeConfig.blockSizeVertical * 73,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[

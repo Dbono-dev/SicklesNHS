@@ -57,7 +57,7 @@ class _SendImagesState extends State<SendImages> {
                 color: Colors.transparent,
                 child: Container(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  height: 475,
+                  height: 425,
                   width: SizeConfig.blockSizeHorizontal * 85,
                   child: Column(
                     children: <Widget>[

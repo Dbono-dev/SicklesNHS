@@ -697,19 +697,22 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                       fontWeight: FontWeight.bold
                     ),)
                     ),
-                    Padding(padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 25, 0.0, 0.0, 0.0)),
-                    Container(
-                      width: SizeConfig.blockSizeHorizontal * 25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: RaisedButton(
-                        color: Colors.white,
-                              elevation: 8,
-                              child: FittedBox(fit: BoxFit.fill, child: Text("LOGOUT")),
-                              onPressed: () async {
-                                await _auth.logout();
-                              }, 
+                    Spacer(),
+                    Padding(
+                      padding:  EdgeInsets.fromLTRB(0, 0, SizeConfig.blockSizeHorizontal * 10, 0),
+                      child: Container(
+                        width: SizeConfig.blockSizeHorizontal * 25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: RaisedButton(
+                          color: Colors.white,
+                                elevation: 8,
+                                child: FittedBox(fit: BoxFit.fill, child: Text("LOGOUT")),
+                                onPressed: () async {
+                                  await _auth.logout();
+                                }, 
+                        ),
                       ),
                     ),
                 ],),
