@@ -418,10 +418,16 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
   }
 }
 
-class BottomEventViewPage extends StatelessWidget {
+class BottomEventViewPage extends StatefulWidget {
   BottomEventViewPage ({Key key, this.post}) : super (key: key);
 
   final DocumentSnapshot post;
+
+  @override
+  _BottomEventViewPageState createState() => _BottomEventViewPageState();
+}
+
+class _BottomEventViewPageState extends State<BottomEventViewPage> {
   String differentSignUp = "Check In";
   int newTime;
   double timing = 0.0;
@@ -432,9 +438,9 @@ class BottomEventViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
-    if(post.data['type'] == "clubDates") {
+    if(widget.post.data['type'] == "clubDates") {
       title = "Club Meeting";
-      theDate = post.data['date'];
+      theDate = widget.post.data['date'];
     }
     else {
       DateTime now = DateTime.now();
@@ -445,8 +451,8 @@ class BottomEventViewPage extends StatelessWidget {
       newTime = int.parse(formatDate(now, [HH]));
       theDate = "";
 
-      int modifiedStartMinutes = post.data['start time minutes'];
-      int modifiedEndMinutes = post.data['end time minutes'];
+      int modifiedStartMinutes = widget.post.data['start time minutes'];
+      int modifiedEndMinutes = widget.post.data['end time minutes'];
 
       double bonusStartMinutes; 
       double bonusEndMinutes;
@@ -477,10 +483,10 @@ class BottomEventViewPage extends StatelessWidget {
         bonusEndMinutes = 0.75;
       } 
 
-      timing = newTime - (post.data["start time"] + bonusStartMinutes);
-      double endtiming = (post.data["end time"] + bonusEndMinutes) - newTime;
+      timing = newTime - (widget.post.data["start time"] + bonusStartMinutes);
+      double endtiming = (widget.post.data["end time"] + bonusEndMinutes) - newTime;
 
-      if(date == post.data["date"].toString())
+      if(date == widget.post.data["date"].toString())
       {
         if(timing >= -1 && timing <= 0.5)
         {
@@ -497,11 +503,11 @@ class BottomEventViewPage extends StatelessWidget {
       else {
         differentSignUp = "Sign Up";
       }
-      if(post.data['participates'].length == int.parse(post.data['max participates'])) {
+      if(widget.post.data['participates'].length == int.parse(widget.post.data['max participates'])) {
         differentSignUp = "";
       }
 
-      title = post.data["title"];
+      title = widget.post.data["title"];
     }
 
     return StreamBuilder<UserData>(
@@ -509,11 +515,11 @@ class BottomEventViewPage extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
-          if(post.data['type'] == "clubDates") {
+          if(widget.post.data['type'] == "clubDates") {
 
           }
           else {
-            if(post.data['participates'].contains(userData.firstName + " " + userData.lastName) && (differentSignUp != "Check In" || differentSignUp != "Check Out")) {
+            if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && (differentSignUp != "Check In" || differentSignUp != "Check Out")) {
               differentSignUp = "";
             }
           }
@@ -542,24 +548,27 @@ class BottomEventViewPage extends StatelessWidget {
                   onPressed: () {
                     if(differentSignUp == "Check In") { 
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: post.data['type']),
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: widget.post.data['type']),
                         ));
                     }
                     if(differentSignUp == "Check Out") {
                       Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: post.data['type'])
+                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: widget.post.data['type'])
                         ));
                     }
                     if(differentSignUp == "Sign Up") {
-                      var participates = post.data['participates'];
-                      var participateDate = post.data['participates dates'];
+                      var participates = widget.post.data['participates'];
+                      var participateDate = widget.post.data['participates dates'];
                       participates.add(userData.firstName + " " + userData.lastName);
                       participateDate.add(global.shownDate);
                       dynamic result = sendEventToDatabases(participates, title, participateDate);
-                      dynamic result2 = sendBugToEmail(title, post);
+                      dynamic result2 = sendBugToEmail(title, widget.post);
                       var eventTitle = userData.eventTitleSignedUp;
                       eventTitle.add(title);
                       dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
+                      setState(() {
+                        
+                      });
                     }
                   },
                     child: Text(differentSignUp, style: TextStyle(
@@ -577,7 +586,6 @@ class BottomEventViewPage extends StatelessWidget {
       }
     );
   }
-
 
   Future sendEventToDatabases(var participate, String title, var participateDate) async {
     await DatabaseEvent().updateEvent(participate, title, participateDate);
@@ -597,11 +605,56 @@ class BottomEventViewPage extends StatelessWidget {
 
     final smtpServer = gmail(userName, password);
 
+    int startTimeMinutes = post.data['start time minutes'];
+    String theStartTimeMinutes;
+    if(startTimeMinutes == 0) {
+      theStartTimeMinutes = "00";
+    }
+    else {
+      theStartTimeMinutes = startTimeMinutes.toString();
+    }
+
+    int endTimeMinutes = post.data['end time minutes'];
+    String theendTimeMinutes;
+    if(endTimeMinutes == 0) {
+      theendTimeMinutes = "00";
+    }
+    else {
+      theendTimeMinutes = endTimeMinutes.toString();
+    }
+
+    String theDate;
+    if(post.data['date'].toString().length > 10) {
+      theDate = global.shownDate;
+    }
+    else {
+      theDate = post.data['date'];
+    }
+
+    String theStartTime = post.data['start time'].toString() + ":" + theStartTimeMinutes;
+    String theEndTime = post.data['end time'].toString() + ":" + theendTimeMinutes;
+    String description = post.data['description'];
+
+    List theMessage = [];
+    theMessage.add("<h3>Hello,</h3>");
+    theMessage.add("<p>Thank you for signing up for $title.</p>");
+    theMessage.add("<p><b>Date:</b> $theDate</p>");
+    theMessage.add("<p><b>Start Time:</b> $theStartTime</p>");
+    theMessage.add("<p><b>End Time:</b> $theEndTime</p>");
+    theMessage.add("<p><b>Description:</b> $description</p>");
+    theMessage.add("<h3>Thanks,</h3>");
+    theMessage.add("<h3>Your Sickles NHS App Team</h3>");
+
+    String tempmessage = "";
+    for(int i = 0; i < theMessage.length; i++) {
+      tempmessage += theMessage[i];
+    }
+
     final message = Message()
     ..from = Address(userName, 'Sickles NHS Developer')
     ..recipients.add(userEmail)
     ..subject = "Signed up for " + title
-    ..text = "Thank you for signing up for " + title + ". \n Event Start Time: " + post.data['start time'].toString() + ":" + post.data['start time minutes'].toString();
+    ..html = tempmessage;
 
     try {
       final sendReport = await send(message, smtpServer);
@@ -663,6 +716,9 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
       }
       theShownDate = theDates[shownDate];
     }
+
+    int theNum = 0;
+    int repeat = 0;
 
     return Material(
       color: Colors.transparent,
@@ -731,19 +787,25 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                 itemCount: participatesDate.length,
                 itemBuilder: (_, index) {
                   if(participatesDate[index] == theShownDate) {
+                    theNum += 1;
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
                       child: Card(
                         elevation: 10,
                         child: ListTile(
-                          leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20)),
+                          leading: Text((theNum).toString() + ".", style: TextStyle(fontSize: 20)),
                           title: Text(participatesList[index]),
                         )
                       ),
                     );
                   }
+                  else if(theNum == 0 && repeat == participatesDate.length - 1) {
+                    
+                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30)),);
+                  }
                   else {
-                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30),),);
+                    repeat += 1;
+                    return Container();
                   }
                 }
               ),

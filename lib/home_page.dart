@@ -600,7 +600,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                 ],
               ),
               Container(
-              height: SizeConfig.blockSizeVertical * 27,
+              height: SizeConfig.blockSizeVertical * 26,
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: FutureBuilder(
                 future: getStudentCards(),
@@ -613,38 +613,59 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                     );
                   }
                   else {
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: snapshot.data.length,
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      itemBuilder: (_, index) {
-                        if(snapshot.data[index].data['type'] == "clubDates") {
-                          x += 1;
-                          if(_clubDate(snapshot.data[index]) - _whithin10Days(snapshot.data[index]) <= 10 && _clubDate(snapshot.data[index]) > _whithin10Days(snapshot.data[index])) {
-                            return BottomPageCards(post: snapshot.data[index]);
-                          }
-                          else {
-                            return Container(height: 0,);
-                          }
+                    int numOfEvents = snapshot.data.length;
+                    for(int i = 0; i < snapshot.data.length; i++) {
+                      if(snapshot.data[i].data['type'] == "Service Event") {
+                        if(snapshot.data[i].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+
                         }
                         else {
-                          if(snapshot.data[index].data['type'] == "Service Event") {
-                            if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+                          numOfEvents -= 1;
+                        }
+                      }
+                      else if(snapshot.data[i].data['type'] == "clubDates"){
+                        numOfEvents -= 1;
+                      }
+                      else {
+                        numOfEvents -= 1;
+                      }
+                    }
+
+                    print(numOfEvents);
+                    
+                    return Container(
+                      child: numOfEvents == 0 ? Center(child: Text("NO EVENTS", style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),)) : ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                        itemBuilder: (_, index) {
+                          if(snapshot.data[index].data['type'] == "clubDates") {
+                            x += 1;
+                            if(_clubDate(snapshot.data[index]) - _whithin10Days(snapshot.data[index]) <= 10 && _clubDate(snapshot.data[index]) > _whithin10Days(snapshot.data[index])) {
                               return BottomPageCards(post: snapshot.data[index]);
+                            }
+                            else {
+                              return Container(height: 0,);
+                            }
+                          }
+                          else {
+                            if(snapshot.data[index].data['type'] == "Service Event") {
+                              if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+                                return BottomPageCards(post: snapshot.data[index]);
+                              }
+                              else {
+                                return Container();
+                              }
                             }
                             else {
                               return Container();
                             }
                           }
-                          else {
-                            return Container();
-                          }
+                          
                         }
-                        
-                      }
+                      ),
                     );
                   }
-                  
                 }
               )
           ),
@@ -652,20 +673,9 @@ class _StudentMyEvents extends State<StudentMyEvents> {
             )
         );
         }
-        return Container(
-              width: SizeConfig.blockSizeHorizontal * 25,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: RaisedButton(
-                color: Colors.white,
-                      elevation: 8,
-                      child: Text("LOGOUT"),
-                      onPressed: () async {
-                        await _auth.logout();
-                      }, 
-              ),
-            );
+        else {
+          return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.grey));
+        }
       }
     );
 }

@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/backend/auth_service.dart';
-import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'dart:convert' as convert;
