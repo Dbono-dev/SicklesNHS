@@ -486,7 +486,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
       timing = newTime - (widget.post.data["start time"] + bonusStartMinutes);
       double endtiming = (widget.post.data["end time"] + bonusEndMinutes) - newTime;
 
-      if(date == widget.post.data["date"].toString())
+      if(date == global.shownDate)
       {
         if(timing >= -1 && timing <= 0.5)
         {
@@ -519,9 +519,12 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
 
           }
           else {
-            if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && (differentSignUp != "Check In" || differentSignUp != "Check Out")) {
+            if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && differentSignUp != "Check Out" && differentSignUp != "Check In") {
               differentSignUp = "";
             }
+          }
+          if(userData.permissions == 0 || userData.permissions == 2) {
+            differentSignUp = "";
           }
           return Material(
             type: MaterialType.transparency,

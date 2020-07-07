@@ -163,7 +163,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
         children: <Widget> [
           Padding(padding: EdgeInsets.all(5)),
           Container(
-            height: SizeConfig.blockSizeVertical * 65,
+            height: SizeConfig.blockSizeVertical * 63,
             child: FutureBuilder(
               future: getQuarter(),
               builder: (_, snapshot) {

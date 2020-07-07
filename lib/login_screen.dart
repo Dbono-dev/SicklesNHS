@@ -10,21 +10,15 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: SizeConfig.blockSizeVertical * 100,
-          width: SizeConfig.blockSizeHorizontal * 100,
-          color: Colors.green,
-        ),
-        Column(
-          children: <Widget>[
-            TopHalfLoginPage(),
-            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
-            LoginPage(),
-          ],
-        )
-      ],
+    return Scaffold(
+      backgroundColor: Colors.green,
+      body: Column(
+        children: <Widget>[
+          TopHalfLoginPage(),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
+          LoginPage(),
+        ],
+      )
     );
   }
 }
@@ -121,97 +115,105 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.blockSizeVertical * 60,
-          child: Form(
-            key: _formKey,
-            child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Material(
-                color: Colors.transparent,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child: TextFormField(
-                      onSaved: (String value) {_email = value;},
-                      validator: (val) => val.isEmpty ? 'Enter an email': null,
-                      keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Email",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                      fillColor: Colors.white,
-                      filled: true,
+      return Material(
+        color: Colors.transparent,
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 60,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Material(
+                    color: Colors.transparent,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        child: TextFormField(
+                          onSaved: (String value) {_email = value;},
+                          validator: (val) => val.isEmpty ? 'Enter an email': null,
+                          keyboardType: TextInputType.emailAddress,
+                        style: TextStyle(fontSize: 20),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          hintText: "Email",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
                     ),
-                ),
+                      ),
                   ),
-              ),
-              Material(
-                color: Colors.transparent,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child: TextFormField(
-                      onSaved: (value) => _password = value,
-                      validator: (val) => val.length < 6 ? 'Enter a password 6+ characters long': null,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Password",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                      fillColor: Colors.white,
-                      filled: true,
+                  Material(
+                    color: Colors.transparent,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        child: TextFormField(
+                          onSaved: (value) => _password = value,
+                          validator: (val) => val.length < 6 ? 'Enter a password 6+ characters long': null,
+                        obscureText: true,
+                        style: TextStyle(fontSize: 20),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          hintText: "Password",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
                     ),
-                ),
+                      ),
                   ),
-              ),
-              Material(
-                color: Colors.transparent,
-                child: FlatButton(
-                  child: Text("Forgot Password/Reset Password", style: TextStyle(color: Colors.white),),
-                  onPressed: () async {
-                    resetPassword(context);
-                  },
-                ),
-              ),
-              Material(
-                elevation: 8.0,
-                borderRadius: BorderRadius.circular(30.0),
-                color: Colors.white,
-                child: MaterialButton(
-                  minWidth: MediaQuery.of(context).size.width / 2,
-                  child: Text("Login",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeHorizontal * 7.5)
-                ),
-                  onPressed: () async {
-                    print("clicked");
-                    if(_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                        dynamic result = await _auth.loginUser(
-                          email: _email,
-                          password: _password,
-                          context: context
-                        );
-                    if(result == null) {
-                      print("Could not sign in with those credentials");
-                    }
-                    }
-                  })
-              ),
-              Spacer(),
-              Material(
-                color: Colors.transparent,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                  child: Text("Developed by: Dylan Bono", style: TextStyle(color: Colors.white, fontSize: 20),),
-                )
-              )
-            ],
-      ),
+                  Material(
+                    color: Colors.transparent,
+                    child: FlatButton(
+                      child: Text("Forgot Password/Reset Password", style: TextStyle(color: Colors.white),),
+                      onPressed: () async {
+                        resetPassword(context);
+                      },
+                    ),
+                  ),
+                  Material(
+                    elevation: 8.0,
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: Colors.white,
+                    child: MaterialButton(
+                      minWidth: MediaQuery.of(context).size.width / 2,
+                      child: Text("Login",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeHorizontal * 7.5)
+                    ),
+                      onPressed: () async {
+                        print("clicked");
+                        if(_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text("Logining in...", style: TextStyle(color: Colors.green),),
+                            duration: Duration(seconds: 1),
+                            backgroundColor: Colors.white,
+                          ));
+                            dynamic result = await _auth.loginUser(
+                              email: _email,
+                              password: _password,
+                              context: context
+                            );
+                          if(result == null) {
+                            print("Could not sign in with those credentials");
+                          }
+                        }
+                      })
+                  ),
+                  Spacer(),
+                  Material(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      child: Text("Developed by: Dylan Bono", style: TextStyle(color: Colors.white, fontSize: 17.5),),
+                    )
+                  )
+                ],
           ),
-    );
+              ),
+        ),
+      );
   }
 }
 
@@ -222,11 +224,10 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
 
     return showDialog(
       context: context,
-      barrierDismissible: false,
       child: AlertDialog(
         title: Text("Reset Password"),
         content: Container(
-          height: SizeConfig.blockSizeVertical * 15,
+          height: SizeConfig.blockSizeVertical * 17,
           child: Column(
             children: <Widget>[
               Text("Enter your Email"),
@@ -260,15 +261,14 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                   if(_theFormKey.currentState.validate()) {
                     _theFormKey.currentState.save();
                     try {
-                      await _auth.resetPassword(_theEmail);
+                      await _auth.resetPassword(_theEmail, context);
                     }
-                    on PlatformException catch (error) {
+                    catch (error) {
                       print(error.message);
-                      Navigator.of(context).pop();
                     }
                   }
                 },
-                child: Text("Ok", style: TextStyle(color: Colors.green))
+                child: Text("Submit", style: TextStyle(color: Colors.green))
               ),
             ],
           )
