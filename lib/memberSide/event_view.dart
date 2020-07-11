@@ -376,14 +376,17 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                       children: <Widget> [
                           Card(
                            elevation: 8,
-                           child: Container(
+                           child: SizedBox(
                              height: SizeConfig.blockSizeVertical * 6,
                              width: 175,
                              child: Center(
                                child: Material(
                                  color: Colors.transparent,
-                                 child: Text(
-                                   startTime.toString() + ":" + theStartTimeMinutes.toString() + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
+                                 child: FittedBox(
+                                   fit: BoxFit.contain,
+                                    child: Text(
+                                     startTime.toString() + ":" + theStartTimeMinutes.toString() + " " + timeofDayStart + " - " + endTime.toString() + ":" + theEndTimeMinutes.toString() + " " + timeofDayEnd, style: TextStyle(fontSize: 20)
+                                   ),
                                  ),
                                ),
                              ),

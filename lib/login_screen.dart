@@ -12,12 +12,17 @@ class LoginScreen extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.green,
-      body: Column(
-        children: <Widget>[
-          TopHalfLoginPage(),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
-          LoginPage(),
-        ],
+      body: SingleChildScrollView(
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 100,
+          child: Column(
+            children: <Widget>[
+              TopHalfLoginPage(),
+              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
+              LoginPage(),
+            ],
+          ),
+        ),
       )
     );
   }

@@ -216,522 +216,524 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     startingDate = _newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
     //startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
 
-    return Container(
-      color: Colors.transparent,
-      height: SizeConfig.blockSizeVertical * 77.8,
-      child: Scaffold(
-        body: Form(
-          key: _thirdformKey,
-          child: ListView(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget> [
-                  Material(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Title',
-                      ),
-                        onChanged: (val) => _title = (val),
-                        validator: (val) => val.isEmpty ? 'Enter Title' : null,
-                        initialValue: _title,
-                      ),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
-                  Material(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Description",
-                          border: OutlineInputBorder()
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.transparent,
+        height: SizeConfig.blockSizeVertical * 77.8,
+        child: Scaffold(
+          body: Form(
+            key: _thirdformKey,
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget> [
+                    Material(
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Title',
                         ),
-                        minLines: 3,
-                        maxLines: 6,
-                        validator: (val) => val.isEmpty ? 'Enter Description' : null,
-                        onChanged: (val) => _description = (val),
-                        initialValue: _description,
-                      ),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 00)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget> [
-                      OutlineButton(
-                        hoverColor: Colors.green,
-                        highlightColor: Colors.green,
-                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
-                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                        child: Text(startingDate),
-                        onPressed: () async {
-                          _newDateTime = await showRoundedDatePicker(
-                            context: context,
-                            initialDate: startDate,
-                            lastDate: DateTime(DateTime.now().year + 1),
-                            borderRadius: 16,
-                            theme: ThemeData(primarySwatch: Colors.green),
-                          );
-                          setState(() {
-                            startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
-                          });
-                        },
-                      ),
-                      OutlineButton(
-                        hoverColor: Colors.green,
-                        highlightColor: Colors.green,
-                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
-                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                    child: Text(theStartTime),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext builder) {
-                          return Container(
-                              height: MediaQuery.of(context).copyWith().size.height / 3,
-                              child: CupertinoDatePicker(
-                                initialDateTime: newDateTime(),
-                                onDateTimeChanged: (DateTime newdate) {
-                                  _startTime = newdate.hour;
-                                  _startTimeMinutes = newdate.minute;
-                                  theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
-                                  setState(() {
-                                    
-                                  });
-                                },
-                                use24hFormat: false,
-                                maximumDate: new DateTime(2030, 12, 30),
-                                minimumYear: 2020,
-                                maximumYear: 2030,
-                                minuteInterval: 15,
-                                mode: CupertinoDatePickerMode.time,
-                          ));
-                        });
-                    },
-                  ),
-                      OutlineButton(
-                        color: Colors.green,
-                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
-                        borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                        child: Text(theEndTime),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext builder) {
-                              return Container(
-                                  height: MediaQuery.of(context).copyWith().size.height / 3,
-                                  child: CupertinoDatePicker(
-                                    initialDateTime: newDateTime(),
-                                    onDateTimeChanged: (DateTime newdate) {
-                                      _endTime = newdate.hour;
-                                      _endTimeMinutes = newdate.minute;
-                                      theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
-                                      setState(() {
-                                        
-                                      });
-                                    },
-                                    use24hFormat: false,
-                                    maximumDate: new DateTime(2030, 12, 30),
-                                    minimumYear: 2020,
-                                    maximumYear: 2030,
-                                    minuteInterval: 15,
-                                    mode: CupertinoDatePickerMode.time,
-                              ));
+                          onChanged: (val) => _title = (val),
+                          validator: (val) => val.isEmpty ? 'Enter Title' : null,
+                          initialValue: _title,
+                        ),
+                      )
+                    ),
+                    Padding(padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
+                    Material(
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Description",
+                            border: OutlineInputBorder()
+                          ),
+                          minLines: 3,
+                          maxLines: 6,
+                          validator: (val) => val.isEmpty ? 'Enter Description' : null,
+                          onChanged: (val) => _description = (val),
+                          initialValue: _description,
+                        ),
+                      )
+                    ),
+                    Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 00)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget> [
+                        OutlineButton(
+                          hoverColor: Colors.green,
+                          highlightColor: Colors.green,
+                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                          borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                          child: Text(startingDate),
+                          onPressed: () async {
+                            _newDateTime = await showRoundedDatePicker(
+                              context: context,
+                              initialDate: startDate,
+                              lastDate: DateTime(DateTime.now().year + 1),
+                              borderRadius: 16,
+                              theme: ThemeData(primarySwatch: Colors.green),
+                            );
+                            setState(() {
+                              startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
                             });
-                        },
-                      ),
-                    ]
-                  ),
-                  Material(
-                    child: RaisedButton(
-                      color: Colors.white,
-                      elevation: 8,
+                          },
+                        ),
+                        OutlineButton(
+                          hoverColor: Colors.green,
+                          highlightColor: Colors.green,
+                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                          borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                      child: Text(theStartTime),
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(25))
-                          ),
                           builder: (BuildContext builder) {
-                                return Container(
-                                  height: SizeConfig.blockSizeVertical * 33,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: CupertinoPicker(
-                                                backgroundColor: Colors.white,
-                                                itemExtent: 28,
-                                                onSelectedItemChanged: (value) {
-                                                  setState(() {
-                                                    selectedValue = value;
-                                                  });
-                                                },
-                                                children: [
-                                                  Text("0"),
-                                                  Text("1"),
-                                                  Text("2"),
-                                                  Text("3"),
-                                                  Text("4"),
-                                                  Text("5"),
-                                                  Text("6"),
-                                                  Text("7"),
-                                                  Text("8"),
-                                                  Text("9"),
-                                                  Text("10"),
-                                                ]),
-                                            ),
-                                            Expanded(
-                                              child: CupertinoPicker(
-                                                backgroundColor: Colors.white,
-                                                itemExtent: 32,
-                                                onSelectedItemChanged: (value) {
-                                                  setState(() {
-                                                    secondSelectedValue = value;
-                                                  });
-                                                },
-                                                children: [
-                                                  Text("days"),
-                                                  Text("weeks"),
-                                                  Text("months"),
-                                                  Text("years")
-                                                ]),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Container(
-                                                height: SizeConfig.blockSizeVertical * 33,
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: <Widget> [
-                                                    FlatButton(
-                                                      child: Text("On a date"),
-                                                      onPressed: () async {
-                                                        onDate = await showRoundedDatePicker(
-                                                            context: context,
-                                                            initialDate: startDate,
-                                                            lastDate: DateTime(DateTime.now().year + 1),
-                                                            borderRadius: 16,
-                                                            theme: ThemeData(primarySwatch: Colors.green),
-                                                          );
-                                                        setState(() {
-                                                          
-                                                        });
-                                                      },
-                                                    ),
-                                                    FlatButton(
-                                                      child: Text("After number of occurrences"),
-                                                      onPressed: () {
-
-                                                      },
-                                                    )
-                                                  ]
-                                                ),
-                                              );
-                                            }
-                                          );
-                                        },
-                                        child: Container(
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            children: <Widget>[
-                                              FlatButton.icon(
-                                                onPressed: () {
-                                                  
-                                                },
-                                                icon: Icon(Icons.compare_arrows),
-                                                label: Text(doesNotEnd)
-                                              ),
-                                              Icon(Icons.arrow_forward_ios)
-                                            ],
-                                          )
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );
+                            return Container(
+                                height: MediaQuery.of(context).copyWith().size.height / 3,
+                                child: CupertinoDatePicker(
+                                  initialDateTime: newDateTime(),
+                                  onDateTimeChanged: (DateTime newdate) {
+                                    _startTime = newdate.hour;
+                                    _startTimeMinutes = newdate.minute;
+                                    theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
+                                    setState(() {
+                                      
+                                    });
+                                  },
+                                  use24hFormat: false,
+                                  maximumDate: new DateTime(2030, 12, 30),
+                                  minimumYear: 2020,
+                                  maximumYear: 2030,
+                                  minuteInterval: 15,
+                                  mode: CupertinoDatePickerMode.time,
+                            ));
                           });
                       },
-                      child: Text(doesNotRepeat)
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 0.0)),
-                  Material(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Address/Location",
-                          border: OutlineInputBorder()
-                      ),
-                        onChanged: (val) => _address = val,
-                        validator: (val) => val.isEmpty ? 'Enter Location' : null,
-                        initialValue: _address,
-                      ),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
-                  Material(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
-                      child: TextFormField(
-                        onChanged: (val) => _max = val,
-                        validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
-                        initialValue: _max,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          hintText: "Max Number Of Participants",
-                          border: OutlineInputBorder()
-                      ),                      
-                      ),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FloatingActionButton(
-                        backgroundColor: Colors.green,
+                        OutlineButton(
+                          color: Colors.green,
+                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+                          borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
+                          child: Text(theEndTime),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext builder) {
+                                return Container(
+                                    height: MediaQuery.of(context).copyWith().size.height / 3,
+                                    child: CupertinoDatePicker(
+                                      initialDateTime: newDateTime(),
+                                      onDateTimeChanged: (DateTime newdate) {
+                                        _endTime = newdate.hour;
+                                        _endTimeMinutes = newdate.minute;
+                                        theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
+                                        setState(() {
+                                          
+                                        });
+                                      },
+                                      use24hFormat: false,
+                                      maximumDate: new DateTime(2030, 12, 30),
+                                      minimumYear: 2020,
+                                      maximumYear: 2030,
+                                      minuteInterval: 15,
+                                      mode: CupertinoDatePickerMode.time,
+                                ));
+                              });
+                          },
+                        ),
+                      ]
+                    ),
+                    Material(
+                      child: RaisedButton(
+                        color: Colors.white,
                         elevation: 8,
                         onPressed: () {
-                          _photoUrl = getImage(_title);
+                          showModalBottomSheet(
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(25))
+                            ),
+                            builder: (BuildContext builder) {
+                                  return Container(
+                                    height: SizeConfig.blockSizeVertical * 33,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: CupertinoPicker(
+                                                  backgroundColor: Colors.white,
+                                                  itemExtent: 28,
+                                                  onSelectedItemChanged: (value) {
+                                                    setState(() {
+                                                      selectedValue = value;
+                                                    });
+                                                  },
+                                                  children: [
+                                                    Text("0"),
+                                                    Text("1"),
+                                                    Text("2"),
+                                                    Text("3"),
+                                                    Text("4"),
+                                                    Text("5"),
+                                                    Text("6"),
+                                                    Text("7"),
+                                                    Text("8"),
+                                                    Text("9"),
+                                                    Text("10"),
+                                                  ]),
+                                              ),
+                                              Expanded(
+                                                child: CupertinoPicker(
+                                                  backgroundColor: Colors.white,
+                                                  itemExtent: 32,
+                                                  onSelectedItemChanged: (value) {
+                                                    setState(() {
+                                                      secondSelectedValue = value;
+                                                    });
+                                                  },
+                                                  children: [
+                                                    Text("days"),
+                                                    Text("weeks"),
+                                                    Text("months"),
+                                                    Text("years")
+                                                  ]),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  height: SizeConfig.blockSizeVertical * 33,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: <Widget> [
+                                                      FlatButton(
+                                                        child: Text("On a date"),
+                                                        onPressed: () async {
+                                                          onDate = await showRoundedDatePicker(
+                                                              context: context,
+                                                              initialDate: startDate,
+                                                              lastDate: DateTime(DateTime.now().year + 1),
+                                                              borderRadius: 16,
+                                                              theme: ThemeData(primarySwatch: Colors.green),
+                                                            );
+                                                          setState(() {
+                                                            
+                                                          });
+                                                        },
+                                                      ),
+                                                      FlatButton(
+                                                        child: Text("After number of occurrences"),
+                                                        onPressed: () {
+
+                                                        },
+                                                      )
+                                                    ]
+                                                  ),
+                                                );
+                                              }
+                                            );
+                                          },
+                                          child: Container(
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: <Widget>[
+                                                FlatButton.icon(
+                                                  onPressed: () {
+                                                    
+                                                  },
+                                                  icon: Icon(Icons.compare_arrows),
+                                                  label: Text(doesNotEnd)
+                                                ),
+                                                Icon(Icons.arrow_forward_ios)
+                                              ],
+                                            )
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                            });
                         },
-                        child: Icon(
-                          Icons.photo_library,
-                          size: 25,
-                        )
+                        child: Text(doesNotRepeat)
                       ),
-                      Material(child: Text(fileSelect, style: TextStyle(fontSize: 20),))
-                    ],
-                  ),
-                ]
-              ),
-              Material(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget> [
-                    Checkbox(
-                      value: serviceEventValue,
-                      activeColor: Colors.green,
-                      checkColor: Colors.white,
-                      onChanged: (newValue) {
-                        setState(() {
-                          serviceEventValue = newValue;                        
-                        });
-                      }
                     ),
-                    Text("Service Event"),
-                    Checkbox(
-                      value: communityServiceEventValue,
-                      activeColor: Colors.green,
-                      checkColor: Colors.white,
-                      onChanged: (theNewValue) {
-                        setState(() {
-                          communityServiceEventValue = theNewValue;
-                        });
-                      }
+                    Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 0.0)),
+                    Material(
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Address/Location",
+                            border: OutlineInputBorder()
+                        ),
+                          onChanged: (val) => _address = val,
+                          validator: (val) => val.isEmpty ? 'Enter Location' : null,
+                          initialValue: _address,
+                        ),
+                      )
                     ),
-                    Text("Community Service Project")
+                    Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
+                    Material(
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
+                        child: TextFormField(
+                          onChanged: (val) => _max = val,
+                          validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
+                          initialValue: _max,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: "Max Number Of Participants",
+                            border: OutlineInputBorder()
+                        ),                      
+                        ),
+                      )
+                    ),
+                    Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        FloatingActionButton(
+                          backgroundColor: Colors.green,
+                          elevation: 8,
+                          onPressed: () {
+                            _photoUrl = getImage(_title);
+                          },
+                          child: Icon(
+                            Icons.photo_library,
+                            size: 25,
+                          )
+                        ),
+                        Material(child: Text(fileSelect, style: TextStyle(fontSize: 20),))
+                      ],
+                    ),
                   ]
                 ),
-              ),
-              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.73),),
-              Material(
-                type: MaterialType.transparency,
-                child: Container(
-                height: SizeConfig.blockSizeVertical * 7,
-                decoration: BoxDecoration(
-                  boxShadow: [BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 15.0,
-                    spreadRadius: 2.0,
-                    offset: Offset(0, 10.0)
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)
+                Material(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget> [
+                      Checkbox(
+                        value: serviceEventValue,
+                        activeColor: Colors.green,
+                        checkColor: Colors.white,
+                        onChanged: (newValue) {
+                          setState(() {
+                            serviceEventValue = newValue;                        
+                          });
+                        }
+                      ),
+                      Text("Service Event"),
+                      Checkbox(
+                        value: communityServiceEventValue,
+                        activeColor: Colors.green,
+                        checkColor: Colors.white,
+                        onChanged: (theNewValue) {
+                          setState(() {
+                            communityServiceEventValue = theNewValue;
+                          });
+                        }
+                      ),
+                      Text("Community Service Project")
+                    ]
                   ),
-                  color: Colors.green,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Builder(
-                      builder: (context) {
-                        return FlatButton(
-                          child: Text(_bottomText, style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                          )),
-                          onPressed: () async {
-                            final form = _thirdformKey.currentState;
-                            form.save();
+                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.73),),
+                Material(
+                  type: MaterialType.transparency,
+                  child: Container(
+                  height: SizeConfig.blockSizeVertical * 7,
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 15.0,
+                      spreadRadius: 2.0,
+                      offset: Offset(0, 10.0)
+                      )
+                    ],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)
+                    ),
+                    color: Colors.green,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Builder(
+                        builder: (context) {
+                          return FlatButton(
+                            child: Text(_bottomText, style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                            )),
+                            onPressed: () async {
+                              final form = _thirdformKey.currentState;
+                              form.save();
 
-                            if(form.validate()) {
-                              bool keepGoing = true;
-                              if(communityServiceEventValue == true) {
-                                _type = "Community Service Project";
-                              }
-                              if(serviceEventValue == true) {
-                                _type = "Service Event";
-                              }
-                              if(communityServiceEventValue == false && serviceEventValue == false) {
-                                keepGoing = false;
-                                await showDialogBox(context, "Please enter a type of event.");
-                              }
-                              if(doesNotRepeat != "Does Not Repeat" && theDate != null) {
-                                if(typeOfDate == "days") {
-                                  DateTime tempDateTime = _newDateTime;
-                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                  for(int i = 1; i < 999; i++) {
-                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + (selectedValue * i));
-                                      if(tempDateTime.isAfter(onDate)) {
-                                        break;
-                                      }
-                                      else {
-                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                      }
-                                    }
-                                  }
+                              if(form.validate()) {
+                                bool keepGoing = true;
+                                if(communityServiceEventValue == true) {
+                                  _type = "Community Service Project";
                                 }
-                                if(typeOfDate == "weeks") {
-                                  DateTime tempDateTime = _newDateTime;
-                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                  for(int i = 1; i < 999; i++) {
-                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue * 7) * i));
-                                      if(tempDateTime.isAfter(onDate)) {
-                                        break;
-                                      }
-                                      else {
-                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                      }
-                                    }
-                                  }
+                                if(serviceEventValue == true) {
+                                  _type = "Service Event";
                                 }
-                                if(typeOfDate == "months") {
-                                  DateTime tempDateTime = _newDateTime;
-                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                  for(int i = 1; i < 999; i++) {
-                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month + (selectedValue * i), _newDateTime.day);
-                                      if(tempDateTime.isAfter(onDate)) {
-                                        break;
-                                      }
-                                      else {
-                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                      }
-                                    }
-                                  }
-                                }
-                                if(typeOfDate == "years") {
-                                  DateTime tempDateTime = _newDateTime;
-                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                  for(int i = 1; i < 999; i++) {
-                                    if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
-                                      break;
-                                    }
-                                    else {
-                                      tempDateTime = new DateTime(_newDateTime.year + (selectedValue * i), _newDateTime.month, _newDateTime.day);
-                                      if(tempDateTime.isAfter(onDate)) {
-                                        break;
-                                      }
-                                      else {
-                                        _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                              else {
-                                if(_newDateTime == null) {
+                                if(communityServiceEventValue == false && serviceEventValue == false) {
                                   keepGoing = false;
-                                  await showDialogBox(context, "Please add a date.");
+                                  await showDialogBox(context, "Please enter a type of event.");
+                                }
+                                if(doesNotRepeat != "Does Not Repeat" && theDate != null) {
+                                  if(typeOfDate == "days") {
+                                    DateTime tempDateTime = _newDateTime;
+                                    _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                    for(int i = 1; i < 999; i++) {
+                                      if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + (selectedValue * i));
+                                        if(tempDateTime.isAfter(onDate)) {
+                                          break;
+                                        }
+                                        else {
+                                          _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                        }
+                                      }
+                                    }
+                                  }
+                                  if(typeOfDate == "weeks") {
+                                    DateTime tempDateTime = _newDateTime;
+                                    _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                    for(int i = 1; i < 999; i++) {
+                                      if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month, _newDateTime.day + ((selectedValue * 7) * i));
+                                        if(tempDateTime.isAfter(onDate)) {
+                                          break;
+                                        }
+                                        else {
+                                          _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                        }
+                                      }
+                                    }
+                                  }
+                                  if(typeOfDate == "months") {
+                                    DateTime tempDateTime = _newDateTime;
+                                    _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                    for(int i = 1; i < 999; i++) {
+                                      if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        tempDateTime = new DateTime(_newDateTime.year, _newDateTime.month + (selectedValue * i), _newDateTime.day);
+                                        if(tempDateTime.isAfter(onDate)) {
+                                          break;
+                                        }
+                                        else {
+                                          _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                        }
+                                      }
+                                    }
+                                  }
+                                  if(typeOfDate == "years") {
+                                    DateTime tempDateTime = _newDateTime;
+                                    _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
+                                    for(int i = 1; i < 999; i++) {
+                                      if(tempDateTime.isAfter(onDate) || tempDateTime.isAtSameMomentAs(onDate)) {
+                                        break;
+                                      }
+                                      else {
+                                        tempDateTime = new DateTime(_newDateTime.year + (selectedValue * i), _newDateTime.month, _newDateTime.day);
+                                        if(tempDateTime.isAfter(onDate)) {
+                                          break;
+                                        }
+                                        else {
+                                          _date = _date + "-" + tempDateTime.toString().substring(5, 7) + "/" + tempDateTime.toString().substring(8, 10) + "/" + tempDateTime.toString().substring(0, 4);
+                                        }
+                                      }
+                                    }
+                                  }
                                 }
                                 else {
-                                  _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
-                                }
-                              }
-                              if(theStartTime == "Start Time") {
-                                keepGoing = false;
-                                await showDialogBox(context, "Please Enter a Start Time");
-                              }
-                              if(theEndTime == "End Time") {
-                                keepGoing = false;
-                                await showDialogBox(context, "Please Enter a End Time");
-                              }
-                              if(keepGoing == true) {
-                                try {
-                                  dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
-                                  if(result == null) {
-                                    print("Fill in all the forms.");
+                                  if(_newDateTime == null) {
+                                    keepGoing = false;
+                                    await showDialogBox(context, "Please add a date.");
                                   }
-                                  if(result != null) {
-                                    setState(() {
-                                      _thirdformKey.currentState.reset();
-                                      _title = "";
-                                      _description = "";
-                                      _address = "";
-                                      _max = "";
-                                      startingDate = "";
-                                      theEndTime = "End Time";
-                                      theStartTime = "Start Time";
-                                      _startTime = null;
-                                      _endTime = null;
-                                      communityServiceEventValue = false;
-                                      serviceEventValue = false;
-                                    });
-                                    Scaffold.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Event Created"),
-                                        backgroundColor: Colors.green,
-                                        elevation: 8,
-                                        duration: Duration(seconds: 3),
-                                      )
-                                    );
+                                  else {
+                                    _date = _newDateTime.toString().substring(5, 7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.toString().substring(0, 4);
                                   }
                                 }
-                                catch (e) {
-                                  return CircularProgressIndicator();
+                                if(theStartTime == "Start Time") {
+                                  keepGoing = false;
+                                  await showDialogBox(context, "Please Enter a Start Time");
+                                }
+                                if(theEndTime == "End Time") {
+                                  keepGoing = false;
+                                  await showDialogBox(context, "Please Enter a End Time");
+                                }
+                                if(keepGoing == true) {
+                                  try {
+                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
+                                    if(result == null) {
+                                      print("Fill in all the forms.");
+                                    }
+                                    if(result != null) {
+                                      setState(() {
+                                        _thirdformKey.currentState.reset();
+                                        _title = "";
+                                        _description = "";
+                                        _address = "";
+                                        _max = "";
+                                        startingDate = "";
+                                        theEndTime = "End Time";
+                                        theStartTime = "Start Time";
+                                        _startTime = null;
+                                        _endTime = null;
+                                        communityServiceEventValue = false;
+                                        serviceEventValue = false;
+                                      });
+                                      Scaffold.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("Event Created"),
+                                          backgroundColor: Colors.green,
+                                          elevation: 8,
+                                          duration: Duration(seconds: 3),
+                                        )
+                                      );
+                                    }
+                                  }
+                                  catch (e) {
+                                    return CircularProgressIndicator();
+                                  }
                                 }
                               }
-                            }
-                          } 
-                        );
-                      },
-                    ),
-                  ],
+                            } 
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              )
-            ],
-          )
+                )
+              ],
+            )
+          ),
         ),
       ),
     );

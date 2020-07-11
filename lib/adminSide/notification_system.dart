@@ -11,16 +11,21 @@ class Notifications extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column( 
-          children: <Widget> [
-            TopHalfViewStudentsPage(),
-            Padding(padding: EdgeInsets.all(10)),
-            Container(
-              height: SizeConfig.blockSizeVertical * 76.5,
-              child: MiddlePageNotification()
+      body: SingleChildScrollView(
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 100,
+          child: Column( 
+              children: <Widget> [
+                TopHalfViewStudentsPage(),
+                Padding(padding: EdgeInsets.all(10)),
+                Container(
+                  height: SizeConfig.blockSizeVertical * 76.5,
+                  child: MiddlePageNotification()
+                ),
+              ]
             ),
-          ]
-        )
+        ),
+      )
     );
   }
 }

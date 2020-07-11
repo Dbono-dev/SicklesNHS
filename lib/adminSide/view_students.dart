@@ -11,15 +11,22 @@ class ViewStudents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: <Widget> [
-            TopHalfViewStudentsPage(),
-            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-            TopMiddleViewStudentPage(),
-            MiddleViewStudentsPage(),
-          ]
-        )
+      body: SingleChildScrollView(
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 100,
+          child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Column(
+                children: <Widget> [
+                  TopHalfViewStudentsPage(),
+                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+                  TopMiddleViewStudentPage(),
+                  MiddleViewStudentsPage(),
+                ]
+              )
+          ),
+        ),
+      ),
     );
   }
 }

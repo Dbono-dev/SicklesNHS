@@ -1,11 +1,17 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickles_nhs_app/backend/scannedData.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:flutter/services.dart';
 
 class ScanningPage extends StatelessWidget {
+
+  ScanningPage(this.uid);
+
+  final String uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +20,7 @@ class ScanningPage extends StatelessWidget {
         children: <Widget> [
           TopHalfViewStudentsPage(),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
-          ScanningPageBody()
+          ScanningPageBody(uid: uid)
         ]
       ),
     );
@@ -22,6 +28,11 @@ class ScanningPage extends StatelessWidget {
 }
 
 class ScanningPageBody extends StatefulWidget {
+
+  ScanningPageBody({this.uid});
+
+  final String uid;
+
   @override
   _ScanningPageBodyState createState() => _ScanningPageBodyState();
 }
@@ -32,6 +43,10 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
   List theScanUID = new List();
   List theScanName = new List();
   List theScanDate = new List();
+  List theScanTime = new List();
+  List theScanTitle = new List();
+  List theScanType = new List();
+  List theScanEvent = new List();
 
   @override
   Widget build(BuildContext context) {
@@ -40,31 +55,16 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
       child: Column(
         children: <Widget> [
           Container(
-            height: SizeConfig.blockSizeVertical * 10,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 2),
-                  elevation: 10,
-                  child: ListTile(
-                    title: Text("Name Location"),
-                    trailing: Text("6/30/2020 @ 9:31 am"),
-                  ),
-                )
-              ]
-            ),
-          ),
-          Container(
-            height: SizeConfig.blockSizeVertical * 30, //Was Previosly at 55
+            height: SizeConfig.blockSizeVertical * 55, //Was Previosly at 55
             child: ListView.builder(
+              padding: EdgeInsets.zero,
               itemCount: theScanUID.length,
               itemBuilder: (_, index) {
                 return Card(
                   elevation: 10,
                   child: ListTile(
                     title: Text(theScanName[index]),
-                    trailing: Text(theScanDate[index]),
+                    trailing: Text(theScanDate[index] + " @ " + theScanTime[index]),
                   )
                 );
               }
@@ -78,18 +78,52 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
               RaisedButton(
                 elevation: 10,
                 color: Colors.white,
-                onPressed: () {
-
+                onPressed: () async {
+                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                  await sharedPreferences.setStringList(widget.uid, theScanName + theScanUID + theScanDate + theScanTime + theScanTitle + theScanType + theScanEvent);
                 },
                 child: Text("Save"),
               ),
-              RaisedButton(
-                elevation: 10,
-                color: Colors.white,
-                onPressed: () {
-
-                },
-                child: Text("Submit"),
+              Builder(
+                builder: (context) {
+                  return RaisedButton(
+                    elevation: 10,
+                    color: Colors.white,
+                    onPressed: () async {
+                      if(theScanName.isNotEmpty) {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Submitting..."),
+                            backgroundColor: Colors.green,
+                            duration: Duration(seconds: 3),
+                          )
+                        );
+                        for(int i = 0; i < theScanUID.length; i++) {
+                          String text = "";
+                          text += theScanTitle[i];
+                          text += "/" + theScanName[i];
+                          text += "/" + theScanTime[i];
+                          text += "/" + theScanType[i];
+                          text += "/" + theScanUID[i];
+                          text += "/" + theScanDate[i];
+                          text += "/" + theScanEvent[i];
+                          await ScannedData(text: text, date: DateTime.now().month.toString() + "/" + DateTime.now().day.toString() + "/" + DateTime.now().year.toString()).submitHours();
+                        }
+                        setState(() {
+                          theScanType.clear();
+                          theScanUID.clear();
+                          theScanName.clear();
+                          theScanDate.clear();
+                          theScanTime.clear();
+                          theScanTitle.clear();
+                          theScanType.clear();
+                          theScanEvent.clear();
+                        });
+                      }
+                    },
+                    child: Text("Submit"),
+                  );
+                }
               )
             ],
           ),
@@ -117,11 +151,15 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
               onPressed: () async {
                 var result = await BarcodeScanner.scan();
                 HapticFeedback.vibrate();
-                List theListOfData = await ScannedData(text: result.rawContent, date: DateTime.now().month.toString() + "/" + DateTime.now().day.toString() + "/" + DateTime.now().year.toString()).resisterScanData();
+                List theListOfData = await ScannedData(text: result.rawContent, date: DateTime.now().month.toString() + "-" + DateTime.now().day.toString() + "-" + DateTime.now().year.toString()).resisterScanData();
                 setState(() {
                   theScanUID.add(theListOfData[4]);
                   theScanName.add(theListOfData[1]); 
-                  theScanDate.add(theListOfData[6]); 
+                  theScanDate.add(theListOfData[5]);
+                  theScanTime.add(theListOfData[2]);
+                  theScanTitle.add(theListOfData[0]);
+                  theScanType.add(theListOfData[3]);
+                  theScanEvent.add(theListOfData[6]);
                 });
               },
             child: Text("Scan", textAlign: TextAlign.center,

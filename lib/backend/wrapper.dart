@@ -28,7 +28,6 @@ class Wrapper extends StatelessWidget {
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
           if(snapshot.hasData) {
-            global.userData = snapshot.data;
             return TheOpeningPage();
           }
           else {

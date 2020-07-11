@@ -26,16 +26,16 @@ class TheOpeningPage extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            children: <Widget>[
-              TopHalfHomePage(),
-              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.10),),
-              MiddleHomePage(),
-              Spacer(),
-              BottonHalfHomePage()
-            ],
-          )
+      backgroundColor: Colors.white,
+      body: Column(
+        children: <Widget>[
+          TopHalfHomePage(),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.10),),
+          MiddleHomePage(),
+          Spacer(),
+          BottonHalfHomePage()
+        ],
+      )
     ); 
   }
 }
@@ -218,7 +218,7 @@ class TopHalfHomePage extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 63,
                         child: FittedBox(
                         fit: BoxFit.fitWidth,
-                          child: Text(timeOfDay + global.userData.firstName, style: TextStyle(
+                          child: Text(timeOfDay + userData.firstName, style: TextStyle(
                           fontStyle: FontStyle.normal,
                           color: Colors.white
                         )),
@@ -400,7 +400,7 @@ class BottonHalfHomePage extends StatelessWidget {
                 ],
               ),
           ),),
-          AdminMyEvents()
+          AdminMyEvents(uid: userData.uid,)
         ]
        );
           }
@@ -682,6 +682,11 @@ class _StudentMyEvents extends State<StudentMyEvents> {
 }
 
 class AdminMyEvents extends StatefulWidget {
+
+  AdminMyEvents({this.uid});
+
+  final String uid;
+
   @override
   _AdminMyEvents createState() => _AdminMyEvents();
 
@@ -735,7 +740,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                     adminTags(context, AddNewEvent(), Icons.add_circle, "Add New Event"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),
                     adminTags(context, Notifications(), Icons.notifications, "Send Notification"),
-                    adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions",), Icons.photo_camera, "Start Scanning"),
+                    adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions", uid: widget.uid,), Icons.photo_camera, "Start Scanning",),
                     adminTags(context, ApproveHoursPage(), Icons.check_circle, "Approve Hours"),
                     adminTags(context, ViewImages(), Icons.image, "View Images"),
                     adminTags(context, ExportDataPage(), Icons.import_export, "Export Data"),
