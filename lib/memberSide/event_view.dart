@@ -436,6 +436,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
   double timing = 0.0;
   String title; 
   String theDate;
+  bool clicked;
 
   @override
   Widget build(BuildContext context) {
@@ -513,83 +514,97 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
       title = widget.post.data["title"];
     }
 
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
-      builder: (context, snapshot) {
-        if(snapshot.hasData) {
-          UserData userData = snapshot.data;
-          if(widget.post.data['type'] == "clubDates") {
+    return Container(
+      height: SizeConfig.blockSizeVertical * 7.316,
+      child: Scaffold(
+        body: StreamBuilder<UserData>(
+          stream: DatabaseService(uid: user.uid).userData,
+          builder: (context, snapshot) {
+            if(snapshot.hasData) {
+              UserData userData = snapshot.data;
+              if(widget.post.data['type'] == "clubDates") {
 
-          }
-          else {
-            if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && differentSignUp != "Check Out" && differentSignUp != "Check In") {
-              differentSignUp = "";
-            }
-          }
-          if(userData.permissions == 0 || userData.permissions == 2) {
-            differentSignUp = "";
-          }
-          return Material(
-            type: MaterialType.transparency,
-            child: Container(
-            height: SizeConfig.blockSizeVertical * 7.316,
-            decoration: BoxDecoration(
-              boxShadow: [BoxShadow(
-                color: Colors.black,
-                blurRadius: 15.0,
-                spreadRadius: 2.0,
-                offset: Offset(0, 10.0)
-                )
-              ],
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30)
-              ),
-              color: Colors.green,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    if(differentSignUp == "Check In") { 
-                      Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: widget.post.data['type']),
-                        ));
-                    }
-                    if(differentSignUp == "Check Out") {
-                      Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: widget.post.data['type'])
-                        ));
-                    }
-                    if(differentSignUp == "Sign Up") {
-                      var participates = widget.post.data['participates'];
-                      var participateDate = widget.post.data['participates dates'];
-                      participates.add(userData.firstName + " " + userData.lastName);
-                      participateDate.add(global.shownDate);
-                      dynamic result = sendEventToDatabases(participates, title, participateDate);
-                      dynamic result2 = sendBugToEmail(title, widget.post);
-                      var eventTitle = userData.eventTitleSignedUp;
-                      eventTitle.add(title);
-                      dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
-                      setState(() {
-                        
-                      });
-                    }
-                  },
-                    child: Text(differentSignUp, style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  )),
+              }
+              else {
+                if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && differentSignUp != "Check Out" && differentSignUp != "Check In") {
+                  differentSignUp = "";
+                }
+              }
+              if(userData.permissions == 0 || userData.permissions == 2 || clicked == true) {
+                differentSignUp = "";
+              }
+              return Material(
+                type: MaterialType.transparency,
+                child: Container(
+                height: SizeConfig.blockSizeVertical * 7.316,
+                decoration: BoxDecoration(
+                  boxShadow: [BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 15.0,
+                    spreadRadius: 2.0,
+                    offset: Offset(0, 10.0)
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)
+                  ),
+                  color: Colors.green,
                 ),
-              ],
-            ),
-          ),
-          );
-        }
-        return CircularProgressIndicator();
-      }
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Builder(
+                      builder: (context) {
+                        return FlatButton(
+                          onPressed: () {
+                            if(differentSignUp == "Check In") { 
+                              Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: widget.post.data['type']),
+                                ));
+                            }
+                            if(differentSignUp == "Check Out") {
+                              Navigator.push(context, 
+                                MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: widget.post.data['type'])
+                                ));
+                            }
+                            if(differentSignUp == "Sign Up") {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text("Signing up..."),
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.green,
+                              ));
+                              var participates = widget.post.data['participates'];
+                              var participateDate = widget.post.data['participates dates'];
+                              participates.add(userData.firstName + " " + userData.lastName);
+                              participateDate.add(global.shownDate);
+                              dynamic result = sendEventToDatabases(participates, title, participateDate);
+                              dynamic result2 = sendBugToEmail(title, widget.post);
+                              var eventTitle = userData.eventTitleSignedUp;
+                              eventTitle.add(title);
+                              dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
+                              setState(() {
+                                clicked = true;
+                              });
+                            }
+                          },
+                            child: Text(differentSignUp, style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                          )),
+                        );
+                      }
+                    ),
+                  ],
+                ),
+              ),
+              );
+            }
+            return CircularProgressIndicator();
+          }
+        ),
+      ),
     );
   }
 
@@ -733,7 +748,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("Participates", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,),
+            Text("Participants", style: TextStyle(fontSize: 40), textAlign: TextAlign.left,),
             participatesDate.length == 0 ? Container() : GestureDetector(
               onTap: () {
                 showCupertinoModalPopup(
@@ -773,7 +788,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                 itemCount: participatesList.length,
                 itemBuilder: (_, index) {
                   if(participatesList.length == 0) {
-                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30),),);
+                    return Center(child: Text("No Participants", style: TextStyle(fontSize: 30),),);
                   }
                   else {
                     return Padding(
@@ -806,8 +821,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                     );
                   }
                   else if(theNum == 0 && repeat == participatesDate.length - 1) {
-                    
-                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30)),);
+                    return Center(child: Text("No Participants", style: TextStyle(fontSize: 30)),);
                   }
                   else {
                     repeat += 1;

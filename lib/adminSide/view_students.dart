@@ -183,9 +183,11 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
   bool secondCheck = false;
   bool thirdCheck = false;
 
+  List<String> checks = new List<String>();
 
   @override
   Widget build(BuildContext context) {
+    print(checks);
     return Container(
       height: SizeConfig.blockSizeVertical * 69.75,
       child: Column(
@@ -219,40 +221,70 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
                   Column(
                     children: <Widget>[
                       Text("Grade:"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget> [
-                          Text("10th Grade:"),
-                          Checkbox(
-                            activeColor: Colors.green,
-                            value: firstCheck,
-                            onChanged: (newValue) {
-                              setState(() {
-                                firstCheck = newValue;
-                              });
-                            },
-                          ),
-                          Text("11th Grade:"),
-                          Checkbox(
-                            activeColor: Colors.green,
-                            value: secondCheck,
-                            onChanged: (theNewValue) {
-                              setState(() {
-                                secondCheck = theNewValue;
-                              });
-                            },
-                          ),
-                          Text("12th Grade:"),
-                          Checkbox(
-                            activeColor: Colors.green,
-                            value: thirdCheck,
-                            onChanged: (theNewValue2) {
-                              setState(() {
-                                thirdCheck = theNewValue2;
-                              });
-                            },
-                          )
-                        ]
+                      Container(
+                        width: SizeConfig.blockSizeHorizontal * 95,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget> [
+                            Text("10th Grade:", style: TextStyle(fontSize: 12.5),),
+                            Checkbox(
+                              activeColor: Colors.green,
+                              value: firstCheck,
+                              onChanged: (newValue) {
+                                if(checks.length == 0 || firstCheck == true) {
+                                  setState(() {
+                                    if(firstCheck == true) {
+                                      checks.remove("firstCheck");
+                                      firstCheck = newValue;
+                                    }
+                                    else {
+                                      checks.add("firstCheck");
+                                      firstCheck = newValue;
+                                    }
+                                  });
+                                }
+                              },
+                            ),
+                            Text("11th Grade:", style: TextStyle(fontSize: 12.5),),
+                            Checkbox(
+                              activeColor: Colors.green,
+                              value: secondCheck,
+                              onChanged: (theNewValue) {
+                                if(checks.length == 0 || secondCheck == true) {
+                                  setState(() {
+                                    if(secondCheck == true) {
+                                      checks.remove("secondCheck");
+                                      secondCheck = theNewValue;
+                                    }
+                                    else {
+                                      checks.add("secondCheck");
+                                      secondCheck = theNewValue;
+                                    }
+                                  });
+                                }
+                              },
+                            ),
+                            Text("12th Grade:", style: TextStyle(fontSize: 12.5),),
+                            Checkbox(
+                              activeColor: Colors.green,
+                              value: thirdCheck,
+                              onChanged: (theNewValue2) {
+                                if(checks.length == 0 || thirdCheck == true) {
+                                  setState(() {
+                                    if(thirdCheck == true) {
+                                      checks.remove("thirdCheck");
+                                      thirdCheck = theNewValue2;
+                                    }
+                                    else {
+                                      checks.add("thirdCheck");
+                                      thirdCheck = theNewValue2;
+                                    }
+                                  });
+                                }
+                              },
+                            )
+                          ]
+                        ),
                       ),
                     ],
                   )

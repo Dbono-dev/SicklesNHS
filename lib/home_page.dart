@@ -55,6 +55,7 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
     }
 
     DateFormat format = new DateFormat("MM/dd/yyyy");
+    DateFormat secondFormat = new DateFormat("yyyy-MM-dd");
 
   @override
   void initState() {
@@ -103,7 +104,7 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                     int a = 0;
                     for(int k = a; a < snapshot.data[i].data['date'].toString().length; k + 1) {
                       numberOfTimesThrough = numberOfTimesThrough + 1;
-                      if(!format.parse(snapshot.data[i].data['date'].toString().substring(a, a + 10)).isAfter(DateTime.now()) || format.parse(snapshot.data[i].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
+                      if(format.parse(snapshot.data[i].data['date'].toString().substring(a, a + 10)).isBefore(secondFormat.parse(DateTime.now().toString().substring(0, 10)))) {
                         numberOfTimesThrough--;
                       }
                       a = a + 11;
@@ -135,7 +136,7 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                         int a = 0;
                         for(int i = a; a < snapshot.data[index].data['date'].toString().length; i + 1) {
                           numberOfTimesThrough = numberOfTimesThrough + 1;
-                          if(!format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAfter(DateTime.now()) || format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
+                          if(format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isBefore(secondFormat.parse(DateTime.now().toString().substring(0, 10)))) { //&& format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
                             numberOfTimesThrough--;
                           }
                           a = a + 11;
@@ -630,8 +631,6 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                         numOfEvents -= 1;
                       }
                     }
-
-                    print(numOfEvents);
                     
                     return Container(
                       child: numOfEvents == 0 ? Center(child: Text("NO EVENTS", style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),)) : ListView.builder(

@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'dart:io';
-//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sickles_nhs_app/backend/message.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
@@ -127,45 +126,8 @@ class MessagesMiddlePage extends StatefulWidget {
 }
 
 class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
-  //final FirebaseMessaging _fcm = FirebaseMessaging();
 
   final List<Message> messages = [];
-
-  @override
-  void initState() {
-    if(Platform.isIOS) {
-      //_fcm.requestNotificationPermissions(IosNotificationSettings());
-    }
-
-    /*_fcm.getToken();
-
-    _fcm.subscribeToTopic('all');
-
-    super.initState();
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-        final notification = message['notification'];
-        setState(() {
-          messages.add(Message(title: notification['title'], body: notification['body']));
-        });
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-        final notification = message['notification'];
-        setState(() {
-          messages.add(Message(title: notification['title'], body: notification['body']));
-        });
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-        final notification = message['notification'];
-        setState(() {
-          messages.add(Message(title: notification['title'], body: notification['body']));
-        });
-      }
-    );*/
-  }
 
   Future getMessages() async {
     var firestone = Firestore.instance;
@@ -344,7 +306,7 @@ class _MessagesMiddlePageState extends State<MessagesMiddlePage> {
         child: ListTile(
           title: Column(
             children: <Widget>[
-              Text(title, style: TextStyle(fontSize: 25),),
+              Text(title, style: TextStyle(fontSize: 25), textAlign: TextAlign.center,),
               Text(message, textAlign: TextAlign.center,)
             ],
           ),
