@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sickles_nhs_app/adminSide/view_images.dart';
@@ -17,10 +18,61 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/adminSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
-import 'package:sickles_nhs_app/backend/globals.dart' as global;
+import 'dart:io' show Platform;
 
 class TheOpeningPage extends StatelessWidget {
-  TheOpeningPage({Key key}) : super (key: key);
+  TheOpeningPage({Key key, this.userData}) : super (key: key);
+
+  final UserData userData;
+
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+
+    @override
+    void initState() {
+      if(Platform.isIOS) {
+        _fcm.requestNotificationPermissions(IosNotificationSettings());
+      }
+
+      _fcm.subscribeToTopic('all');
+      _fcm.subscribeToTopic(userData.firstName + userData.lastName);
+      for(int i = 0; i < userData.eventTitleSignedUp; i++) {
+        _fcm.subscribeToTopic(userData.eventTitleSignedUp[i]);
+      }
+      if(userData.permissions == 1) {
+        _fcm.subscribeToTopic('members');
+      }
+      if(userData.permissions == 2) {
+        _fcm.subscribeToTopic('officers');
+      }
+      if(userData.permissions == 0) {
+        _fcm.subscribeToTopic('sponsors');
+      }
+
+      _fcm.getToken();
+
+      _fcm.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print('onMessage: $message');
+          final notification = message['notification'];
+        },
+        onLaunch: (Map<String, dynamic> message) async {
+          print('onMessage: $message');
+          final notification = message['notification'];
+        },
+        onBackgroundMessage: (Map<String, dynamic> message) async {
+          if(message.containsKey('data')) {
+            final dynamic data = message['data'];
+          }
+          if(message.containsKey('notification')) {
+            final dynamic notification = message['notification'];
+          }
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print('onMessage: $message');
+          final notification = message['notification'];
+        }
+      );
+    }
 
   @override
   Widget build(BuildContext context) {
