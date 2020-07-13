@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'dart:io';
+import 'package:http/http.dart' show get;
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ViewImages extends StatelessWidget {
   Future getPosts() async {
     var firestore = Firestore.instance;
-    QuerySnapshot qn = await firestore.collection("upload pics").getDocuments();
+    QuerySnapshot qn = await firestore.collection("upload pics").orderBy('dateTime', descending: true).getDocuments();
     return qn.documents;
   }
 
@@ -86,17 +90,54 @@ class ViewImages extends StatelessWidget {
                   itemBuilder: (_, i) {
                     return Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, SizeConfig.blockSizeHorizontal * 2, 0),
-                      child: Image.network(
-                        theImages[i],
-                        fit: BoxFit.fitHeight, height: 180,
-                        loadingBuilder:(BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-                          if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.white)
-                              ),
-                            );
-                          },
+                      child: GestureDetector(
+                        onLongPress: () async {
+                          showDialog(
+                            barrierDismissible: true,
+                            context: context,
+                            builder: (context) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: IconButton(
+                                      icon: Icon(Icons.save_alt, color: Colors.white, size: 45,),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        var response = await get(theImages[i]);
+                                        var documentDirectory = await getApplicationDocumentsDirectory();
+
+                                        File file = new File(
+                                          join(documentDirectory.path, snapshot.data['name'] + dateTime.month.toString() + "-" + dateTime.day.toString() + "-" + dateTime.year.toString() + '.png')
+                                        );
+
+                                        file.writeAsBytesSync(response.bodyBytes);
+                                      },
+                                    ),
+                                  ),
+                                  Image.network(
+                                    theImages[i],
+                                    height: SizeConfig.blockSizeVertical * 80,
+                                    width: SizeConfig.blockSizeHorizontal * 80,
+                                  ),
+                                ],
+                              );
+                            }
+                          );
+                        },
+                        child: Image.network(
+                          theImages[i],
+                          fit: BoxFit.fitHeight, height: 180,
+                          loadingBuilder:(BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                            if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(Colors.white)
+                                ),
+                              );
+                            },
+                        ),
                       ),
                     );
                   },

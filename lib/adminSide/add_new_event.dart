@@ -61,18 +61,17 @@ class MiddleNewEventPage extends StatefulWidget {
 
   MiddleNewEventPage({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
 
-  String title;
-  String description;
-  int startTime;
-  int startTimeMinutes;
-  int endTime;
-  int endTimeMinutes;
-  String address;
-  String date;
-  String max;
-  String type;
-  String fileSelect;
-  
+  final String title;
+  final String description;
+  final int startTime;
+  final int startTimeMinutes;
+  final int endTime;
+  final int endTimeMinutes;
+  final String address;
+  final String date;
+  final String max;
+  final String type;
+  final String fileSelect;
 
   @override
   _MiddleNewEventPageState createState() => _MiddleNewEventPageState();
@@ -237,6 +236,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           hintText: 'Title',
                         ),
                           onChanged: (val) => _title = (val),
+                          textCapitalization: TextCapitalization.sentences,
                           validator: (val) => val.isEmpty ? 'Enter Title' : null,
                           initialValue: _title,
                         ),
@@ -252,6 +252,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             border: OutlineInputBorder()
                           ),
                           minLines: 3,
+                          textCapitalization: TextCapitalization.sentences,
                           maxLines: 6,
                           validator: (val) => val.isEmpty ? 'Enter Description' : null,
                           onChanged: (val) => _description = (val),
@@ -287,33 +288,65 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           highlightColor: Colors.green,
                           shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
                           borderSide: BorderSide(color: Colors.green, style: BorderStyle.solid, width: 3),
-                      child: Text(theStartTime),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext builder) {
-                            return Container(
-                                height: MediaQuery.of(context).copyWith().size.height / 3,
-                                child: CupertinoDatePicker(
-                                  initialDateTime: newDateTime(),
-                                  onDateTimeChanged: (DateTime newdate) {
-                                    _startTime = newdate.hour;
-                                    _startTimeMinutes = newdate.minute;
-                                    theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
-                                    setState(() {
-                                      
-                                    });
-                                  },
-                                  use24hFormat: false,
-                                  maximumDate: new DateTime(2030, 12, 30),
-                                  minimumYear: 2020,
-                                  maximumYear: 2030,
-                                  minuteInterval: 15,
-                                  mode: CupertinoDatePickerMode.time,
-                            ));
-                          });
-                      },
-                    ),
+                          child: Text(theStartTime),
+                          onPressed: () async {
+                            await showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  height: SizeConfig.blockSizeVertical * 42,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          FlatButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                            child: Text("DONE", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _startTime = null;
+                                                _startTimeMinutes = null;
+                                                theStartTime = null;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("CANCEL", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        height: MediaQuery.of(context).copyWith().size.height / 3,
+                                        child: CupertinoDatePicker(
+                                          initialDateTime: newDateTime(),
+                                          onDateTimeChanged: (DateTime newdate) {
+                                            _startTime = newdate.hour;
+                                            _startTimeMinutes = newdate.minute;
+                                            theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
+                                            setState(() {
+                                              
+                                            });
+                                          },
+                                          use24hFormat: false,
+                                          maximumDate: new DateTime(2030, 12, 30),
+                                          minimumYear: 2020,
+                                          maximumYear: 2030,
+                                          minuteInterval: 15,
+                                          mode: CupertinoDatePickerMode.time,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                          },
+                        ),
                         OutlineButton(
                           color: Colors.green,
                           shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
@@ -322,26 +355,57 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           onPressed: () {
                             showModalBottomSheet(
                               context: context,
-                              builder: (BuildContext builder) {
+                              builder: (context) {
                                 return Container(
-                                    height: MediaQuery.of(context).copyWith().size.height / 3,
-                                    child: CupertinoDatePicker(
-                                      initialDateTime: newDateTime(),
-                                      onDateTimeChanged: (DateTime newdate) {
-                                        _endTime = newdate.hour;
-                                        _endTimeMinutes = newdate.minute;
-                                        theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
-                                        setState(() {
-                                          
-                                        });
-                                      },
-                                      use24hFormat: false,
-                                      maximumDate: new DateTime(2030, 12, 30),
-                                      minimumYear: 2020,
-                                      maximumYear: 2030,
-                                      minuteInterval: 15,
-                                      mode: CupertinoDatePickerMode.time,
-                                ));
+                                  height: SizeConfig.blockSizeVertical * 42,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          FlatButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                            child: Text("DONE", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _endTime = null;
+                                                _endTimeMinutes = null;
+                                                theEndTime = null;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("CANCEL", style: TextStyle(color: Colors.green), textAlign: TextAlign.right,),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        height: MediaQuery.of(context).copyWith().size.height / 3,
+                                        child: CupertinoDatePicker(
+                                          initialDateTime: newDateTime(),
+                                          onDateTimeChanged: (DateTime newdate) {
+                                            setState(() {
+                                              _endTime = newdate.hour;
+                                              _endTimeMinutes = newdate.minute;
+                                              theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
+                                            });
+                                          },
+                                          use24hFormat: false,
+                                          maximumDate: new DateTime(2030, 12, 30),
+                                          minimumYear: 2020,
+                                          maximumYear: 2030,
+                                          minuteInterval: 15,
+                                          mode: CupertinoDatePickerMode.time,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               });
                           },
                         ),
@@ -471,35 +535,32 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       ),
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0.0, 0.0)),
-                    Material(
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Address/Location",
-                            border: OutlineInputBorder()
-                        ),
-                          onChanged: (val) => _address = val,
-                          validator: (val) => val.isEmpty ? 'Enter Location' : null,
-                          initialValue: _address,
-                        ),
-                      )
+                    Container(
+                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Address/Location",
+                          border: OutlineInputBorder()
+                      ),
+                        onChanged: (val) => _address = val,
+                        textCapitalization: TextCapitalization.sentences,
+                        validator: (val) => val.isEmpty ? 'Enter Location' : null,
+                        initialValue: _address,
+                      ),
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 0.73, 0, 0)),
-                    Material(
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
-                        child: TextFormField(
-                          onChanged: (val) => _max = val,
-                          validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
-                          initialValue: _max,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hintText: "Max Number Of Participants",
-                            border: OutlineInputBorder()
+                    Container(
+                      padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
+                      child: TextFormField(
+                        onChanged: (val) => _max = val,
+                        validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
+                        initialValue: _max,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: "Max Number Of Participants",
+                          border: OutlineInputBorder()
                         ),                      
-                        ),
-                      )
+                      ),
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
                     Row(

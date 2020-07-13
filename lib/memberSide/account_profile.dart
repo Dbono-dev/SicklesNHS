@@ -281,7 +281,10 @@ class _AccountProfileState extends State<AccountProfile> {
               )
           ),
           Padding(padding: EdgeInsets.all(1),),
-          int.tryParse(grade) == null ? Material(child: Text(grade, style: TextStyle(fontSize: 20),),) :Material(
+          int.tryParse(grade) == null ? Material(
+            color: Colors.transparent,
+            child: Text(grade, style: TextStyle(fontSize: 20),),)
+            : Material(
             color: Colors.transparent,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
