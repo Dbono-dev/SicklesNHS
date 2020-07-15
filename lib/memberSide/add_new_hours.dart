@@ -336,7 +336,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                             final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + '.jpg');
                             final StorageUploadTask task = firebaseStorageRef.putData(signture);
                             var url = await (await task.onComplete).ref.getDownloadURL();
-
+                      
                             dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "save");
 
                             if(result == null) {

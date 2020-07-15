@@ -109,10 +109,10 @@ class ViewImages extends StatelessWidget {
                                         var documentDirectory = await getApplicationDocumentsDirectory();
 
                                         File file = new File(
-                                          join(documentDirectory.path, snapshot.data['name'] + dateTime.month.toString() + "-" + dateTime.day.toString() + "-" + dateTime.year.toString() + '.png')
+                                          join(documentDirectory.path, 'imagetest.png')
                                         );
 
-                                        file.writeAsBytesSync(response.bodyBytes);
+                                        file.writeAsBytesSync(response.bodyBytes); 
                                       },
                                     ),
                                   ),

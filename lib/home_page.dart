@@ -27,10 +27,16 @@ class TheOpeningPage extends StatelessWidget {
 
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
+    /*await firebaseMessaging.requestNotificationPermissions(
+    const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
+  );*/
+
     @override
-    void initState() {
+    void initState() async {
       if(Platform.isIOS) {
-        _fcm.requestNotificationPermissions(IosNotificationSettings());
+        await _fcm.requestNotificationPermissions(IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: false
+        ));
       }
 
       _fcm.subscribeToTopic('all');
