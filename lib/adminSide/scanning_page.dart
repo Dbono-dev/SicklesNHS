@@ -8,9 +8,16 @@ import 'package:flutter/services.dart';
 
 class ScanningPage extends StatelessWidget {
 
-  ScanningPage(this.uid);
+  ScanningPage(this.uid, {this.theScanUID, this.theScanName, this.theScanDate, this.theScanTime, this.theScanTitle, this.theScanType, this.theScanEvent});
 
   final String uid;
+  final List theScanUID;
+  final List theScanName;
+  final List theScanDate;
+  final List theScanTime;
+  final List theScanTitle;
+  final List theScanType;
+  final List theScanEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class ScanningPage extends StatelessWidget {
         children: <Widget> [
           TopHalfViewStudentsPage(),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
-          ScanningPageBody(uid: uid)
+          ScanningPageBody(uid: uid, theScanDate: theScanDate, theScanEvent: theScanEvent, theScanName: theScanName, theScanTime: theScanTime, theScanTitle: theScanTitle, theScanType: theScanType, theScanUID: theScanUID,)
         ]
       ),
     );
@@ -29,9 +36,16 @@ class ScanningPage extends StatelessWidget {
 
 class ScanningPageBody extends StatefulWidget {
 
-  ScanningPageBody({this.uid});
+  ScanningPageBody({this.uid, this.theScanUID, this.theScanName, this.theScanDate, this.theScanTime, this.theScanTitle, this.theScanType, this.theScanEvent});
 
   final String uid;
+  final List theScanUID;
+  final List theScanName;
+  final List theScanDate;
+  final List theScanTime;
+  final List theScanTitle;
+  final List theScanType;
+  final List theScanEvent;
 
   @override
   _ScanningPageBodyState createState() => _ScanningPageBodyState();
@@ -50,6 +64,16 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.theScanUID != null) {
+      theScanUID = widget.theScanUID;
+      theScanName = widget.theScanName;
+      theScanDate = widget.theScanDate;
+      theScanTime = widget.theScanTime;
+      theScanTitle = widget.theScanTitle;
+      theScanType = widget.theScanType;
+      theScanEvent = widget.theScanEvent;
+    }
+
     return Container(
       height: SizeConfig.blockSizeVertical * 76,
       child: Column(
@@ -75,14 +99,51 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
-                elevation: 10,
-                color: Colors.white,
-                onPressed: () async {
-                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  await sharedPreferences.setStringList(widget.uid, theScanName + theScanUID + theScanDate + theScanTime + theScanTitle + theScanType + theScanEvent);
-                },
-                child: Text("Save"),
+              Builder(
+                builder: (context) {
+                  return RaisedButton(
+                    elevation: 10,
+                    color: Colors.white,
+                    onPressed: () async {
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Saving..."),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 3),
+                        )
+                      );
+                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                      List<String> largeStringList = new List<String>();
+                      if(sharedPreferences.getStringList("scannedData") != null) {
+                        largeStringList = sharedPreferences.getStringList("scannedData");
+                      }
+
+                      String stringList = "";
+                      for(int i = 0; i < theScanName.length; i++) {
+                        stringList += (theScanName[i]);
+                        stringList += "/" + (theScanUID[i]);
+                        stringList += "/" + (theScanDate[i]);
+                        stringList += "/" + (theScanTitle[i]);
+                        stringList += "/" + (theScanType[i]);
+                        stringList += "/" + theScanTime[i];
+                        stringList += "/" + (theScanEvent[i]) + "/";
+                      }
+                      largeStringList.add(stringList);
+                      await sharedPreferences.setStringList("scannedData", largeStringList);
+                      setState(() {
+                        theScanType.clear();
+                        theScanUID.clear();
+                        theScanName.clear();
+                        theScanDate.clear();
+                        theScanTime.clear();
+                        theScanTitle.clear();
+                        theScanType.clear();
+                        theScanEvent.clear();
+                      });
+                    },
+                    child: Text("Save"),
+                  );
+                }
               ),
               Builder(
                 builder: (context) {
