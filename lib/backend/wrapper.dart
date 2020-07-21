@@ -38,7 +38,7 @@ class Wrapper extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Sickles NHS", style: TextStyle(color: Colors.green, fontSize: 45)),
+                      Text("SICKLES NHS", style: TextStyle(color: Colors.green, fontSize: 45)),
                       CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation(Colors.green),
                       ),

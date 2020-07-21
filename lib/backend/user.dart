@@ -11,11 +11,11 @@ class UserData {
   final String grade;
   final int permissions;
   final String date;
-  final int hours;
-  final int firstQuarter;
-  final int secondQuarter;
-  final int thirdQuarter;
-  final int fourthQuarter;
+  var hours;
+  var firstQuarter;
+  var secondQuarter;
+  var thirdQuarter;
+  var fourthQuarter;
   final int numClub;
   var eventTitleSignedUp;
   final int numOfCommunityServiceEvents;

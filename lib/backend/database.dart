@@ -45,13 +45,13 @@ class DatabaseService {
     });
   }
 
-  Future updateHoursRequest(int hours, int currentHours) async {
+  Future updateHoursRequest(double hours, double currentHours) async {
     return await memberCollection.document(uid).updateData({
       'hours': currentHours + hours
     });
   }
 
-  Future updateHoursByQuarter(int hours, int currentHours, String quarter) async {
+  Future updateHoursByQuarter(double hours, double currentHours, String quarter) async {
     try{
       return await memberCollection.document(uid).updateData({
         quarter: currentHours + hours
@@ -86,6 +86,7 @@ class DatabaseService {
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
+      uid: snapshot.data['uid'],
       firstName: snapshot.data['first name'],
       lastName: snapshot.data['last name'],
       grade: snapshot.data['grade'],
@@ -98,13 +99,12 @@ class DatabaseService {
       fourthQuarter: snapshot.data['fourthQuarter'],
       numClub: snapshot.data['numClub'],
       eventTitleSignedUp: snapshot.data['signed up event title'],
-      numOfCommunityServiceEvents: snapshot.data['num of community service events']
+      numOfCommunityServiceEvents: snapshot.data['num of community service events'],
     );
   }
 
   Stream<UserData> get userData {
-    return memberCollection.document(uid).snapshots()
-    .map(_userDataFromSnapshot);
+    return memberCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
 }
@@ -151,7 +151,7 @@ class DatabaseSubmitHours {
 
   final CollectionReference submitHours = Firestore.instance.collection('Approving Hours');
 
- Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid, int currentHours, String saveSubmit) async {
+ Future updateSubmitHours(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, bool complete, var url, String uid, double currentHours, String saveSubmit) async {
     return await submitHours.document(type + " " + uid).setData({
       'type': type,
       'location': location,

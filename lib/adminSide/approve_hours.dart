@@ -48,7 +48,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
   List pastDates = new List();
   List pastHours = new List();
   String currentHours;
-  int quarterHours;
+  double quarterHours;
   int x = 0;
 
   @override
@@ -140,11 +140,11 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                                 pastDates.add(snapshot.data[index].data['date']);
                                                 pastHours.add(snapshot.data[index].data['hours']);
 
-                                              sendHoursRequestUpdate(int.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), int.parse(currentHours));
+                                              sendHoursRequestUpdate(double.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), double.parse(currentHours));
 
                                               setState(() {
                                                 sendEventToDatabase(pastTitles, pastDates, pastHours, snapshot.data[index].data['uid'].toString());
-                                                sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), int.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
+                                                sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), double.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
                                                 sendMessage("Hour Approval Update", "Your hours have been approved", context);
                                                 sendUpdateComplete(snapshot.data[index].data['type']);
                                               });
@@ -223,7 +223,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
     await DatabaseService(uid: uid).updateCompetedEvents(title, date, hours);
   }
 
-  Future sendHoursRequestUpdate(int hours, String uid, int currentHours) async {
+  Future sendHoursRequestUpdate(double hours, String uid, double currentHours) async {
     await DatabaseService(uid: uid).updateHoursRequest(hours, currentHours);
   }
 
@@ -235,7 +235,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
     await DatabaseSubmitHours().updateCompleteness(type, false);
   }
 
-  Future sendHoursQuarterUpdate(String uid, int hours, int currentHours, String quarter) async {
+  Future sendHoursQuarterUpdate(String uid, double hours, double currentHours, String quarter) async {
     await DatabaseService(uid: uid).updateHoursByQuarter(hours, currentHours, quarter);
   }
   

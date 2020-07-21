@@ -75,8 +75,8 @@ class ScannedData {
       List dates = new List();
       List hours = new List();
 
-      int currentHours;
-      int currentQuarterHours;
+      double currentHours;
+      double currentQuarterHours;
       int numClub;
       int numCommunity;
 
@@ -183,8 +183,8 @@ class ScannedData {
         dates.add(date);
         hours.add(differenceTime.toString());
 
-        await DatabaseService(uid: uid).updateHoursByQuarter(differenceTime.toInt(), currentQuarterHours, quarter);
-        await DatabaseService(uid: uid).updateHoursRequest(differenceTime.toInt(), currentHours);
+        await DatabaseService(uid: uid).updateHoursByQuarter(differenceTime, currentQuarterHours, quarter);
+        await DatabaseService(uid: uid).updateHoursRequest(differenceTime, currentHours);
         await DatabaseService(uid: uid).updateCompetedEvents(titles, dates, hours);
         await DatabaseQRCodeHours().deleteDoc(name, title);
       }

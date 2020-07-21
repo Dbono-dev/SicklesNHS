@@ -20,7 +20,7 @@ class AccountProfile extends StatefulWidget {
   final String type;
   final String name;
   final String uid;
-  final int hours;
+  final double hours;
 
   @override
   _AccountProfileState createState() => _AccountProfileState();
@@ -49,14 +49,15 @@ class _AccountProfileState extends State<AccountProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              topHalfOfAccountProfile(context),
-              Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
-              middleAcountProfilePage(context)
-            ],
-          ),
+      body: Container(
+        height: SizeConfig.blockSizeVertical * 100,
+        child: Column(
+          children: <Widget>[
+            topHalfOfAccountProfile(context),
+            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
+            middleAcountProfilePage(context)
+          ],
+        ),
       )
     );
   }
@@ -164,38 +165,38 @@ class _AccountProfileState extends State<AccountProfile> {
 
   Widget topHalfOfAccountProfile(BuildContext context) {
     return Material(
-            child: Container(
-            height: SizeConfig.blockSizeVertical * 20,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30)
-              ),
-              boxShadow: [BoxShadow(
-                color: Colors.black,
-                blurRadius: 10.0,
-                spreadRadius: 1.0,
-                offset: Offset(0, 5.0)
-                )
-              ],
-              color: Colors.green,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  color: Colors.white,
-                  iconSize: SizeConfig.blockSizeVertical * 8,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Spacer(),
-                icons(context),                
-              ],
-            ),
+        child: Container(
+        height: SizeConfig.blockSizeVertical * 20,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30)
           ),
+          boxShadow: [BoxShadow(
+            color: Colors.black,
+            blurRadius: 10.0,
+            spreadRadius: 1.0,
+            offset: Offset(0, 5.0)
+            )
+          ],
+          color: Colors.green,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              color: Colors.white,
+              iconSize: SizeConfig.blockSizeVertical * 8,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Spacer(),
+            icons(context),                
+          ],
+        ),
+      ),
     );
   }
 
@@ -251,11 +252,12 @@ class _AccountProfileState extends State<AccountProfile> {
     }
 
     return Container(
+      height: SizeConfig.blockSizeVertical * 74,
       child: Column(
         children: <Widget>[
           Container(
             width: SizeConfig.blockSizeHorizontal * 25,
-            height: 100,
+            height: SizeConfig.blockSizeVertical * 18,
             child: FloatingActionButton(
             backgroundColor: Colors.green,
             elevation: 8,
@@ -272,6 +274,7 @@ class _AccountProfileState extends State<AccountProfile> {
             child: editing != true ? Text(
               firstName + " " + lastName, style: TextStyle(fontSize: 35),
               ) : SizedBox(
+                height: SizeConfig.blockSizeVertical * 5,
                 width: SizeConfig.blockSizeHorizontal * 65,
                 child: TextFormField(
                   style: TextStyle(fontSize: 35),
@@ -290,6 +293,7 @@ class _AccountProfileState extends State<AccountProfile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 editing == true ? SizedBox(
+                  height: SizeConfig.blockSizeVertical * 5,
                   width: SizeConfig.blockSizeHorizontal * 7.5,
                   child: TextFormField(
                     initialValue: grade,
@@ -492,7 +496,7 @@ class _AccountProfileState extends State<AccountProfile> {
               Padding(padding: EdgeInsets.all(5),),
               Material(child: Text("Recent Activity", style: TextStyle(fontSize: 20),),),
               Container(
-                height: SizeConfig.blockSizeVertical * 33.4,
+                height: SizeConfig.blockSizeVertical * 27,
                   child: FutureBuilder(
                     future: getQuarterHours(),
                     builder: (_, quarterHours) {
