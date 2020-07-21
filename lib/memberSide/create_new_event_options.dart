@@ -25,7 +25,7 @@ class CreateNewHoursOptionsPage extends StatelessWidget {
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
           theTiles(tile1, tile1 == "Create New Scanning Session" ? ScanningPage(uid) : AddNewHours(), context),
           theTiles(tile2, tile2 == "View Saved Scanning Sessions" ? ViewSavedScanningSessions(uid: uid,) : ViewSavedServiceHourForms(), context),
-          theTiles(tile3, tile3 == "View Submitted Scanning Sessions" ? SubmittedServiceHourForms() : SubmittedServiceHourForms(), context),
+          tile3 == "View Submitted Scanning Sessions" ? Container() : theTiles(tile3, SubmittedServiceHourForms(), context),
         ]
       ),
     );

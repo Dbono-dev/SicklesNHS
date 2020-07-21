@@ -9,23 +9,17 @@ import 'package:sickles_nhs_app/backend/globals.dart' as global;
 class Notifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          height: SizeConfig.blockSizeVertical * 100,
-          child: Column( 
-              children: <Widget> [
-                TopHalfViewStudentsPage(),
-                Padding(padding: EdgeInsets.all(10)),
-                Container(
-                  height: SizeConfig.blockSizeVertical * 76.6,
-                  child: MiddlePageNotification()
-                ),
-              ]
-            ),
-        ),
-      )
+    return Material(
+      child: Container(
+        height: SizeConfig.blockSizeVertical * 100,
+        child: Column( 
+            children: <Widget> [
+              TopHalfViewStudentsPage(),
+              Padding(padding: EdgeInsets.all(10)),
+              MiddlePageNotification(),
+            ]
+          ),
+      ),
     );
   }
 }
@@ -64,11 +58,9 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
     return qn.documents;
   }
 
-  return Scaffold(
-    body: SingleChildScrollView(
+    return SingleChildScrollView(
       child: Container(
-        height: SizeConfig.blockSizeVertical * 80.5,
-        child: Material(
+        height: SizeConfig.blockSizeVertical * 77,
         child: Form(
           key: _fourthformKey,
           child: Column(
@@ -427,9 +419,9 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                           toWho = global.selectedPerson;
                         }
                         var result = await MessageDatabase().addMessage(_title, _body, toWho);
-                        /*final response = await PushNotificationService().sendAndRetrieveMessage(
-                          _title, _body, context
-                        );*/
+                        final response = await PushNotificationService().sendAndRetrieveMessage(
+                          _title, _body, context, toWho
+                        );
                         setState(() {
                           _fourthformKey.currentState.reset();
                           _title = "";
@@ -464,14 +456,12 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
             ],
           )
         ),
-            ),
           ),
-    ),
     );
   }
 
-  Future sendMessage(String title, String body, BuildContext context) async {
-    await PushNotificationService().sendAndRetrieveMessage(title, body, context);
+  Future sendMessage(String title, String body, BuildContext context, String toWho) async {
+    await PushNotificationService().sendAndRetrieveMessage(title, body, context, toWho);
   }
 
   Widget personCards(DocumentSnapshot snapshot, BuildContext context) {

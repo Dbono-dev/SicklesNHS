@@ -494,7 +494,12 @@ class _AccountProfileState extends State<AccountProfile> {
                     ],
                     ),
               Padding(padding: EdgeInsets.all(5),),
-              Material(child: Text("Recent Activity", style: TextStyle(fontSize: 20),),),
+              Material(
+                color: Colors.transparent,
+                child: Text("Recent Activity", 
+                style: TextStyle(fontSize: 20),
+                ),)
+              ,
               Container(
                 height: SizeConfig.blockSizeVertical * 27,
                   child: FutureBuilder(

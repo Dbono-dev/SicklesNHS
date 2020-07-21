@@ -122,6 +122,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                             color: Colors.green,
                                             onPressed: () async {
                                               DateFormat _format = new DateFormat("MM/dd/yyyy");
+                                              String name = "";
                                               String quarter = await CurrentQuarter(_format.parse(snapshot.data[index].data['date'])).getQuarter();
 
                                               for(int i = 0; i < notTheSnapshot.data.length; i++) {
@@ -145,7 +146,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                               setState(() {
                                                 sendEventToDatabase(pastTitles, pastDates, pastHours, snapshot.data[index].data['uid'].toString());
                                                 sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), double.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
-                                                sendMessage("Hour Approval Update", "Your hours have been approved", context);
+                                                sendMessage("Hour Approval Update", "Your hours have been approved", context, snapshot.data[index].data['name']);
                                                 sendUpdateComplete(snapshot.data[index].data['type']);
                                               });
                                             },
@@ -155,7 +156,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                             color: Colors.red,
                                             onPressed: () {
                                               setState(() {
-                                                sendMessage("Hour Approval Update", "Your hours have been declined", context);
+                                                sendMessage("Hour Approval Update", "Your hours have been declined", context, snapshot.data[index].data['name']);
                                                 sendUpdateDecline(snapshot.data[index].data['type']);
                                               });
                                             },
@@ -239,7 +240,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
     await DatabaseService(uid: uid).updateHoursByQuarter(hours, currentHours, quarter);
   }
   
-  Future sendMessage(String title, String body, BuildContext context) async {
-    await PushNotificationService().sendAndRetrieveMessage(title, body, context);
+  Future sendMessage(String title, String body, BuildContext context, toWho) async {
+    await PushNotificationService().sendAndRetrieveMessage(title, body, context, toWho);
   }
 }

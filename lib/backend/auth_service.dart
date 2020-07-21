@@ -58,7 +58,8 @@ class AuthService {
       return user;
     }
     catch(error) {
-      return ErrorMessage(error.message.toString(), context);
+      print(error);
+      return errorMessage(error.message.toString(), context);
     }
   }
 
@@ -103,7 +104,7 @@ class AuthService {
     }
   }
 
-  Future<void> ErrorMessage(String body, BuildContext context) async {
+  Future<void> errorMessage(String body, BuildContext context) async {
     if(Platform.isAndroid) {
       return showDialog<void>(
           context: context,
@@ -125,17 +126,23 @@ class AuthService {
         );
     }
     else {
-      return CupertinoAlertDialog(
-        title: Text("Error Message"),
-        content: Text(body),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text("Ok")
-          )
-        ],
+      return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text("Error Message"),
+            content: Text(body),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Ok")
+              )
+            ],
+          );
+        },
       );
     }
   }
