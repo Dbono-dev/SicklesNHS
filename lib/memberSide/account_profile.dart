@@ -14,13 +14,12 @@ import 'package:intl/intl.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class AccountProfile extends StatefulWidget {
-  AccountProfile({Key key, this.posts, this.type, this.name, this.uid, this.hours}) : super (key: key);
+  AccountProfile({Key key, this.posts, this.type, this.name, this.uid}) : super (key: key);
 
   final DocumentSnapshot posts;
   final String type;
   final String name;
   final String uid;
-  final double hours;
 
   @override
   _AccountProfileState createState() => _AccountProfileState();

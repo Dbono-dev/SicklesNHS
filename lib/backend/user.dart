@@ -11,7 +11,7 @@ class UserData {
   final String grade;
   final int permissions;
   final String date;
-  var hours;
+  final int hours;
   var firstQuarter;
   var secondQuarter;
   var thirdQuarter;

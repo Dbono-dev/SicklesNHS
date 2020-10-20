@@ -84,7 +84,7 @@ class TopHalfViewStudentsPage extends StatelessWidget {
                       elevation: 8,
                       onPressed: () {
                         Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + " " + userData.lastName, uid: user.uid, hours: userData.hours)
+                          MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + " " + userData.lastName, uid: user.uid)
                           ));
                       },
                       child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
@@ -187,7 +187,6 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(checks);
     return Container(
       height: SizeConfig.blockSizeVertical * 69.75,
       child: Column(
