@@ -90,7 +90,6 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
   String _date;
   final _fourthformKey = GlobalKey<FormState>();
   DateTime _newDateTime;
-  final _mobileFormatter = PhoneNumberTextInputFormatter();
 
   @override
   Widget build(BuildContext context) {
@@ -290,10 +289,6 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                         hintText: 'Supervisor Phone Number',
                       ),
                       onChanged: (val) => _supPhone = (val),
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly,
-                        _mobileFormatter,
-                      ],
                       initialValue: _supPhone,
                       validator: (value) {
                         if(value.isEmpty) {
@@ -459,37 +454,5 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
 
   Future sendEventToDatabase(String type, String location, String hours, String nameOfSup, String supPhone, String emailSup, String date, String name, var url, String uid, double currentHours, String saveSubmit) async {
     await DatabaseSubmitHours().updateSubmitHours(type, location, hours, nameOfSup, supPhone, emailSup, date, name, false, url, uid, currentHours, saveSubmit);
-  }
-}
-
-class PhoneNumberTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    final int newTextLength = newValue.text.length;
-    int selectionIndex = newValue.selection.end;
-    int usedSubstringIndex = 0;
-    final StringBuffer newText = new StringBuffer();
-    if (newTextLength >= 4) {
-      newText.write(newValue.text.substring(0, usedSubstringIndex = 3) + '-');
-      if (newValue.selection.end >= 3)
-        selectionIndex += 2;
-    }
-    if (newTextLength >= 7) {
-      newText.write(newValue.text.substring(3, usedSubstringIndex = 6) + '-');
-      if (newValue.selection.end >= 6)
-        selectionIndex++;
-    }
-    if (newTextLength >= 11) {
-      newText.write(newValue.text.substring(6, usedSubstringIndex = 10) );
-      if (newValue.selection.end >= 10)
-        selectionIndex++;
-    }
-    if (newTextLength >= usedSubstringIndex)
-      newText.write(newValue.text.substring(usedSubstringIndex));
-    return new TextEditingValue(
-      text: newText.toString(),
-      selection: new TextSelection.collapsed(offset: newText.length),
-    );
   }
 }
