@@ -5,6 +5,7 @@ import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:provider/provider.dart';
+import 'package:sickles_nhs_app/home_page.dart';
 import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
 import 'package:sickles_nhs_app/memberSide/send_images.dart';
 import 'package:sickles_nhs_app/memberSide/settings_page.dart';
@@ -188,7 +189,7 @@ class _AccountProfileState extends State<AccountProfile> {
               color: Colors.white,
               iconSize: SizeConfig.blockSizeVertical * 8,
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => TheOpeningPage()));
               },
             ),
             Spacer(),

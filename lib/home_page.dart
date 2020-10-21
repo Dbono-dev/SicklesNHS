@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -106,19 +108,20 @@ class MiddleHomePage extends StatefulWidget {
 }
 
 class _MiddleHomePageState extends State<MiddleHomePage> {
-    Future getPosts() async {
-      var firestore = Firestore.instance;
-      QuerySnapshot qn = await firestore.collection("events").orderBy('date').getDocuments();
-      return qn.documents;
-    }
-
-    DateFormat format = new DateFormat("MM/dd/yyyy");
-    DateFormat secondFormat = new DateFormat("yyyy-MM-dd");
 
   @override
   void initState() {
-    super.setState(() { });
+    super.initState();
   }
+
+  Future getPosts() async {
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("events").orderBy('date').getDocuments();
+    return qn.documents;
+  }
+
+  DateFormat format = new DateFormat("MM/dd/yyyy");
+  DateFormat secondFormat = new DateFormat("yyyy-MM-dd");
 
   @override
   Widget build(BuildContext context) {
@@ -170,8 +173,11 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                     if(numberOfTimesThrough == 0) {
                       theLength = theLength - 1;
                     }
-                    if(snapshot.data[i].data['participates'].contains(userData.firstName + " " + userData.lastName)) {
+                    else if(snapshot.data[i].data['participates'].contains(userData.firstName + " " + userData.lastName)) {
                       theLength = theLength - 1;
+                    }
+                    else {
+
                     }
                   }
                   if(theLength == 0) {
@@ -225,6 +231,7 @@ class TopHalfHomePage extends StatelessWidget {
   TopHalfHomePage({Key key}) : super (key: key);
 
   String timeOfDay;
+  
 
   @override
   Widget build(BuildContext context) {

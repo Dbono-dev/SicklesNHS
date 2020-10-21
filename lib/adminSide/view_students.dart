@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:sickles_nhs_app/home_page.dart';
 import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
@@ -71,7 +72,7 @@ class TopHalfViewStudentsPage extends StatelessWidget {
                     color: Colors.white,
                     iconSize: 60,
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => TheOpeningPage()));
                     },
                   ),
                   Padding(

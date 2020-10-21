@@ -59,7 +59,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                           ),
                           onPressed: () {
                             showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                              return SetClubDates("new", "clubDates", "", "");
+                              return setClubDates("new", "clubDates", "", "");
                             });
                           },
                         )
@@ -104,7 +104,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
                                 ),
                                 onPressed: () {
                                   showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                                    return SetClubDates("edit", "clubDates", snapshot.data[index].data['inital date'].toString(), "");
+                                    return setClubDates("edit", "clubDates", snapshot.data[index].data['inital date'].toString(), "");
                                   });
                                 }
                               ),
@@ -212,9 +212,9 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
   }
 
 
-  Widget SetClubDates(String editOrNew, String type, String oldDate, String quarter) {
+  Widget setClubDates(String editOrNew, String type, String oldDate, String quarter) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 41,
+      height: SizeConfig.blockSizeVertical * 42,
       child: Column(
         children: <Widget>[
           Row(
@@ -289,7 +289,7 @@ class _ImportantDateMainState extends State<ImportantDateMain> {
               ),
               onPressed: () {
                 showModalBottomSheet(context: context, builder: (BuildContext builder) {
-                  return SetClubDates("", "endOfQuarter" , date, number);//snapshot.data['date'].toString());
+                  return setClubDates("", "endOfQuarter" , date, number);//snapshot.data['date'].toString());
                 });
               }
             ),

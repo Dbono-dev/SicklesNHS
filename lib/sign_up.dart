@@ -9,59 +9,23 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack (
-      children: <Widget> [
-        Container(
-          height: SizeConfig.blockSizeHorizontal * 100,
-          width: SizeConfig.blockSizeVertical * 100,
-          color: Colors.green,
-        ),
-        Column(
-          children: <Widget>[
-            TopHalfSignUpPage(),
-            MiddlePageSignUpScreen(),
-          ],
-        )
-      ]
-    );
-  }
-}
-
-class TopHalfSignUpPage extends StatelessWidget {
-  TopHalfSignUpPage({Key key}) : super (key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-            type: MaterialType.transparency,
-            child: Container(
-            height: SizeConfig.blockSizeVertical * 20,
-            decoration: BoxDecoration(
-              boxShadow: [BoxShadow(
-                color: Colors.green,
-                blurRadius: 25.0,
-                spreadRadius: 2.0,
-                offset: Offset(0, -10.0)
-                )
-              ],
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30)
-              ),
-              color: Colors.white,
-            ),
-            child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                    child: Text("Sickles NHS", style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green
-                  )),
-                ),
+    return Scaffold(
+      backgroundColor: Colors.green,
+      body: SingleChildScrollView(
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 100,
+          child: Column(
+            children: <Widget>[
+              TopHalfLoginPage(),
+              Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 7.5)),
+              Expanded(child: MiddlePageSignUpScreen()),
+            ],
           ),
+        ),
+      ),
     );
   }
 }
-
 
 class MiddlePageSignUpScreen extends StatelessWidget {
   MiddlePageSignUpScreen({Key key}) : super (key: key);
@@ -78,128 +42,190 @@ class MiddlePageSignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
-      height: SizeConfig.blockSizeVertical * 80,
+      color: Colors.transparent,
         child: Form(
         key: _secondformKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Padding(padding: EdgeInsets.all(5)),
-            Material(
-              color: Colors.transparent,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: TextFormField(
-                    onSaved: (value) => _firstName = value,
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    hintText: "First Name",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    fillColor: Colors.white,
-                    filled: true,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Material(
+                  color: Colors.transparent,
+                    child: Container(
+                      width: SizeConfig.blockSizeHorizontal * 40,
+                      margin: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: TextFormField(
+                        onSaved: (value) => _firstName = value,
+                        validator: (val) => val.isEmpty ? 'Enter an First Name' : null,
+                        style: TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          hintText: "First Name",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                    ),
                   ),
-              ),
                 ),
+                Material(
+                  color: Colors.transparent,
+                    child: Container(
+                      width: SizeConfig.blockSizeHorizontal * 40,
+                      margin: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: TextFormField(
+                        onSaved: (value) => _lastName = value,
+                        validator: (val) => val.isEmpty ? 'Enter your Last Name' : null,
+                        style: TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          hintText: "Last Name",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(padding: EdgeInsets.all(5),),
-            Material(
-              color: Colors.transparent,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: TextFormField(
-                    onSaved: (value) => _lastName = value,
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    hintText: "Last Name",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    fillColor: Colors.white,
-                    filled: true,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Material(
+                  color: Colors.transparent,
+                    child: Container(
+                      width: SizeConfig.blockSizeHorizontal * 40,
+                      margin: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        onSaved: (value) => _studentNum = value,
+                        validator: (val) => val.isEmpty ? 'Enter your Student Number' : null,
+                        style: TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          hintText: "Student Number",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                    ),
                   ),
-              ),
                 ),
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            Material(
-              color: Colors.transparent,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: TextFormField(
-                    onSaved: (value) => _studentNum = value,
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    hintText: "Student Number",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    fillColor: Colors.white,
-                    filled: true,
+                Material(
+                  color: Colors.transparent,
+                    child: Container(
+                      width: SizeConfig.blockSizeHorizontal * 40,
+                      margin: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        onSaved: (value) => _grade = value,
+                        validator: (val) => val.isEmpty ? 'Enter a grade' : null,
+                        style: TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          hintText: "Grade",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                    ),
                   ),
-              ),
                 ),
-            ),
-            Padding(padding: EdgeInsets.all(5),),
+              ],
+            ),  
+            Padding(padding: EdgeInsets.all(5),),          
             Material(
               color: Colors.transparent,
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
-                    onSaved: (value) => _grade = value,
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    hintText: "Grade",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-              ),
-                ),
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            Material(
-              color: Colors.transparent,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     onSaved: (value) => _email = value,
-                  style: TextStyle(fontSize: 20),
+                    validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                  style: TextStyle(fontSize: 15),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                     hintText: "Email",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                     fillColor: Colors.white,
                     filled: true,
                   ),
               ),
                 ),
             ),
-            Padding(padding: EdgeInsets.all(5),),
             Material(
               color: Colors.transparent,
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
                     onSaved: (value) => _password = value,
-                  style: TextStyle(fontSize: 20),
+                    validator: (val) => val.isEmpty ? 'Enter a Password' : null,
+                  style: TextStyle(fontSize: 15),
                   obscureText: true,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                     hintText: "Password",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                     fillColor: Colors.white,
                     filled: true,
                   ),
               ),
                 ),
             ),
-            //Padding(padding: EdgeInsets.all(10),),
+            Padding(padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),),
+            GestureDetector(
+              onTap: () async {
+                print("clicked");
+                final form = _secondformKey.currentState;
+                form.save();
+                if(form.validate()) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("Signing up...", style: TextStyle(color: Colors.green),),
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Colors.white,
+                  ));
+                  try {
+                    dynamic result = await _auth.createUser(
+                      email: _email,
+                      password: _password,
+                      firstName: _firstName,
+                      lastName: _lastName,
+                      studentNum: _studentNum,
+                      grade: _grade,
+                    );
+                    print("Works");
+                  }
+                  on AuthException catch (error) {
+                  return _buildErrorDialog(context, error.message);
+                  } on Exception catch (error) {
+                  return _buildErrorDialog(context, error.toString());
+                }
+                }
+                Navigator.push(context, MaterialPageRoute(
+                builder: (context) => LoginScreen()),);
+              },
+              child: Card(
+                elevation: 10,
+                child: Container(
+                  height: SizeConfig.blockSizeVertical * 6,
+                  width: SizeConfig.blockSizeHorizontal * 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white
+                  ),
+                  child: Center(child: Text("SIGN UP", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 20), )),
+                ),
+              )
+            ),
             Spacer(),
             Material(
               type: MaterialType.transparency,
               child: Container(
-              height: 49.0,
+              height: SizeConfig.blockSizeVertical * 7,
               decoration: BoxDecoration(
                 boxShadow: [BoxShadow(
                   color: Colors.black,
@@ -217,45 +243,17 @@ class MiddlePageSignUpScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
+                  FlatButton(
+                    onPressed: () {
                       Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => LoginScreen()
-                    ),
-                    );
+                        builder: (context) => LoginScreen()),
+                      );
                     },
-                      child: FlatButton(
-                        onPressed: () async {
-                          print("clicked");
-                          final form = _secondformKey.currentState;
-                          form.save();
-                          if(form.validate()) {
-                            try {
-                              dynamic result = await _auth.createUser(
-                                email: _email,
-                                password: _password,
-                                firstName: _firstName,
-                                lastName: _lastName,
-                                studentNum: _studentNum,
-                                grade: _grade,
-                              );
-                              print("Works");
-                            }
-                            on AuthException catch (error) {
-                            return _buildErrorDialog(context, error.message);
-                            } on Exception catch (error) {
-                            return _buildErrorDialog(context, error.toString());
-                          }
-                          }
-                          Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => LoginScreen()),);
-                        },
-                        child: Text("Sign Up", style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black
+                    child: Text("BACK", style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green
                     )),
-                      ),
                   ),
                 ],
               ),

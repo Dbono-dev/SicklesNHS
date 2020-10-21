@@ -20,6 +20,8 @@ class LoginScreen extends StatelessWidget {
               TopHalfLoginPage(),
               Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 10)),
               LoginPage(),
+              Spacer(),
+              BottonHalfLoginPage()
             ],
           ),
         ),
@@ -55,7 +57,7 @@ class TopHalfLoginPage extends StatelessWidget {
             ),
             child: FittedBox(
                   fit: BoxFit.fitWidth,
-                    child: Text("Sickles NHS", style: TextStyle(
+                    child: Text("SICKLES NHS", style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.green
                   )),
@@ -74,7 +76,7 @@ class BottonHalfLoginPage extends StatelessWidget {
             type: MaterialType.transparency,
             child: Container(
               alignment: Alignment.center,
-            height: SizeConfig.blockSizeVertical * 10,
+            height: SizeConfig.blockSizeVertical * 7,
             decoration: BoxDecoration(
               boxShadow: [BoxShadow(
                 color: Colors.black,
@@ -94,10 +96,10 @@ class BottonHalfLoginPage extends StatelessWidget {
                     Navigator.push(context, MaterialPageRoute(
                     builder: (context) => SignUpPage()
                   ),);},
-                  child: Text("Sign Up",
+                  child: Text("SIGN UP",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.green,
                       fontSize: SizeConfig.blockSizeHorizontal * 8,
                     )),
                 ),
@@ -123,7 +125,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
       return Material(
         color: Colors.transparent,
         child: Container(
-          height: SizeConfig.blockSizeVertical * 60,
+          height: SizeConfig.blockSizeVertical * 51,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -182,7 +184,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                     color: Colors.white,
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width / 2,
-                      child: Text("Login",
+                      child: Text("LOGIN",
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeHorizontal * 7.5)
                     ),
@@ -200,6 +202,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                               password: _password,
                               context: context
                             );
+                            print("got here");
                           if(result == null) {
                             print("Could not sign in with those credentials");
                           }
