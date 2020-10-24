@@ -397,7 +397,7 @@ class MiddleHomePageCards extends StatelessWidget {
                               ),
                             ),
                             Text(post.data["title"], style: TextStyle(
-                              fontSize: SizeConfig.blockSizeHorizontal * 6,
+                              fontSize: SizeConfig.blockSizeHorizontal * 4.5,
                               fontWeight: FontWeight.bold, 
                               color: Colors.black
                             ),
@@ -470,7 +470,7 @@ class BottonHalfHomePage extends StatelessWidget {
         ]
        );
           }
-          if(userData.permissions == 1) {
+          if(userData.permissions == 2) {
             return Stack(
                 children: <Widget>[
                 Material(
@@ -496,7 +496,7 @@ class BottonHalfHomePage extends StatelessWidget {
         ]
        );
           }
-          if(userData.permissions == 2 && format.parse(userData.date).isAfter(DateTime.now())) {
+          if(userData.permissions == 1 && format.parse(userData.date).isAfter(DateTime.now())) {
             return Stack(
                 children: <Widget>[
                 Material(

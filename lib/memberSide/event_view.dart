@@ -288,6 +288,9 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
       theShownDate = theDates[shownDate];
       global.shownDate = theDates[shownDate];
     }
+    else {
+      global.shownDate = widget.post.data['date'].toString();
+    }
 
     return Card(
       elevation: 8,
@@ -305,7 +308,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(title, style: TextStyle(
-                  fontSize: 35,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold
                 ),
                 textAlign: TextAlign.center,
@@ -343,11 +346,11 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                   )
                 ) : Text(widget.post.data['date']),
                 Container(
-                  height: 145,
-                  width: 315,
+                  height: SizeConfig.blockSizeVertical * 20,
+                  width: SizeConfig.blockSizeHorizontal * 80,
                   child: _image,
                 ),
-                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
+                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5),),
                 Expanded(
                   child: Container(
                     child: SingleChildScrollView(
@@ -358,10 +361,11 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                     ),
                   ),
                 ),
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    Divider(),
                     Text(location),
                     Text("Remaining Spots: " + remainingSpots)
                   ],
@@ -489,7 +493,6 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
 
       timing = newTime - (widget.post.data["start time"] + bonusStartMinutes);
       double endtiming = (widget.post.data["end time"] + bonusEndMinutes) - newTime;
-
       if(date == global.shownDate)
       {
         if(timing >= -1 && timing <= 0.5)
@@ -530,7 +533,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
                   differentSignUp = "";
                 }
               }
-              if(userData.permissions == 0 || userData.permissions == 2 || clicked == true) {
+              if(userData.permissions == 0 || userData.permissions == 1 || clicked == true) {
                 differentSignUp = "";
               }
               return Material(
@@ -571,7 +574,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
                             if(differentSignUp == "Sign Up") {
                               Scaffold.of(context).showSnackBar(SnackBar(
                                 content: Text("Signing up..."),
-                                duration: Duration(seconds: 3),
+                                duration: Duration(seconds: 2),
                                 backgroundColor: Colors.green,
                               ));
                               var participates = widget.post.data['participates'];
@@ -736,6 +739,10 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
         }
       }
       theShownDate = theDates[shownDate];
+    }
+    else {
+      theShownDate = widget.post.data['date'];
+      listWidgetDates.add(Text(widget.post.data['date']));
     }
 
     int theNum = 0;

@@ -569,8 +569,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         FloatingActionButton(
                           backgroundColor: Colors.green,
                           elevation: 8,
-                          onPressed: () {
-                            _photoUrl = getImage(_title);
+                          onPressed: () async {
+                            _photoUrl = await getImage(_title);
                           },
                           child: Icon(
                             Icons.photo_library,
