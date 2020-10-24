@@ -81,7 +81,7 @@ Widget build(BuildContext context) {
           ),
           Text(date, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         QrImage(
-          data:theQrContent, //qrContent,
+          data: qrContent,
           version: QrVersions.auto,
           size: SizeConfig.blockSizeVertical * 45,
         ),

@@ -42,7 +42,6 @@ class ScannedData {
       }
     }
 
-    qrCodeItems.add(date);
 
     return qrCodeItems;
   }
@@ -60,8 +59,6 @@ class ScannedData {
         qrCodeItems.add(text);
       }
     }
-
-    qrCodeItems.add(date);
 
       title = qrCodeItems[0];
       name = qrCodeItems[1];
@@ -82,6 +79,7 @@ class ScannedData {
 
       DateFormat _format = new DateFormat("MM/dd/yyyy");
       String quarter = await CurrentQuarter(_format.parse(date)).getQuarter();
+      print("got passed the get Quarter function");
 
       QuerySnapshot result2 = await Firestore.instance.collection("members").getDocuments();
         var snapshot2 = result2.documents;
