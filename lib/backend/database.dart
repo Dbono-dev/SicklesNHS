@@ -175,8 +175,8 @@ class DatabaseSubmitHours {
     });
   }
 
-  Future updateCompleteness(String type, bool complete) async {
-    return await submitHours.document(type).updateData({
+  Future updateCompleteness(String type, bool complete, String uid) async {
+    return await submitHours.document(type + " " + uid).updateData({
       'complete': complete
     });
   }

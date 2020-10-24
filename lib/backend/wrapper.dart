@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/home_page.dart';
 import 'package:sickles_nhs_app/login_screen.dart';
 import 'package:sickles_nhs_app/backend/push_notification.dart';
@@ -34,6 +35,7 @@ class Wrapper extends StatelessWidget {
               color: Colors.transparent,
               child: Center(
                 child: Container(
+                  width: SizeConfig.blockSizeHorizontal * 100,
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

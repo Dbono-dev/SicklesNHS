@@ -246,7 +246,8 @@ class _AccountProfileState extends State<AccountProfile> {
     DateFormat format = new DateFormat("MM/dd/yyyy");
     DateFormat secondFormat = new DateFormat("MM-dd-yyyy");
 
-    if(int.parse(hours) >= 6) {
+    
+    if(double.parse(hours) >= 6) {
       _theColor = Colors.green;
       _theTextColor = Colors.white;
     }
@@ -348,10 +349,10 @@ class _AccountProfileState extends State<AccountProfile> {
                                   title: Text("Hours"),
                                   content: Column(
                                     children: <Widget> [
-                                      ListTile(title: Text("Quarter 1: " + q1Hours), trailing: int.parse(q1Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
-                                      ListTile(title: Text("Quarter 2: " + q2Hours), trailing: int.parse(q2Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                      ListTile(title: Text("Quarter 3: " + q3Hours), trailing: int.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                      ListTile(title: Text("Quarter 4: " + q4Hours), trailing: int.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
+                                      ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Quarter 3: " + q3Hours), trailing: double.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Quarter 4: " + q4Hours), trailing: double.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
                                     ]
                                   ),
                                   actions: <Widget>[
@@ -568,6 +569,8 @@ class _AccountProfileState extends State<AccountProfile> {
                                 );
                               }
                             }
+                            print(secondQuarter);
+                            print(thenewDate[index]);
                             if(thenewDate[index].isAfter(firstQuarter) && thenewDate[index].isBefore(secondQuarter)) {
                               if(thesecondQuarter == true) {
                                 return Column(
@@ -586,7 +589,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                 thesecondQuarter = true;
                                 return Column(
                                   children: <Widget>[
-                                    quarterPages("Third"),
+                                    quarterPages("Second"),
                                     accountProfileCards(
                                       title: title[index],
                                       date: date[index].toString().substring(0, 10),
@@ -715,7 +718,7 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
                 children: <Widget>[
                   Container(
                     width: SizeConfig.blockSizeHorizontal * 40,
-                    child: Text(title, style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)
+                    child: Text(title, style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)
                   ),
                   Padding(padding: EdgeInsets.all(2)),
                   Text(date, style: TextStyle(fontSize: 20),),

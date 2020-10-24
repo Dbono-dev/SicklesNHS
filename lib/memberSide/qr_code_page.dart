@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
-import 'dart:convert';
 
 class QRCodePage extends StatelessWidget {
 QRCodePage ({Key key, this.title, this.name, this.type, this.uid, this.date, this.event}) : super (key: key);
@@ -82,7 +81,7 @@ Widget build(BuildContext context) {
           ),
           Text(date, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         QrImage(
-          data: qrContent,
+          data:theQrContent, //qrContent,
           version: QrVersions.auto,
           size: SizeConfig.blockSizeVertical * 45,
         ),

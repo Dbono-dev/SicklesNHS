@@ -206,7 +206,7 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30)
               ),
-              color: Colors.green,
+              color: Colors.green, 
             ),
             child: FlatButton(
               onPressed: () async {

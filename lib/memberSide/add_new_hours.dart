@@ -348,7 +348,6 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                                 _location = "";
                                 _newDateTime = null;
                                 _hours = "";
-                                _typeOfActivity = "";
                                 _location = "";
                                 _fourthformKey.currentState.reset();
                               });

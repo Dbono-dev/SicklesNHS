@@ -510,10 +510,9 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
       else {
         differentSignUp = "Sign Up";
       }
-      if(widget.post.data['participates'].length == int.parse(widget.post.data['max participates'])) {
-        differentSignUp = "";
-      }
 
+      theDate = global.shownDate.toString();
+      theDate = theDate.substring(0, 2) + "-" + theDate.substring(3, 5) + "-" + theDate.substring(6);
       title = widget.post.data["title"];
     }
 
@@ -531,6 +530,17 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
               else {
                 if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && differentSignUp != "Check Out" && differentSignUp != "Check In") {
                   differentSignUp = "";
+                }
+                if(widget.post.data['participates'].length == int.parse(widget.post.data['max participates'])) {
+                  if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName)) {
+
+                  }
+                  else {
+                    differentSignUp = "";
+                  }
+                }
+                if(!widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName)) {
+                  differentSignUp = "Sign Up";
                 }
               }
               if(userData.permissions == 0 || userData.permissions == 1 || clicked == true) {

@@ -22,7 +22,7 @@ class ScannedData {
   String theText = "";
 
   Future<List> resisterScanData() async {
-      List<String> qrCodeItems = new List<String>(); 
+    List<String> qrCodeItems = new List<String>(); 
 
     /*for(int i = 0; i < text.length; i++) {
       var char = text[i];
