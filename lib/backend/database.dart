@@ -13,7 +13,7 @@ class DatabaseService {
     return await memberCollection.document(uid).setData({
       'first name': firstName,
       'last name': lastName,
-      'hours': 0,
+      'hours': 0, //Make sure that this value is saved as a double so just write double.parse(0.toString())
       'student number': studentNum,
       'grade': grade,
       'permissions': int.parse(permissions),
