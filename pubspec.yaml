@@ -47,11 +47,18 @@ dependencies:
   path_provider: ^1.6.11
   masked_text: ^0.0.6
   shared_preferences: ^0.5.8
+  flutter_automation: ^1.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  flutter_launcher_icons: ^0.8.1
 
+flutter_icons:
+  image_path: "icon/App Icon Sickles NHS Android.png"
+  andriod: "launcher_icon"
+  ios: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

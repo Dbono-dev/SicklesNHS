@@ -207,7 +207,7 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
                 topRight: Radius.circular(30)
               ),
               color: Colors.green, 
-            ),
+            ), 
             child: FlatButton(
               onPressed: () async {
                 var result = await BarcodeScanner.scan();

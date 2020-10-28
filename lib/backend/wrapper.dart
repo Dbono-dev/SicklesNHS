@@ -31,6 +31,7 @@ class Wrapper extends StatelessWidget {
             return TheOpeningPage();
           }
           else {
+            print(snapshot);
             return Material(
               color: Colors.transparent,
               child: Center(

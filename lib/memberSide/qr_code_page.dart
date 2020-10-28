@@ -55,6 +55,7 @@ Widget build(BuildContext context) {
 
   String theQrContent = title  + "/" + name + "/" + time + "/" + type + "/" + uid + "/" + date + "/" + event;
   String qrContent = "";
+  print(theQrContent);
 
   List<int> theListOfInts = new List<int> ();
 

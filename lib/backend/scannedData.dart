@@ -24,12 +24,12 @@ class ScannedData {
   Future<List> resisterScanData() async {
     List<String> qrCodeItems = new List<String>(); 
 
-    /*for(int i = 0; i < text.length; i++) {
+    for(int i = 0; i < text.length; i++) {
       var char = text[i];
       int temp = char.codeUnitAt(0) - 5;
       String theTemp = String.fromCharCode(temp);
       theText += theTemp;
-    }*/
+    }
 
     for(int i = 0; i < text.length; i++) {
       if(text.substring(0, i).contains("/")) {

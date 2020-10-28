@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1059922742746:android:12963c6c6c5b902a1e84e3",
+        "mobilesdk_app_id": "1:1059922742746:android:29275209db9662771e84e3",
         "android_client_info": {
-          "package_name": "com.example.sickles_nhs_app"
+          "package_name": "com.sickles_nhs_app.sickles_nhs_app"
         }
       },
       "oauth_client": [
@@ -30,6 +30,13 @@
             {
               "client_id": "1059922742746-93dng507bm3f97t7pb3e2cv9ot2u3v1l.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1059922742746-e0np31ddmd9unb3e17n6qg04vgtsi7s0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.theSicklesNHSApp.sicklesNhsApp"
+              }
             }
           ]
         }
