@@ -212,7 +212,7 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
               onPressed: () async {
                 var result = await BarcodeScanner.scan();
                 HapticFeedback.vibrate();
-                List theListOfData = await ScannedData(text: result.rawContent, date: DateTime.now().month.toString() + "-" + DateTime.now().day.toString() + "-" + DateTime.now().year.toString()).resisterScanData();
+                List theListOfData = await ScannedData(text: result.rawContent, date: DateTime.now().month.toString() + "/" + DateTime.now().day.toString() + "/" + DateTime.now().year.toString()).resisterScanData();
                 setState(() {
                   theScanUID.add(theListOfData[4]);
                   theScanName.add(theListOfData[1]); 

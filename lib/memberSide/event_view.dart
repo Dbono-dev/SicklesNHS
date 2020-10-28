@@ -530,7 +530,10 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
               else {
                 if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName) && differentSignUp != "Check Out" && differentSignUp != "Check In") {
                   differentSignUp = "";
-                }
+                } 
+                
+                //Look at these if/else statements becuase as long as the name is not in the participates name than it allows students to sign up
+                //So it looks like I will have to check if there are spots avaliable than inside of that if statement see if the participates list includes there name
                 if(widget.post.data['participates'].length == int.parse(widget.post.data['max participates'])) {
                   if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName)) {
 
