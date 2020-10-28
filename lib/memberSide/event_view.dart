@@ -549,7 +549,6 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
               if(userData.permissions == 0 || userData.permissions == 1 || clicked == true) {
                 differentSignUp = "";
               }
-              differentSignUp = "Check In";
               return Material(
                 type: MaterialType.transparency,
                 child: Container(
