@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/login_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -124,6 +126,38 @@ class SettingsPageBody extends StatelessWidget {
               ),
             )
           ),
+          Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2)),
+          Text("Follow Us", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 35, decoration: TextDecoration.underline), textAlign: TextAlign.center,),
+          Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Ink(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        colors: [Color.fromARGB(255, 76, 104, 215), Color.fromARGB(255, 138, 58, 185), Color.fromARGB(255, 188, 42, 141), Color.fromARGB(255, 205, 72, 107), Color.fromARGB(255, 233, 89, 80), Color.fromARGB(255, 251, 173, 80), Color.fromARGB(255, 252, 204, 99)],
+                        begin: Alignment.topLeft,
+                        end: Alignment(0, 1),
+                      ),
+                    ),
+                    child: Center(child: FaIcon(FontAwesomeIcons.instagram))
+                  ),
+                ), 
+                iconSize: 55,
+                color: Colors.white,
+                onPressed: () => launch('https://www.instagram.com/sicklesnhs/?hl=en')
+              ),
+              IconButton(
+                icon: FaIcon(FontAwesomeIcons.twitter), 
+                color: Color.fromARGB(255, 29, 161, 242),
+                iconSize: 55,
+                onPressed: () => launch('https://twitter.com/SicklesNhs')
+              )
+            ],
+          )
         ],
       ),
     );
@@ -153,3 +187,21 @@ class SettingsPageBody extends StatelessWidget {
     }
   }
 }
+
+class RadiantGradientMask extends StatelessWidget {
+  RadiantGradientMask({this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) => RadialGradient(
+        center: Alignment.center,
+        radius: 0.5,
+        colors: [Colors.blue, Colors.red],
+        tileMode: TileMode.mirror,
+      ).createShader(bounds),
+      child: child,
+    );
+  }
+} 

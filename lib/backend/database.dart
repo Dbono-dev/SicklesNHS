@@ -92,7 +92,7 @@ class DatabaseService {
       grade: snapshot.data['grade'],
       permissions: snapshot.data['permissions'],
       date: snapshot.data['date'],
-      hours: snapshot.data['hours'],
+      hours: double.parse(snapshot.data['hours'].toString()),
       firstQuarter: snapshot.data['firstQuarter'],
       secondQuarter: snapshot.data['secondQuarter'],
       thirdQuarter: snapshot.data['thirdQuarter'],

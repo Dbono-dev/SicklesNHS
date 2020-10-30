@@ -67,7 +67,7 @@ class TopHalfViewEventsPage extends StatelessWidget {
                 iconSize: 55,
                 icon: Icon(Icons.edit),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent(title: post.data['title'], description: post.data['description'], max: post.data['max participates'], address: post.data['address'], type: post.data['type'], date: post.data['date'], startTime: post.data['start time'], startTimeMinutes: post.data['start time minutes'], endTimeMinutes: post.data['end time minutes'], endTime: post.data['end time'],)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent(title: post.data['title'], description: post.data['description'], max: post.data['max participates'], address: post.data['address'], type: post.data['type'], date: post.data['date'], startTime: post.data['start time'], startTimeMinutes: post.data['start time minutes'], endTimeMinutes: post.data['end time minutes'], endTime: post.data['end time'], fileSelect: post.data['photo url'] == null ? "No File Selected" : "File Selected",)));
                 },
               );
             }
@@ -532,18 +532,13 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
                   differentSignUp = "";
                 } 
                 
-                //Look at these if/else statements becuase as long as the name is not in the participates name than it allows students to sign up
-                //So it looks like I will have to check if there are spots avaliable than inside of that if statement see if the participates list includes there name
-                if(widget.post.data['participates'].length == int.parse(widget.post.data['max participates'])) {
+                if(widget.post.data['participates'].length >= int.parse(widget.post.data['max participates'])) {
                   if(widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName)) {
 
                   }
                   else {
                     differentSignUp = "";
                   }
-                }
-                if(!widget.post.data['participates'].contains(userData.firstName + " " + userData.lastName)) {
-                  differentSignUp = "Sign Up";
                 }
               }
               if(userData.permissions == 0 || userData.permissions == 1 || clicked == true) {
@@ -835,14 +830,14 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                       child: Card(
                         elevation: 10,
                         child: ListTile(
-                          leading: Text((theNum).toString() + ".", style: TextStyle(fontSize: 20)),
+                          leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20)),
                           title: Text(participatesList[index]),
                         )
                       ),
                     );
                   }
                   else if(theNum == 0 && repeat == participatesDate.length - 1) {
-                    return Center(child: Text("No Participants", style: TextStyle(fontSize: 30)),);
+                    return Center(child: Text("No Participates", style: TextStyle(fontSize: 30)),);
                   }
                   else {
                     repeat += 1;

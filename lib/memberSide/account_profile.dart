@@ -134,7 +134,7 @@ class _AccountProfileState extends State<AccountProfile> {
     if(widget.type == "student") {
       return Row(
         children: <Widget>[
-          iconsForTopAccountProfile(Icons.add_circle_outline, CreateNewHoursOptionsPage(tile1: "Create New Service Hour Form", tile2: "View Saved Service Hour Forms", tile3: "View Submitted Service Hour Forms")),
+          iconsForTopAccountProfile(Icons.add_circle_outline, CreateNewHoursOptionsPage(tile1: "Create New Service Hour Form", tile2: "View Saved Service Hour Forms", tile3: "View Submitted Service Hour Forms", uid: widget.uid,)),
           iconsForTopAccountProfile(Icons.format_list_numbered, Leaderboard()),
           iconsForTopAccountProfile(Icons.image, SendImages(name: widget.name,)),
           iconsForTopAccountProfile(Icons.inbox, MessagesPage()),

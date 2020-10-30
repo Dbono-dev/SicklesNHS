@@ -205,8 +205,8 @@ class MiddlePageSignUpScreen extends StatelessWidget {
                   return _buildErrorDialog(context, error.toString());
                 }
                 }
-                Navigator.push(context, MaterialPageRoute(
-                builder: (context) => LoginScreen()),);
+                /*Navigator.push(context, MaterialPageRoute(
+                builder: (context) => LoginScreen()),);*/
               },
               child: Card(
                 elevation: 10,

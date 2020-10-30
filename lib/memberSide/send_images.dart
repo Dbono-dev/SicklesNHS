@@ -26,14 +26,14 @@ class _SendImagesState extends State<SendImages> {
     File theFile = File(tempImage.path);
     print(tempImage.path);
     setState(() {
-      theImages.add(theFile);
+      theImages.add(theFile); 
     });
   }
 
   Future sendImages() async {
     List theImagesUrl = new List();
     for(int i = 0; i < theImages.length; i++) {
-      firebaseStorageRef = FirebaseStorage.instance.ref().child(widget.name + DateTime.now().toString());
+      firebaseStorageRef = FirebaseStorage.instance.ref().child(widget.name + DateTime.now().toString() + '.jpg');
       final StorageUploadTask task = firebaseStorageRef.putFile(theImages[i]);
 
       var test = await (await task.onComplete).ref.getDownloadURL();
@@ -115,18 +115,37 @@ class _SendImagesState extends State<SendImages> {
                     builder: (context) {
                       return FlatButton(
                         onPressed: () async {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Images Sent"),
-                              backgroundColor: Colors.green,
-                              elevation: 8,
-                              duration: Duration(seconds: 3),
-                            )
-                          );
-                          await sendImages();
-                          setState(() {
-                            theImages.clear();
-                          });
+                          if(theImages.length > 0) {
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Images Sent"),
+                                backgroundColor: Colors.green,
+                                elevation: 8,
+                                duration: Duration(seconds: 3),
+                              )
+                            );
+                            await sendImages();
+                            setState(() {
+                              theImages.clear();
+                            });
+                          }
+                          else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Error Message"),
+                                  content: Text("Please add photos before submitting"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("DONE"),
+                                      onPressed: () => Navigator.of(context).pop(),
+                                    )
+                                  ],
+                                );
+                              }
+                            );
+                          }
                         },
                           child: Text("Send Images", style: TextStyle(
                           fontSize: 35,

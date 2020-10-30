@@ -48,6 +48,8 @@ dependencies:
   masked_text: ^0.0.6
   shared_preferences: ^0.5.8
   flutter_automation: ^1.4.0
+  font_awesome_flutter: ^8.10.0
+  url_launcher: ^5.6.0
 
 dev_dependencies:
   flutter_test:

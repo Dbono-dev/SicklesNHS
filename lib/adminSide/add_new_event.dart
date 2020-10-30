@@ -10,46 +10,46 @@ import 'package:flutter/cupertino.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 
   
-  class AddNewEvent extends StatefulWidget {
-    AddNewEvent({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
+class AddNewEvent extends StatefulWidget {
+  AddNewEvent({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
 
-    String title;
-    String description;
-    int startTime;
-    int startTimeMinutes;
-    int endTime;
-    int endTimeMinutes;
-    String address;
-    String date;
-    String max;
-    String type;
-    String fileSelect;
+  String title;
+  String description;
+  int startTime;
+  int startTimeMinutes;
+  int endTime;
+  int endTimeMinutes;
+  String address;
+  String date;
+  String max;
+  String type;
+  String fileSelect;
 
-    @override
-    _AddNewEventState createState() => _AddNewEventState();
+  @override
+  _AddNewEventState createState() => _AddNewEventState();
+}
+
+class _AddNewEventState extends State<AddNewEvent> {
+  @override
+  Widget build(BuildContext context) {
+    return Stack (
+      children: <Widget>[
+        Container(
+          height: SizeConfig.blockSizeVertical * 100,
+          width: SizeConfig.blockSizeHorizontal * 100,
+          color: Colors.white,
+        ),
+        Column(
+          children: <Widget> [
+            TopHalfViewStudentsPage(text: "addEvent"),
+            Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
+            MiddleNewEventPage(title: widget.title, description: widget.description, startTime: widget.startTime, startTimeMinutes: widget.startTimeMinutes, endTime: widget.endTime, endTimeMinutes: widget.endTimeMinutes, address: widget.address, date: widget.date, max: widget.max, type: widget.type, fileSelect: widget.fileSelect),
+          ]
+        )
+      ],
+    );
   }
-  
-  class _AddNewEventState extends State<AddNewEvent> {
-    @override
-    Widget build(BuildContext context) {
-      return Stack (
-        children: <Widget>[
-          Container(
-            height: SizeConfig.blockSizeVertical * 100,
-            width: SizeConfig.blockSizeHorizontal * 100,
-            color: Colors.white,
-          ),
-          Column(
-            children: <Widget> [
-              TopHalfViewStudentsPage(text: "addEvent"),
-              Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
-              MiddleNewEventPage(title: widget.title, description: widget.description, startTime: widget.startTime, startTimeMinutes: widget.startTimeMinutes, endTime: widget.endTime, endTimeMinutes: widget.endTimeMinutes, address: widget.address, date: widget.date, max: widget.max, type: widget.type,),
-            ]
-          )
-        ],
-      );
-    }
-  }
+}
 
 class Options {
   const Options(this.id, this.name);
@@ -133,6 +133,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   String _address;
   String _date;
   String _max;
+  String startingDate;
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +202,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       _address = widget.address;
       _date = widget.date;
       _max = widget.max;
+      fileSelect = widget.fileSelect;
+      startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
     }
 
     if(_startTime != null) {
@@ -211,9 +214,8 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
     }
 
-    String startingDate;
     startingDate = _newDateTime == null ? "Date" : _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
-    //startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
+    
 
     return SingleChildScrollView(
       child: Container(
@@ -764,6 +766,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                         startingDate = "";
                                         theEndTime = "End Time";
                                         theStartTime = "Start Time";
+                                        _newDateTime = null;
                                         _startTime = null;
                                         _endTime = null;
                                         communityServiceEventValue = false;
