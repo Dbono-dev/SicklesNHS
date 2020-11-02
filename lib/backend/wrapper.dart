@@ -31,7 +31,6 @@ class Wrapper extends StatelessWidget {
             return TheOpeningPage();
           }
           else {
-            print(snapshot);
             return Material(
               color: Colors.transparent,
               child: Center(
@@ -45,6 +44,7 @@ class Wrapper extends StatelessWidget {
                       CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation(Colors.green),
                       ),
+                      Text("Please make sure your app is the most updated version!", style: TextStyle(color: Colors.green, fontSize: 25), textAlign: TextAlign.center)
                     ],
                   ),
                 ),

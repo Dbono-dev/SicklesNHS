@@ -8,22 +8,12 @@ import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
-
+import 'package:sickles_nhs_app/backend/event.dart';
   
 class AddNewEvent extends StatefulWidget {
-  AddNewEvent({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
+  AddNewEvent({this.event});
 
-  String title;
-  String description;
-  int startTime;
-  int startTimeMinutes;
-  int endTime;
-  int endTimeMinutes;
-  String address;
-  String date;
-  String max;
-  String type;
-  String fileSelect;
+ final Event event;
 
   @override
   _AddNewEventState createState() => _AddNewEventState();
@@ -43,7 +33,7 @@ class _AddNewEventState extends State<AddNewEvent> {
           children: <Widget> [
             TopHalfViewStudentsPage(text: "addEvent"),
             Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
-            MiddleNewEventPage(title: widget.title, description: widget.description, startTime: widget.startTime, startTimeMinutes: widget.startTimeMinutes, endTime: widget.endTime, endTimeMinutes: widget.endTimeMinutes, address: widget.address, date: widget.date, max: widget.max, type: widget.type, fileSelect: widget.fileSelect),
+            MiddleNewEventPage(event: widget.event),
           ]
         )
       ],
@@ -51,27 +41,11 @@ class _AddNewEventState extends State<AddNewEvent> {
   }
 }
 
-class Options {
-  const Options(this.id, this.name);
-  final String name;
-  final int id;
-}
-
 class MiddleNewEventPage extends StatefulWidget {
 
-  MiddleNewEventPage({this.title, this.description, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.date, this.max, this.type, this.fileSelect});
+  MiddleNewEventPage({this.event});
 
-  final String title;
-  final String description;
-  final int startTime;
-  final int startTimeMinutes;
-  final int endTime;
-  final int endTimeMinutes;
-  final String address;
-  final String date;
-  final String max;
-  final String type;
-  final String fileSelect;
+  final Event event;
 
   @override
   _MiddleNewEventPageState createState() => _MiddleNewEventPageState();
@@ -79,10 +53,8 @@ class MiddleNewEventPage extends StatefulWidget {
 
 class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   String fileSelect = "No File Selected";
-  File image;
   var _photoUrl;
   StorageReference firebaseStorageRef;
-  var listOfDates = new List<DateTime> ();
   DateTime startDate = new DateTime.now();
 
   Future<String> getImage(String eventTitle) async {
@@ -140,7 +112,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     final _thirdformKey = GlobalKey<FormState>();
     String _bottomText = "Create Event";
 
-    String _type = widget.type;
+    String _type = widget.event.type;
 
     if(_type == "Community Service Project") {
       communityServiceEventValue = true;
@@ -191,18 +163,18 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       doesNotRepeat = "Repeats every " + selectedValue.toString() + " " + typeOfDate + theDate;
     }
 
-    if(widget.title != null) {
-      _title = widget.title;
+    if(widget.event != null) {
+      _title = widget.event.title;
       _bottomText = "Save Event";
-      _description = widget.description;
-      _startTime = widget.startTime;
-      _startTimeMinutes = widget.startTimeMinutes;
-      _endTime = widget.endTime;
-      _endTimeMinutes = widget.endTimeMinutes;
-      _address = widget.address;
-      _date = widget.date;
-      _max = widget.max;
-      fileSelect = widget.fileSelect;
+      _description = widget.event.description;
+      _startTime = widget.event.startTime;
+      _startTimeMinutes = widget.event.startTimeMinutes;
+      _endTime = widget.event.endTime;
+      _endTimeMinutes = widget.event.endTimeMinutes;
+      _address = widget.event.address;
+      _date = widget.event.date;
+      _max = widget.event.maxParticipates;
+      fileSelect = widget.event.photoUrl;
       startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
     }
 
@@ -752,7 +724,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                 }
                                 if(keepGoing == true) {
                                   try {
-                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes);
+                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes, _bottomText);
                                     if(result == null) {
                                       print("Fill in all the forms.");
                                     }
@@ -803,8 +775,13 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     );
   }
 
-  Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
-    await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
+  Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes, String saveSubmit) async {
+    if(saveSubmit == "Create Event") {
+      await DatabaseEvent().newEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
+    }
+    else {
+      await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
+    }
   }
 
   Future showDialogBox(BuildContext context, String errorMessage) {

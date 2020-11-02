@@ -8,6 +8,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
+import 'package:sickles_nhs_app/backend/event.dart';
 import 'package:sickles_nhs_app/memberSide/qr_code_page.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
@@ -67,7 +68,20 @@ class TopHalfViewEventsPage extends StatelessWidget {
                 iconSize: 55,
                 icon: Icon(Icons.edit),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent(title: post.data['title'], description: post.data['description'], max: post.data['max participates'], address: post.data['address'], type: post.data['type'], date: post.data['date'], startTime: post.data['start time'], startTimeMinutes: post.data['start time minutes'], endTimeMinutes: post.data['end time minutes'], endTime: post.data['end time'], fileSelect: post.data['photo url'] == null ? "No File Selected" : "File Selected",)));
+                  Event event = new Event(
+                    title: post.data['title'],
+                    description: post.data['description'],
+                    maxParticipates: post.data['max participates'],
+                    address: post.data['address'],
+                    type: post.data['type'],
+                    date: post.data['date'],
+                    startTime: post.data['start time'],
+                    startTimeMinutes: post.data['start time minutes'],
+                    endTime: post.data['end time'],
+                    endTimeMinutes: post.data['end time minutes'],
+                    photoUrl: post.data['photo url'] == null ? "No File Selected" : "File Selected"
+                  ); 
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent(event: event,)));
                 },
               );
             }

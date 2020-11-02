@@ -13,7 +13,7 @@ class DatabaseService {
     return await memberCollection.document(uid).setData({
       'first name': firstName,
       'last name': lastName,
-      'hours': 0, //Make sure that this value is saved as a double so just write double.parse(0.toString())
+      'hours': 0,
       'student number': studentNum,
       'grade': grade,
       'permissions': int.parse(permissions),
@@ -114,7 +114,7 @@ class DatabaseEvent {
 
   final CollectionReference eventsCollection = Firestore.instance.collection('events');
 
- Future updateEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
+ Future newEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
     return await eventsCollection.document(title).setData({
       'title': title,
       'description': description,
@@ -127,6 +127,22 @@ class DatabaseEvent {
       'type': type,
       'participates': [],
       'participates dates': [],
+      'start time minutes': startTimeMinutes,
+      'end time minutes': endTimeMinutes,
+    });
+  }
+
+  Future updateEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
+    return await eventsCollection.document(title).updateData({
+      'title': title,
+      'description': description,
+      'start time': startTime,
+      'end time': endTime,
+      'date': date,
+      'photo url': photoUrl,
+      'max participates': maxParticipates,
+      'address': address,
+      'type': type,
       'start time minutes': startTimeMinutes,
       'end time minutes': endTimeMinutes,
     });

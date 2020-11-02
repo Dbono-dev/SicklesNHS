@@ -193,7 +193,7 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                         if(_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text("Logining in...", style: TextStyle(color: Colors.green),),
+                            content: Text("Logging in...", style: TextStyle(color: Colors.green),),
                             duration: Duration(seconds: 1),
                             backgroundColor: Colors.white,
                           ));
