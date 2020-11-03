@@ -79,9 +79,10 @@ class TopHalfViewEventsPage extends StatelessWidget {
                     startTimeMinutes: post.data['start time minutes'],
                     endTime: post.data['end time'],
                     endTimeMinutes: post.data['end time minutes'],
-                    photoUrl: post.data['photo url'] == null ? "No File Selected" : "File Selected"
+                    photoUrl: post.data['photo url'],
+                    oldTitle: post.data['oldTitle']
                   ); 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent(event: event,)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewEvent("edit", event: event,)));
                 },
               );
             }

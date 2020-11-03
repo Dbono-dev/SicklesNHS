@@ -11,9 +11,10 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/event.dart';
   
 class AddNewEvent extends StatefulWidget {
-  AddNewEvent({this.event});
+  AddNewEvent(this.type, {this.event});
 
- final Event event;
+ final Event event; 
+ final String type;
 
   @override
   _AddNewEventState createState() => _AddNewEventState();
@@ -33,7 +34,7 @@ class _AddNewEventState extends State<AddNewEvent> {
           children: <Widget> [
             TopHalfViewStudentsPage(text: "addEvent"),
             Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
-            MiddleNewEventPage(event: widget.event),
+            MiddleNewEventPage(widget.type, event: widget.event),
           ]
         )
       ],
@@ -43,9 +44,10 @@ class _AddNewEventState extends State<AddNewEvent> {
 
 class MiddleNewEventPage extends StatefulWidget {
 
-  MiddleNewEventPage({this.event});
+  MiddleNewEventPage(this.type, {this.event});
 
   final Event event;
+  String type;
 
   @override
   _MiddleNewEventPageState createState() => _MiddleNewEventPageState();
@@ -111,17 +113,39 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
   Widget build(BuildContext context) {
     final _thirdformKey = GlobalKey<FormState>();
     String _bottomText = "Create Event";
+    String _type;
 
-    String _type = widget.event.type;
-
-    if(_type == "Community Service Project") {
-      communityServiceEventValue = true;
+    if(widget.type == "edit") {
+      _type = widget.event.type;
+      if(_type == "Community Service Project") {
+        communityServiceEventValue = true;
+      }
+      else if(_type == "Service Event") {
+        serviceEventValue = true;
+      }
+      else {
+        
+      }
+      _title = widget.event.title;
+      _bottomText = "Save Event";
+      _description = widget.event.description;
+      _startTime = widget.event.startTime;
+      _startTimeMinutes = widget.event.startTimeMinutes;
+      _endTime = widget.event.endTime;
+      _endTimeMinutes = widget.event.endTimeMinutes;
+      _address = widget.event.address;
+      _date = widget.event.date;
+      _max = widget.event.maxParticipates;
+      _photoUrl = widget.event.photoUrl;
+      fileSelect = _photoUrl != null ? "File Selected" : "No File Selected";
+      startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
+      _newDateTime = new DateTime(int.parse(_date.substring(6)), int.parse(_date.substring(0, 2)), int.parse(_date.substring(3, 5)));
     }
-    else if(_type == "Service Event") {
-      serviceEventValue = true;
+    else if(widget.type == "editing") {
+      _bottomText = "Save Event";
     }
     else {
-      
+
     }
 
     if(onDate != null) {
@@ -163,21 +187,6 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       doesNotRepeat = "Repeats every " + selectedValue.toString() + " " + typeOfDate + theDate;
     }
 
-    if(widget.event != null) {
-      _title = widget.event.title;
-      _bottomText = "Save Event";
-      _description = widget.event.description;
-      _startTime = widget.event.startTime;
-      _startTimeMinutes = widget.event.startTimeMinutes;
-      _endTime = widget.event.endTime;
-      _endTimeMinutes = widget.event.endTimeMinutes;
-      _address = widget.event.address;
-      _date = widget.event.date;
-      _max = widget.event.maxParticipates;
-      fileSelect = widget.event.photoUrl;
-      startingDate = _date == null || _date.toString().length > 10 ? "Date" : _date;
-    }
-
     if(_startTime != null) {
       theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
     }
@@ -209,7 +218,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           border: OutlineInputBorder(),
                           hintText: 'Title',
                         ),
-                          onChanged: (val) => _title = (val),
+                          onChanged: (val) {
+                            _title = (val);
+                            widget.type = "editing";
+                          } ,
                           textCapitalization: TextCapitalization.sentences,
                           validator: (val) => val.isEmpty ? 'Enter Title' : null,
                           initialValue: _title,
@@ -229,7 +241,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           textCapitalization: TextCapitalization.sentences,
                           maxLines: 6,
                           validator: (val) => val.isEmpty ? 'Enter Description' : null,
-                          onChanged: (val) => _description = (val),
+                          onChanged: (val) {
+                            widget.type = "editing";
+                            _description = (val);
+                          },
                           initialValue: _description,
                         ),
                       )
@@ -254,6 +269,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             );
                             setState(() {
                               startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+                              widget.type = "editing";
                             });
                           },
                         ),
@@ -304,7 +320,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                             _startTimeMinutes = newdate.minute;
                                             theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
                                             setState(() {
-                                              
+                                              widget.type = "editing";
                                             });
                                           },
                                           use24hFormat: false,
@@ -367,6 +383,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                               _endTime = newdate.hour;
                                               _endTimeMinutes = newdate.minute;
                                               theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
+                                              widget.type = "editing";
                                             });
                                           },
                                           use24hFormat: false,
@@ -516,7 +533,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           hintText: "Address/Location",
                           border: OutlineInputBorder()
                       ),
-                        onChanged: (val) => _address = val,
+                        onChanged: (val) {
+                          widget.type = "editing";
+                          _address = val;
+                        },
                         textCapitalization: TextCapitalization.sentences,
                         validator: (val) => val.isEmpty ? 'Enter Location' : null,
                         initialValue: _address,
@@ -526,7 +546,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                     Container(
                       padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
-                        onChanged: (val) => _max = val,
+                        onChanged: (val) {
+                          widget.type = "editing";
+                          _max = val;
+                        },
                         validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
                         initialValue: _max,
                         keyboardType: TextInputType.number,
@@ -545,13 +568,15 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           elevation: 8,
                           onPressed: () async {
                             _photoUrl = await getImage(_title);
+                            widget.type = "editing";
                           },
                           child: Icon(
                             Icons.photo_library,
                             size: 25,
                           )
                         ),
-                        Material(child: Text(fileSelect, style: TextStyle(fontSize: 20),))
+                        Material(child: Text(fileSelect, style: TextStyle(fontSize: 20),)),
+                        _photoUrl != null ? Image.network(_photoUrl, height: SizeConfig.blockSizeVertical * 7.5, width: SizeConfig.blockSizeHorizontal * 7.5,) : Container(),
                       ],
                     ),
                   ]
@@ -724,7 +749,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                 }
                                 if(keepGoing == true) {
                                   try {
-                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes, _bottomText);
+                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes, _bottomText, oldTitle: widget.event.oldTitle);
                                     if(result == null) {
                                       print("Fill in all the forms.");
                                     }
@@ -746,7 +771,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                       });
                                       Scaffold.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text("Event Created"),
+                                          content: _bottomText == "Save Event" ? Text("Event Saved") : Text("Event Created"),
                                           backgroundColor: Colors.green,
                                           elevation: 8,
                                           duration: Duration(seconds: 3),
@@ -775,12 +800,12 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     );
   }
 
-  Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes, String saveSubmit) async {
+  Future sendEventToDatabase(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes, String saveSubmit, {String oldTitle}) async {
     if(saveSubmit == "Create Event") {
       await DatabaseEvent().newEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
     }
     else {
-      await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes);
+      await DatabaseEvent().updateEvents(title, description, startTime, endTime, date, photoUrl, maxParticipates, address, type, startTimeMinutes, endTimeMinutes, oldTitle);
     }
   }
 

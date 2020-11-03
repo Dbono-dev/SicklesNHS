@@ -801,7 +801,7 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                   children: <Widget>[
-                    adminTags(context, AddNewEvent(), Icons.add_circle, "Add New Event"),
+                    adminTags(context, AddNewEvent("new"), Icons.add_circle, "Add New Event"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),
                     adminTags(context, Notifications(), Icons.notifications, "Send Notification"),
                     adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions", uid: widget.uid,), Icons.photo_camera, "Start Scanning",),

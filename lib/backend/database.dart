@@ -117,6 +117,7 @@ class DatabaseEvent {
  Future newEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
     return await eventsCollection.document(title).setData({
       'title': title,
+      'oldTitle': title,
       'description': description,
       'start time': startTime,
       'end time': endTime,
@@ -132,9 +133,10 @@ class DatabaseEvent {
     });
   }
 
-  Future updateEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
-    return await eventsCollection.document(title).updateData({
+  Future updateEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes, String oldTitle) async {
+    return await eventsCollection.document(oldTitle).updateData({
       'title': title,
+      'oldTitle': oldTitle,
       'description': description,
       'start time': startTime,
       'end time': endTime,
@@ -257,7 +259,8 @@ class DatabaseBugs {
 
   Future submmissionBugs(String summary) async {
     return await submitBugs.document(summary.substring(0, 5)).setData({
-      'summary': summary
+      'summary': summary,
+      'timecode': DateTime.now()
     });
   }
 }

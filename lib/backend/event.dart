@@ -12,6 +12,7 @@ class Event {
   final String type;
   var participates;
   var participatesDates;
+  final String oldTitle;
 
-  Event({this.title, this.description, this.date, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.maxParticipates, this.photoUrl, this.type});
+  Event({this.title, this.description, this.date, this.startTime, this.startTimeMinutes, this.endTime, this.endTimeMinutes, this.address, this.maxParticipates, this.photoUrl, this.type, this.oldTitle});
 }
