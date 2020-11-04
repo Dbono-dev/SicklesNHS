@@ -8,6 +8,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
+import 'package:sickles_nhs_app/adminSide/add_participants.dart';
 import 'package:sickles_nhs_app/backend/event.dart';
 import 'package:sickles_nhs_app/memberSide/qr_code_page.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
@@ -17,9 +18,10 @@ import 'package:sickles_nhs_app/memberSide/account_profile.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class EventPageView extends StatelessWidget {
-  EventPageView ({Key key, this.post}) : super (key: key);
+  EventPageView ({Key key, this.post, this.officerSponsor}) : super (key: key);
 
   final DocumentSnapshot post;
+  final bool officerSponsor;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class EventPageView extends StatelessWidget {
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
                   BottomEventViewPage(post: post,),
                   Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-                  post.data['type'] == "clubDates" ? Container() : BottomBottomEventViewPage(post: post,)
+                  post.data['type'] == "clubDates" ? Container() : BottomBottomEventViewPage(post: post, officerSponsor: officerSponsor)
         ], ),
               ),
           )
@@ -715,9 +717,10 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
 
 class BottomBottomEventViewPage extends StatefulWidget {
 
-  BottomBottomEventViewPage({this.post});
+  BottomBottomEventViewPage({this.post, this.officerSponsor});
 
   DocumentSnapshot post;
+  final bool officerSponsor;
 
   @override
   _BottomBottomEventViewPageState createState() => _BottomBottomEventViewPageState();
@@ -812,6 +815,12 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                 ),
               )
             ),
+            widget.officerSponsor ? FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddParticipants()));
+              },
+              child: Text("Add Participants"),
+            ) : Container(),
             Container(
               height: SizeConfig.blockSizeVertical * 45,
               child: participatesDate.length == 0 ? ListView.builder(

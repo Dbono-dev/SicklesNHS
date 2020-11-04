@@ -206,7 +206,7 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                           a = a + 11;
                         }
                         if(numberOfTimesThrough > 0) {
-                          return MiddleHomePageCards(post: snapshot.data[index],);
+                          return MiddleHomePageCards(post: snapshot.data[index], officerSponsor: userData.permissions == 0 || userData.permissions == 1 ? true : false);
                         }
                         else {
                           return Container();
@@ -320,9 +320,10 @@ class TopHalfHomePage extends StatelessWidget {
 }
 
 class MiddleHomePageCards extends StatelessWidget {
-  MiddleHomePageCards({Key key, this.post}) : super (key: key);
+  MiddleHomePageCards({Key key, this.post, this.officerSponsor}) : super (key: key);
 
   final DocumentSnapshot post;
+  final bool officerSponsor;
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +333,7 @@ class MiddleHomePageCards extends StatelessWidget {
     Widget image;
 
     navigateToDetail(DocumentSnapshot post) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post, officerSponsor: officerSponsor,)));
     }
 
     final user = Provider.of<User>(context);
