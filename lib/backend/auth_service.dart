@@ -148,12 +148,11 @@ class AuthService {
   }
 
   Future createUser({String firstName, String lastName, String email, String password, String studentNum, String grade}) async {
-    var r = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    var r = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
     await DatabaseService(uid: r.user.uid).updateUserData(firstName, lastName, studentNum, grade, r.user.uid, "2");
-    var result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-    FirebaseUser user = result.user; 
-    return user;
+    await new Future.delayed(Duration(seconds: 3));
+    return r.user;
   }
 
   Future<String> createImportedUser(String email, String password) async {

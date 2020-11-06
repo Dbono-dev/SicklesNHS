@@ -19,7 +19,7 @@ class Wrapper extends StatelessWidget {
 
     final user = Provider.of<User>(context);
     pushNotification();
-
+    
     if(user == null) {
       return LoginScreen();
     }

@@ -41,6 +41,7 @@ class TheOpeningPage extends StatelessWidget {
       }
 
       _fcm.subscribeToTopic('all');
+      print(userData.firstName + userData.lastName);
       _fcm.subscribeToTopic(userData.firstName + userData.lastName);
       for(int i = 0; i < userData.eventTitleSignedUp; i++) {
         _fcm.subscribeToTopic(userData.eventTitleSignedUp[i]);
