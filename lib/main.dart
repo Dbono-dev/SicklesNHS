@@ -4,7 +4,6 @@ import 'package:sickles_nhs_app/backend/auth_service.dart';
 import 'package:sickles_nhs_app/backend/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
-import 'dart:io' show Platform;
 
 void main() => runApp(MyApp());
 

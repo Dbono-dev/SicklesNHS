@@ -684,6 +684,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
     String theStartTime = post.data['start time'].toString() + ":" + theStartTimeMinutes;
     String theEndTime = post.data['end time'].toString() + ":" + theendTimeMinutes;
     String description = post.data['description'];
+    String location = post.data['location'];
 
     List theMessage = [];
     theMessage.add("<h3>Hello,</h3>");
@@ -691,6 +692,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
     theMessage.add("<p><b>Date:</b> $theDate</p>");
     theMessage.add("<p><b>Start Time:</b> $theStartTime</p>");
     theMessage.add("<p><b>End Time:</b> $theEndTime</p>");
+    theMessage.add("<p><b>Location:</b> $location</p>");
     theMessage.add("<p><b>Description:</b> $description</p>");
     theMessage.add("<h3>Thanks,</h3>");
     theMessage.add("<h3>Your Sickles NHS App Team</h3>");
@@ -817,7 +819,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
             ),
             widget.officerSponsor ? FlatButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddParticipants()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddParticipants(post: widget.post)));
               },
               child: Text("Add Participants"),
             ) : Container(),

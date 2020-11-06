@@ -186,7 +186,7 @@ class MiddlePageSignUpScreen extends StatelessWidget {
                   Scaffold.of(context).showSnackBar(SnackBar(
                     content: Text("Signing up...", style: TextStyle(color: Colors.green),),
                     duration: Duration(seconds: 2),
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.white, 
                   ));
                   try {
                     dynamic result = await _auth.createUser(
@@ -272,7 +272,7 @@ Future _buildErrorDialog(BuildContext context, _message) {
       builder: (context) {
         return AlertDialog(
           title: Text('Error Message'),
-          content: Text("Please fill in all of the fields"),
+          content: Text(_message),//"Please fill in all of the fields"),
           actions: <Widget>[
             FlatButton(
                 child: Text('Cancel'),

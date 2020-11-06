@@ -113,7 +113,7 @@ class DatabaseEvent {
   DatabaseEvent();
 
   final CollectionReference eventsCollection = Firestore.instance.collection('events');
-
+ 
  Future newEvents(String title, String description, int startTime, int endTime, String date, var photoUrl, String maxParticipates, String address, String type, int startTimeMinutes, int endTimeMinutes) async {
     return await eventsCollection.document(title).setData({
       'title': title,

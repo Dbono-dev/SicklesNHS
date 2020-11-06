@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
@@ -32,10 +33,12 @@ class _AccountProfileState extends State<AccountProfile> {
   List completedEvents = new List();
 
   String newHour;
+  String currentQuarter;
 
   Future getCompletedHours(String uid) async {
     var firestone = Firestore.instance;
     QuerySnapshot qn = await firestone.collection("members").getDocuments();
+    currentQuarter = await CurrentQuarter(DateTime.now()).currentQuarter();
     return qn.documents;
   }
 
@@ -233,6 +236,7 @@ class _AccountProfileState extends State<AccountProfile> {
     List date = new List ();
     List theHours = new List ();
     List<DateTime> thenewDate = new List<DateTime>();
+    String currentQuarterHours;
 
     DateTime startOfSchool;
     DateTime firstQuarter;
@@ -245,12 +249,6 @@ class _AccountProfileState extends State<AccountProfile> {
     bool theforthQuarter = false;
     DateFormat format = new DateFormat("MM/dd/yyyy");
     DateFormat secondFormat = new DateFormat("MM-dd-yyyy");
-
-    
-    if(double.parse(hours) >= 6) {
-      _theColor = Colors.green;
-      _theTextColor = Colors.white;
-    }
 
     return Container(
       height: SizeConfig.blockSizeVertical * 74,
@@ -308,7 +306,6 @@ class _AccountProfileState extends State<AccountProfile> {
             )
           ),
           Padding(padding: EdgeInsets.all(7),),
-
           FutureBuilder(
             future: getCompletedHours(uid),
             builder: (_, snapshot) {
@@ -332,6 +329,21 @@ class _AccountProfileState extends State<AccountProfile> {
                   }
                 }
 
+                void hoursTile(String quarters, String quartersHours, int numOfHoursForThatQuarter) {
+                  if(currentQuarter == quarters) {
+                    currentQuarterHours = quartersHours;
+                    if(double.parse(quartersHours) >= numOfHoursForThatQuarter) {
+                      _theColor = Colors.green;
+                      _theTextColor = Colors.white;
+                    }
+                  }
+                }
+
+                hoursTile("firstQuarter", q1Hours, 0);
+                hoursTile("secondQuarter", q2Hours, 3);
+                hoursTile("thirdQuarter", q3Hours, 6);
+                hoursTile("fourthQuarter", q4Hours, 6); 
+
                 return Column(
                 children: <Widget>[
                   Row(
@@ -349,10 +361,11 @@ class _AccountProfileState extends State<AccountProfile> {
                                   title: Text("Hours"),
                                   content: Column(
                                     children: <Widget> [
-                                      ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
-                                      ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 0 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
+                                      ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 3 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
                                       ListTile(title: Text("Quarter 3: " + q3Hours), trailing: double.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
                                       ListTile(title: Text("Quarter 4: " + q4Hours), trailing: double.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                      ListTile(title: Text("Total: " + hours, style: TextStyle(fontWeight: FontWeight.bold)),),
                                     ]
                                   ),
                                   actions: <Widget>[
@@ -375,7 +388,7 @@ class _AccountProfileState extends State<AccountProfile> {
                             width: SizeConfig.blockSizeHorizontal * 25,
                               child: Material(
                                 color: _theColor,
-                                child: Align(alignment: Alignment.center, child: Text(hours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
+                                child: Align(alignment: Alignment.center, child: Text(currentQuarterHours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
                             ),
                           ),
                         ),
@@ -385,65 +398,72 @@ class _AccountProfileState extends State<AccountProfile> {
                           QuerySnapshot qn = await Firestore.instance.collection('Important Dates').getDocuments();
                           var result = qn.documents;
                           List<Widget> clubDates = new List<Widget>();
-                          for(int i = 0; i < result.length; i++) {
-                            DocumentSnapshot theResult = result[i];
-                            if(theResult.data['type'] == "clubDates") {
-                              if(widget.type == "admin") {
-                                clubDates.add(
-                                  Container(
-                                    width: SizeConfig.blockSizeHorizontal * 80,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          width: SizeConfig.blockSizeHorizontal * 45,
-                                          child: ListTile(
-                                            title: Text(theResult['date'].toString()),
-                                            trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
+                          if(qn.documents.length == 4) {
+                            for(int i = 0; i < result.length; i++) {
+                              DocumentSnapshot theResult = result[i];
+                              if(theResult.data['type'] == "clubDates") {
+                                if(widget.type == "admin") {
+                                  clubDates.add(
+                                    Container(
+                                      width: SizeConfig.blockSizeHorizontal * 80,
+                                      child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                            width: SizeConfig.blockSizeHorizontal * 45,
+                                            child: ListTile(
+                                              title: Text(theResult['date'].toString()),
+                                              trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
+                                            ),
                                           ),
-                                        ),
-                                        RaisedButton(
-                                          elevation: 10,
-                                          color: Colors.white,
-                                          onPressed: () async {
-                                            List participatesList = new List();
-                                            participatesList = theResult.data['participates'];
-                                            if(theResult.data['participates'].contains(uid)) {
-                                              participatesList.remove(uid);
-                                              await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
-                                              await DatabaseService(uid: uid).updateNumOfClub(numClub - 1);
-                                              setState(() {
-                                                
-                                              });
-                                              super.setState(() { });
-                                            }
-                                            else {
-                                              participatesList.add(uid);
-                                              await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
-                                              await DatabaseService(uid: uid).updateNumOfClub(numClub + 1);
-                                              setState(() {
-                                                
-                                              });
-                                            }
-                                          },
-                                          child: Text("Change", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                );
-                              }
-                              else {
-                                clubDates.add(
-                                  Container(
-                                    width: SizeConfig.blockSizeHorizontal * 45,
-                                    child: ListTile(
-                                      title: Text(theResult['date'].toString()),
-                                      trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
-                                    ),
-                                  )
-                                );
+                                          RaisedButton(
+                                            elevation: 10,
+                                            color: Colors.white,
+                                            onPressed: () async {
+                                              List participatesList = new List();
+                                              participatesList = theResult.data['participates'];
+                                              if(theResult.data['participates'].contains(uid)) {
+                                                participatesList.remove(uid);
+                                                await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
+                                                await DatabaseService(uid: uid).updateNumOfClub(numClub - 1);
+                                                setState(() {
+                                                  
+                                                });
+                                                super.setState(() { });
+                                              }
+                                              else {
+                                                participatesList.add(uid);
+                                                await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
+                                                await DatabaseService(uid: uid).updateNumOfClub(numClub + 1);
+                                                setState(() {
+                                                  
+                                                });
+                                              }
+                                            },
+                                            child: Text("Change", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  );
+                                }
+                                else {
+                                  clubDates.add(
+                                    Container(
+                                      width: SizeConfig.blockSizeHorizontal * 45,
+                                      child: ListTile(
+                                        title: Text(theResult['date'].toString()),
+                                        trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
+                                      ),
+                                    )
+                                  );
+                                }
                               }
                             }
+                          }
+                          else {
+                            clubDates.add(
+                              Text("No Club Meetings")
+                            );
                           }
 
                           showDialog(
@@ -532,7 +552,7 @@ class _AccountProfileState extends State<AccountProfile> {
                       }
                       if(title.length == 0) {
                         return Center(
-                          child: Text("NO EVENTS", style: TextStyle(color: Colors.green, fontSize: 45)),
+                          child: Text("NO EVENTS", style: TextStyle(color: Colors.green, fontSize: 40)),
                         );
                       }
                       else {

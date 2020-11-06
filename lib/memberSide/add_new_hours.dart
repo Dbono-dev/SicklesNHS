@@ -37,7 +37,7 @@ class AddNewHours extends StatelessWidget {
                   children: <Widget> [
                     TopHalfViewStudentsPage(),
                     Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-                    AddNewHoursMiddle(name: userData.firstName + userData.lastName, uid: user.uid, hours: double.parse(userData.hours.toString()), fromSaved: fromSaved),
+                    AddNewHoursMiddle(name: userData.firstName + " " + userData.lastName, uid: user.uid, hours: double.parse(userData.hours.toString()), fromSaved: fromSaved),
                   ]
                 ),
               ),

@@ -34,16 +34,17 @@ class ApproveHoursMiddlePage extends StatefulWidget {
 
 class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
   Future getPosts() async {
-      var firestore = Firestore.instance;
-      QuerySnapshot qn = await firestore.collection("Approving Hours").getDocuments();
-      return qn.documents;
-    }
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("Approving Hours").getDocuments();
+    return qn.documents;
+  }
 
   Future getMembers() async {
-      var firestore = Firestore.instance;
-      QuerySnapshot qn = await firestore.collection("members").getDocuments();
-      return qn.documents;
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("members").getDocuments();
+    return qn.documents;
   }
+  
   List pastTitles = new List();
   List pastDates = new List();
   List pastHours = new List();
@@ -92,96 +93,90 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                           if(snapshot.data[index].data['complete'] == false && snapshot.data[index].data['save_submit'] == "submit") {
                             return Container(
                                 margin: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 2.19, 0, 0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    
-                                  },
-                                  child: Card(
-                                    elevation: 8,
-                                    margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 2, 0, SizeConfig.blockSizeHorizontal * 2, 0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    child: ExpansionTile(
-                                      title: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          Material(
-                                            color: Colors.transparent,
-                                            child: Column(
-                                              children: <Widget>[
-                                                Text(snapshot.data[index].data['type'], overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12),),
-                                                Text(snapshot.data[index].data['date'],),
-                                                Text(snapshot.data[index].data['hours'] + " hours",)
-                                              ],
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          IconButton(
-                                            icon: Icon(Icons.check),
-                                            color: Colors.green,
-                                            onPressed: () async {
-                                              DateFormat _format = new DateFormat("MM/dd/yyyy");
-                                              String name = "";
-                                              String quarter = await CurrentQuarter(_format.parse(snapshot.data[index].data['date'])).getQuarter();
-
-                                              for(int i = 0; i < notTheSnapshot.data.length; i++) {
-                                                  if(snapshot.data[index].data['uid'] == notTheSnapshot.data[i].data['uid']) {
-                                                    if(notTheSnapshot.data[i].data['event title'] != null) {
-                                                      pastTitles = notTheSnapshot.data[i].data['event title'];
-                                                      pastDates = notTheSnapshot.data[i].data['event date'];
-                                                      pastHours = notTheSnapshot.data[i].data['event hours'];
-                                                    }
-                                                    currentHours = notTheSnapshot.data[i].data['hours'].toString();
-                                                    quarterHours = double.parse(notTheSnapshot.data[i].data[quarter].toString());
-                                                  }
-                                                }
-                                                
-                                                pastTitles.add(snapshot.data[index].data['type']);
-                                                pastDates.add(snapshot.data[index].data['date']);
-                                                pastHours.add(snapshot.data[index].data['hours']);
-
-                                              sendHoursRequestUpdate(double.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), double.parse(currentHours));
-
-                                              setState(() {
-                                                sendEventToDatabase(pastTitles, pastDates, pastHours, snapshot.data[index].data['uid'].toString());
-                                                sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), double.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
-                                                sendMessage("Hour Approval Update", "Your hours have been approved", context, snapshot.data[index].data['name']);
-                                                sendUpdateComplete(snapshot.data[index].data['type'], snapshot.data[index].data['uid'].toString());
-                                              });
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.block),
-                                            color: Colors.red,
-                                            onPressed: () {
-                                              setState(() {
-                                                sendMessage("Hour Approval Update", "Your hours have been declined", context, snapshot.data[index].data['name']);
-                                                sendUpdateDecline(snapshot.data[index].data['type'], snapshot.data[index].data['uid'].toString());
-                                              });
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                      leading: Text(snapshot.data[index].data['name'], style: TextStyle(fontSize: 10),),
+                                child: Card(
+                                  elevation: 8,
+                                  margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 2, 0, SizeConfig.blockSizeHorizontal * 2, 0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  child: ExpansionTile(
+                                    title: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
-                                        Column(
-                                          children: <Widget>[
-                                            Text("Location: " + snapshot.data[index].data['location']),
-                                            Text("Name of Supervisor: " + snapshot.data[index].data['name of supervisor']),
-                                            Text("Supervisor Email: " + snapshot.data[index].data['supervisor email']),
-                                            Text("Supervisor Phone Number: " + snapshot.data[index].data['supervisor phone number']),
-                                            Center(
-                                              child: FadeInImage.memoryNetwork(
-                                                placeholder: kTransparentImage,
-                                                image: snapshot.data[index].data['url'].toString()
-                                              ),
-                                            ),
-                                          ],
+                                        Material(
+                                          color: Colors.transparent,
+                                          child: Column(
+                                            children: <Widget>[
+                                              Text(snapshot.data[index].data['date'],),
+                                              Text(snapshot.data[index].data['hours'] + " hours",)
+                                            ],
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        IconButton(
+                                          icon: Icon(Icons.check),
+                                          color: Colors.green,
+                                          onPressed: () async {
+                                            DateFormat _format = new DateFormat("MM/dd/yyyy");
+                                            String quarter = await CurrentQuarter(_format.parse(snapshot.data[index].data['date'])).getQuarter();
+
+                                            for(int i = 0; i < notTheSnapshot.data.length; i++) {
+                                                if(snapshot.data[index].data['uid'] == notTheSnapshot.data[i].data['uid']) {
+                                                  if(notTheSnapshot.data[i].data['event title'] != null) {
+                                                    pastTitles = notTheSnapshot.data[i].data['event title'];
+                                                    pastDates = notTheSnapshot.data[i].data['event date'];
+                                                    pastHours = notTheSnapshot.data[i].data['event hours'];
+                                                  }
+                                                  currentHours = notTheSnapshot.data[i].data['hours'].toString();
+                                                  quarterHours = double.parse(notTheSnapshot.data[i].data[quarter].toString());
+                                                }
+                                              }
+                                              
+                                              pastTitles.add(snapshot.data[index].data['type']);
+                                              pastDates.add(snapshot.data[index].data['date']);
+                                              pastHours.add(snapshot.data[index].data['hours']);
+
+                                            sendHoursRequestUpdate(double.parse(snapshot.data[index].data['hours']), snapshot.data[index].data['uid'].toString(), double.parse(currentHours));
+
+                                            setState(() {
+                                              sendEventToDatabase(pastTitles, pastDates, pastHours, snapshot.data[index].data['uid'].toString());
+                                              sendHoursQuarterUpdate(snapshot.data[index].data['uid'].toString(), double.parse(snapshot.data[index].data['hours']), quarterHours, quarter);
+                                              sendMessage("Hour Approval Update", "Your hours have been approved", context, snapshot.data[index].data['name']);
+                                              sendUpdateComplete(snapshot.data[index].data['type'], snapshot.data[index].data['uid'].toString());
+                                            });
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.block),
+                                          color: Colors.red,
+                                          onPressed: () {
+                                            setState(() {
+                                              sendMessage("Hour Approval Update", "Your hours have been declined", context, snapshot.data[index].data['name']);
+                                              sendUpdateDecline(snapshot.data[index].data['type'], snapshot.data[index].data['uid'].toString());
+                                            });
+                                          },
                                         )
                                       ],
                                     ),
-                                  )
+                                    leading: Text(snapshot.data[index].data['name'],),
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          Text(snapshot.data[index].data['type'], textAlign: TextAlign.center,),
+                                          Text("Location: " + snapshot.data[index].data['location'], textAlign: TextAlign.center,),
+                                          Text("Name of Supervisor: " + snapshot.data[index].data['name of supervisor']),
+                                          Text("Supervisor Email: " + snapshot.data[index].data['supervisor email']),
+                                          Text("Supervisor Phone Number: " + snapshot.data[index].data['supervisor phone number']),
+                                          Center(
+                                            child: FadeInImage.memoryNetwork(
+                                              placeholder: kTransparentImage,
+                                              image: snapshot.data[index].data['url'].toString()
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               );
                             }
