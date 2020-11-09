@@ -180,8 +180,10 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                           theme: ThemeData(primarySwatch: Colors.green),
                         );
                         setState(() {
-                          startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
-                          _date = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+                          if(_newDateTime != null) {
+                            startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
+                            _date = _newDateTime.toString().substring(5,7) + "/" + _newDateTime.toString().substring(8, 10) + "/" + _newDateTime.year.toString();
+                          }
                         });
                       },
                   ),
@@ -329,7 +331,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                     onPressed: () async {
                       final form = _fourthformKey.currentState;
                         form.save();
-                        if(form.validate() && _controller.isNotEmpty) {
+                        if(form.validate() && _controller.isNotEmpty && startingDate != "Date") {
                           try {
                             var signture = await _controller.toPngBytes();
                             final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + '.jpg');
@@ -397,7 +399,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                           onTap: () async {
                           final form = _fourthformKey.currentState;
                           form.save();
-                          if(form.validate() && _controller.isNotEmpty) {
+                          if(form.validate() && _controller.isNotEmpty && startingDate != "Date") {
                             try {
                               var signture = await _controller.toPngBytes();
                               final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
@@ -412,7 +414,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                               if(result != null) {
                                 setState(() {
                                   _controller.clear();
-                                  _fourthformKey.currentState.reset();
+                                  form.reset();
                                 });
                                 Scaffold.of(context).showSnackBar(
                                   SnackBar(
