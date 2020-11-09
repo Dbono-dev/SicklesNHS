@@ -216,6 +216,13 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: Text("Developed by: Dylan Bono", style: TextStyle(color: Colors.white, fontSize: 17.5),),
                     )
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      child: Text("Graphic Design by: Emma Couto", style: TextStyle(color: Colors.white, fontSize: 17.5),),
+                    )
                   )
                 ],
           ),
