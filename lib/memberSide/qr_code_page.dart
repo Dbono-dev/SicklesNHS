@@ -61,7 +61,7 @@ Widget build(BuildContext context) {
 
   for(int i = 0; i < theQrContent.length; i++) {
     var char = theQrContent[i];
-    int temp = char.codeUnitAt(0) + 5;
+    int temp = char.codeUnitAt(0) + 5; 
     theListOfInts.add(temp);
     String theTemp = String.fromCharCode(temp);
     qrContent += theTemp;

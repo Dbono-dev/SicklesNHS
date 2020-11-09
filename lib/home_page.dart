@@ -26,33 +26,59 @@ class TheOpeningPage extends StatelessWidget {
 
   final UserData userData;
 
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: <Widget>[
+          TopHalfHomePage(),
+          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.10),),
+          MiddleHomePage(userData: userData,),
+          Spacer(),
+          BottonHalfHomePage()
+        ],
+      )
+    ); 
+  }
+}
+
+class MiddleHomePage extends StatefulWidget {
+  MiddleHomePage({Key key, this.userData}) : super (key: key);
+
+  UserData userData;
+
+  @override
+  _MiddleHomePageState createState() => _MiddleHomePageState();
+}
+
+class _MiddleHomePageState extends State<MiddleHomePage> {
+
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
-    /*await firebaseMessaging.requestNotificationPermissions(
-    const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
-  );*/
-
-    @override
-    void initState() async {
-      if(Platform.isIOS) {
-        await _fcm.requestNotificationPermissions(IosNotificationSettings(
+  @override
+  void initState() async {
+    super.initState();
+    if(Platform.isIOS) {
+      await _fcm.requestNotificationPermissions(IosNotificationSettings(
           sound: true, badge: true, alert: true, provisional: false
-        ));
+      ));
+    }
+    _fcm.subscribeToTopic('all');
+      print(widget.userData.firstName + widget.userData.lastName);
+      _fcm.subscribeToTopic(widget.userData.firstName + widget.userData.lastName);
+      for(int i = 0; i < widget.userData.eventTitleSignedUp; i++) {
+        _fcm.subscribeToTopic(widget.userData.eventTitleSignedUp[i]);
       }
-
-      _fcm.subscribeToTopic('all');
-      print(userData.firstName + userData.lastName);
-      _fcm.subscribeToTopic(userData.firstName + userData.lastName);
-      for(int i = 0; i < userData.eventTitleSignedUp; i++) {
-        _fcm.subscribeToTopic(userData.eventTitleSignedUp[i]);
-      }
-      if(userData.permissions == 1) {
+      if(widget.userData.permissions == 1) {
         _fcm.subscribeToTopic('members');
       }
-      if(userData.permissions == 2) {
+      if(widget.userData.permissions == 2) {
         _fcm.subscribeToTopic('officers');
       }
-      if(userData.permissions == 0) {
+      if(widget.userData.permissions == 0) {
         _fcm.subscribeToTopic('sponsors');
       }
 
@@ -80,43 +106,12 @@ class TheOpeningPage extends StatelessWidget {
           final notification = message['notification'];
         }
       );
-    }
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          TopHalfHomePage(),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.10),),
-          MiddleHomePage(),
-          Spacer(),
-          BottonHalfHomePage()
-        ],
-      )
-    ); 
-  }
-}
-
-class MiddleHomePage extends StatefulWidget {
-  MiddleHomePage({Key key}) : super (key: key);
-
-  @override
-  _MiddleHomePageState createState() => _MiddleHomePageState();
-}
-
-class _MiddleHomePageState extends State<MiddleHomePage> {
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   Future getPosts() async {
     var firestore = Firestore.instance;
     QuerySnapshot qn = await firestore.collection("events").orderBy('date').getDocuments();
+
     return qn.documents;
   }
 

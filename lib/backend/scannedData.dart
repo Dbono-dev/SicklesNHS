@@ -37,7 +37,7 @@ class ScannedData {
         text = text.substring(i);
         i = 0;
       }
-      else if(i == text.length - 1) {
+      else if(i == text.length - 1) { 
         qrCodeItems.add(text);
       }
     }

@@ -168,7 +168,7 @@ class _ScanningPageBodyState extends State<ScanningPageBody> {
                           text += "/" + theScanUID[i];
                           text += "/" + theScanDate[i];
                           text += "/" + theScanEvent[i];
-                          await ScannedData(text: text, date: DateTime.now().month.toString() + "/" + DateTime.now().day.toString() + "/" + DateTime.now().year.toString()).submitHours();
+                          await ScannedData(text: text, date: DateTime.now().toString().substring(5, 7) + "/" + DateTime.now().toString().substring(8, 10) + "/" + DateTime.now().year.toString()).submitHours();
                         }
                         setState(() {
                           theScanType.clear();
