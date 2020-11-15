@@ -131,15 +131,25 @@ class TopMiddleViewStudentPage extends StatelessWidget {
           }
           else {
             for(int i = 0; i < snapshot2.data.length; i++) {
-              if(int.tryParse(snapshot2.data[i].data['grade']) == null) {
+              if(int.tryParse(snapshot2.data[i].data['grade']) == null || snapshot2.data[i].data['permissions'] == 1 || snapshot2.data[i].data['permissions'] == 0) {
 
               }
               else {
-                if(snapshot2.data[i].data[currentQuarter] >= 6) {
-                  yes = yes + 1;
+                if(currentQuarter == "secondQuarter") {
+                  if(snapshot2.data[i].data[currentQuarter] >= 3) {
+                    yes = yes + 1;
+                  }
+                  else { 
+                    no = no + 1;
+                  }
                 }
-                else { 
-                  no = no + 1;
+                else {
+                  if(snapshot2.data[i].data[currentQuarter] >= 6) {
+                    yes = yes + 1;
+                  }
+                  else { 
+                    no = no + 1;
+                  }
                 }
               }
             }

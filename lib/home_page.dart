@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sickles_nhs_app/adminSide/view_images.dart';
@@ -55,58 +54,6 @@ class MiddleHomePage extends StatefulWidget {
 }
 
 class _MiddleHomePageState extends State<MiddleHomePage> {
-
-  final FirebaseMessaging _fcm = FirebaseMessaging();
-
-  @override
-  void initState() async {
-    super.initState();
-    if(Platform.isIOS) {
-      await _fcm.requestNotificationPermissions(IosNotificationSettings(
-          sound: true, badge: true, alert: true, provisional: false
-      ));
-    }
-    _fcm.subscribeToTopic('all');
-      print(widget.userData.firstName + widget.userData.lastName);
-      _fcm.subscribeToTopic(widget.userData.firstName + widget.userData.lastName);
-      for(int i = 0; i < widget.userData.eventTitleSignedUp; i++) {
-        _fcm.subscribeToTopic(widget.userData.eventTitleSignedUp[i]);
-      }
-      if(widget.userData.permissions == 1) {
-        _fcm.subscribeToTopic('members');
-      }
-      if(widget.userData.permissions == 2) {
-        _fcm.subscribeToTopic('officers');
-      }
-      if(widget.userData.permissions == 0) {
-        _fcm.subscribeToTopic('sponsors');
-      }
-
-      _fcm.getToken();
-
-      _fcm.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print('onMessage: $message');
-          final notification = message['notification'];
-        },
-        onLaunch: (Map<String, dynamic> message) async {
-          print('onMessage: $message');
-          final notification = message['notification'];
-        },
-        onBackgroundMessage: (Map<String, dynamic> message) async {
-          if(message.containsKey('data')) {
-            final dynamic data = message['data'];
-          }
-          if(message.containsKey('notification')) {
-            final dynamic notification = message['notification'];
-          }
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print('onMessage: $message');
-          final notification = message['notification'];
-        }
-      );
-  }
 
   Future getPosts() async {
     var firestore = Firestore.instance;

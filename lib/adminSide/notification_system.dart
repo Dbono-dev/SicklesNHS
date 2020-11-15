@@ -163,8 +163,14 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                                                           }
                                                           else {
                                                             return GestureDetector(
-                                                              onTap: () {
-                                                                global.selectedEvent = snapshot.data[index].data["title"].toString();
+                                                              onTap: () { 
+                                                                String tempText = "";
+                                                                for(int a = 0; a < snapshot.data[index].data["title"].toString().length; a++) {
+                                                                  if(snapshot.data[index].data["title"].toString().substring(a, a + 1) != " ") {
+                                                                    tempText += snapshot.data[index].data["title"].toString().substring(a, a + 1);
+                                                                  }
+                                                                }
+                                                                global.selectedEvent = tempText;
                                                                 Navigator.of(context).pop();
                                                                 setState(() {
                                                                   

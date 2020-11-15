@@ -726,7 +726,7 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
         height: SizeConfig.blockSizeVertical * 8,
         width: SizeConfig.blockSizeHorizontal * 90,
         child: Card(
-          color: int.parse(hours) == 0 ? Colors.yellow[400] : Colors.white,
+          color: double.parse(hours) == 0 ? Colors.yellow[400] : Colors.white,
           elevation: 8,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)
@@ -752,7 +752,7 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
   }
 
   Widget endOfHoursCard(bool editing, String hours, int index) {
-    if(int.parse(hours) == 0) {
+    if(double.parse(hours) == 0) {
       return Icon(Icons.check, color: Colors.green, size: 25,);
     }
     else if(editing == true) {
