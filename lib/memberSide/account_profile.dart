@@ -79,13 +79,13 @@ class _AccountProfileState extends State<AccountProfile> {
                  actions: <Widget>[
                    CupertinoActionSheetAction(
                      onPressed: () {
-                       DatabaseService(uid: widget.uid).updateUserPermissions(2, "05/20/21");
+                       DatabaseService(uid: widget.uid).updateUserPermissions(1, "05/20/2021");
                      },
                      child: Text('Elevate to Officer Permanently')
                      ),
                    CupertinoActionSheetAction(
                      onPressed: () {
-                      DatabaseService(uid: widget.uid).updateUserPermissions(2, adjustedTime);
+                      DatabaseService(uid: widget.uid).updateUserPermissions(1, adjustedTime);
                      },
                      child: Text('Elevate to Officer for a day')
                     )
@@ -258,14 +258,15 @@ class _AccountProfileState extends State<AccountProfile> {
             width: SizeConfig.blockSizeHorizontal * 25,
             height: SizeConfig.blockSizeVertical * 18,
             child: FloatingActionButton(
-            backgroundColor: Colors.green,
-            elevation: 8,
-            onPressed: () {},
-            child: Text(firstName.substring(0, 1) + lastName.substring(0, 1), style: TextStyle(
-              color: Colors.white,
-              fontSize: SizeConfig.blockSizeHorizontal * 15
-            ),),
-          ),
+              backgroundColor: Colors.green,
+              elevation: 8,
+              onPressed: () {},
+              child: Text(firstName.substring(0, 1) + lastName.substring(0, 1), style: TextStyle(
+                color: Colors.white,
+                fontSize: SizeConfig.blockSizeHorizontal * 12.5
+              ),
+             ),
+           ),
           ),
           Padding(padding: EdgeInsets.all(4),),
           Material(
@@ -508,7 +509,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           width: SizeConfig.blockSizeHorizontal * 25,
                             child: Material(
                               color: Colors.transparent,
-                            child: Align(alignment: Alignment.center, child: Text(numOfCommunityServiceEvents.toString() + " Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
+                              child: Align(alignment: Alignment.center, child: Text(numOfCommunityServiceEvents.toString() + " Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
                           ),
                         ),
                       )
