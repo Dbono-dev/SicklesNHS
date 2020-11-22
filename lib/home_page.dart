@@ -335,7 +335,10 @@ class MiddleHomePageCards extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   clipBehavior: Clip.antiAlias,
-                                  child: image
+                                  child: Hero(
+                                    tag: 'eventView' + post.data['title'],
+                                    child: image
+                                  )
                                 ),
                               ),
                             ),

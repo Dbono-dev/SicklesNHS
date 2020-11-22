@@ -365,7 +365,10 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                 Container(
                   height: SizeConfig.blockSizeVertical * 20,
                   width: SizeConfig.blockSizeHorizontal * 80,
-                  child: _image,
+                  child: Hero(
+                    tag: 'eventView' + title,
+                    child: _image
+                  ),
                 ),
                 Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5),),
                 Expanded(

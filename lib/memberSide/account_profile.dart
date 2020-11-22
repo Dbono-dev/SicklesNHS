@@ -231,6 +231,8 @@ class _AccountProfileState extends State<AccountProfile> {
   Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
+    Color _chapterProjectColor = Colors.transparent;
+    Color _chapterProjectTextColor = Colors.black;
 
     List title = new List ();
     List date = new List ();
@@ -328,7 +330,7 @@ class _AccountProfileState extends State<AccountProfile> {
                     }
                   }
                 }
-
+                
                 void hoursTile(String quarters, String quartersHours, int numOfHoursForThatQuarter) {
                   if(currentQuarter == quarters) {
                     currentQuarterHours = quartersHours;
@@ -339,356 +341,465 @@ class _AccountProfileState extends State<AccountProfile> {
                   }
                 }
 
+                Future chapterProjectTile(theHours, date, hours) async {
+                  List<DocumentSnapshot> quarterHours = await getQuarterHours();
+                  if(theHours.length != 0) {
+                    for(int i = 0; i < quarterHours.length; i++) {
+                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Start of School") {
+                        startOfSchool = secondFormat.parse(quarterHours[i].data['date']);
+                      }
+                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "First") {
+                        firstQuarter = secondFormat.parse(quarterHours[i].data['date']);
+                      }
+                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Second") {
+                        secondQuarter = secondFormat.parse(quarterHours[i].data['date']);
+                      }
+                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Third") {
+                        thirdQuarter = secondFormat.parse(quarterHours[i].data['date']);
+                      }
+                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Fourth") {
+                        forthQuarter = secondFormat.parse(quarterHours[i].data['date']);
+                      }
+                    }
+                    bool firstOrSecond;
+                    if(DateTime.now().isBefore(secondQuarter) && DateTime.now().isAfter(startOfSchool)) {
+                      firstOrSecond = true;
+                    }
+                    else if (DateTime.now().isBefore(forthQuarter) && DateTime.now().isAfter(secondQuarter)) {
+                      firstOrSecond = false;
+                    }
+                    else {
+
+                    }
+                    
+                    for(int i = 0; i < theHours.length; i++) {
+                      if(double.parse(theHours[i]) == 0) {
+                        if(format.parse(date[i]).isBefore(secondQuarter) && format.parse(date[i]).isAfter(startOfSchool) && firstOrSecond == true) {
+                          _chapterProjectColor = Colors.green;
+                          _chapterProjectTextColor = Colors.white;
+                        }
+                        else if(format.parse(date[i]).isBefore(forthQuarter) && format.parse(date[i]).isAfter(secondQuarter) && firstOrSecond == false) {
+                          _chapterProjectColor = Colors.green;
+                          _chapterProjectTextColor = Colors.white;
+                        }
+                        else {
+
+                        }
+                      }
+                    }
+                  }
+                  
+                }
+
                 hoursTile("firstQuarter", q1Hours, 0);
                 hoursTile("secondQuarter", q2Hours, 3);
                 hoursTile("thirdQuarter", q3Hours, 6);
-                hoursTile("fourthQuarter", q4Hours, 6); 
+                hoursTile("fourthQuarter", q4Hours, 6);
 
-                return Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                return FutureBuilder(
+                  future: chapterProjectTile(theHours, date, hours),
+                  builder: (context, snapshot) {
+                    return Column(
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Padding(
-                                padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 10, 0, SizeConfig.blockSizeVertical * 10),
-                                child: AlertDialog(
-                                  title: Text("Hours"),
-                                  content: Column(
-                                    children: <Widget> [
-                                      ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 0 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
-                                      ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 3 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                      ListTile(title: Text("Quarter 3: " + q3Hours), trailing: double.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                      ListTile(title: Text("Quarter 4: " + q4Hours), trailing: double.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                      ListTile(title: Text("Total: " + hours, style: TextStyle(fontWeight: FontWeight.bold)),),
-                                    ]
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("DONE", style: TextStyle(color: Colors.green),),
-                                    )
-                                  ],
-                                ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                    padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 10, 0, SizeConfig.blockSizeVertical * 10),
+                                    child: AlertDialog(
+                                      title: Text("Hours"),
+                                      content: Column(
+                                        children: <Widget> [
+                                          ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 0 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
+                                          ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 3 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                          ListTile(title: Text("Quarter 3: " + q3Hours), trailing: double.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                          ListTile(title: Text("Quarter 4: " + q4Hours), trailing: double.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+                                          ListTile(title: Text("Total: " + hours, style: TextStyle(fontWeight: FontWeight.bold)),),
+                                        ]
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("DONE", style: TextStyle(color: Colors.green),),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
                               );
-                            }
-                          );
-                        },
-                        child: Card(
-                          elevation: 8,
-                          child: Container(
-                            height: SizeConfig.blockSizeVertical * 7,
-                            width: SizeConfig.blockSizeHorizontal * 25,
-                              child: Material(
-                                color: _theColor,
-                                child: Align(alignment: Alignment.center, child: Text(currentQuarterHours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
+                            },
+                            child: Card(
+                              elevation: 8,
+                              child: Container(
+                                height: SizeConfig.blockSizeVertical * 7,
+                                width: SizeConfig.blockSizeHorizontal * 25,
+                                  child: Material(
+                                    color: _theColor,
+                                    child: Align(alignment: Alignment.center, child: Text(currentQuarterHours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          QuerySnapshot qn = await Firestore.instance.collection('Important Dates').getDocuments();
-                          var result = qn.documents;
-                          List<Widget> clubDates = new List<Widget>();
-                          if(qn.documents.length == 4) {
-                            for(int i = 0; i < result.length; i++) {
-                              DocumentSnapshot theResult = result[i];
-                              if(theResult.data['type'] == "clubDates") {
-                                if(widget.type == "admin") {
-                                  clubDates.add(
-                                    Container(
-                                      width: SizeConfig.blockSizeHorizontal * 80,
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                            width: SizeConfig.blockSizeHorizontal * 45,
-                                            child: ListTile(
-                                              title: Text(theResult['date'].toString()),
-                                              trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
-                                            ),
+                          GestureDetector(
+                            onTap: () async {
+                              QuerySnapshot qn = await Firestore.instance.collection('Important Dates').getDocuments();
+                              var result = qn.documents;
+                              List<Widget> clubDates = new List<Widget>();
+                              if(qn.documents.length == 4) {
+                                for(int i = 0; i < result.length; i++) {
+                                  DocumentSnapshot theResult = result[i];
+                                  if(theResult.data['type'] == "clubDates") {
+                                    if(widget.type == "admin") {
+                                      clubDates.add(
+                                        Container(
+                                          width: SizeConfig.blockSizeHorizontal * 80,
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                width: SizeConfig.blockSizeHorizontal * 45,
+                                                child: ListTile(
+                                                  title: Text(theResult['date'].toString()),
+                                                  trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
+                                                ),
+                                              ),
+                                              RaisedButton(
+                                                elevation: 10,
+                                                color: Colors.white,
+                                                onPressed: () async {
+                                                  List participatesList = new List();
+                                                  participatesList = theResult.data['participates'];
+                                                  if(theResult.data['participates'].contains(uid)) {
+                                                    participatesList.remove(uid);
+                                                    await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
+                                                    await DatabaseService(uid: uid).updateNumOfClub(numClub - 1);
+                                                    setState(() {
+                                                      
+                                                    });
+                                                    super.setState(() { });
+                                                  }
+                                                  else {
+                                                    participatesList.add(uid);
+                                                    await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
+                                                    await DatabaseService(uid: uid).updateNumOfClub(numClub + 1);
+                                                    setState(() {
+                                                      
+                                                    });
+                                                  }
+                                                },
+                                                child: Text("Change", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
+                                              )
+                                            ],
                                           ),
-                                          RaisedButton(
-                                            elevation: 10,
-                                            color: Colors.white,
-                                            onPressed: () async {
-                                              List participatesList = new List();
-                                              participatesList = theResult.data['participates'];
-                                              if(theResult.data['participates'].contains(uid)) {
-                                                participatesList.remove(uid);
-                                                await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
-                                                await DatabaseService(uid: uid).updateNumOfClub(numClub - 1);
-                                                setState(() {
-                                                  
-                                                });
-                                                super.setState(() { });
-                                              }
-                                              else {
-                                                participatesList.add(uid);
-                                                await DatabaseImportantDates().addParticipates(participatesList, theResult.data['type'], theResult.data['inital date']);
-                                                await DatabaseService(uid: uid).updateNumOfClub(numClub + 1);
-                                                setState(() {
-                                                  
-                                                });
-                                              }
-                                            },
-                                            child: Text("Change", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
-                                          )
-                                        ],
-                                      ),
-                                    )
+                                        )
+                                      );
+                                    }
+                                    else {
+                                      clubDates.add(
+                                        Container(
+                                          width: SizeConfig.blockSizeHorizontal * 45,
+                                          child: ListTile(
+                                            title: Text(theResult['date'].toString()),
+                                            trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
+                                          ),
+                                        )
+                                      );
+                                    }
+                                  }
+                                }
+                              }
+                              else {
+                                clubDates.add(
+                                  Text("No Club Meetings")
+                                );
+                              }
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Club Meeting Attendence"),
+                                    content: Container(
+                                      height: SizeConfig.blockSizeVertical * 40,
+                                      child: Column(
+                                        children: clubDates,
+                                      )
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Done", style: TextStyle(color: Colors.green),),
+                                      )
+                                    ],
                                   );
+                                }
+                              );
+                            },
+                            child: Card(
+                              elevation: 8,
+                              child: Container(
+                                height: SizeConfig.blockSizeVertical * 7,
+                                width: SizeConfig.blockSizeHorizontal * 25,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                  child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)),
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              List<Widget> chapterProjects = new List<Widget>();
+                              int getsOne = 0;
+                              for(int i = 0; i < theHours.length; i++) {
+                                if(double.parse(theHours[i]) == 0) {
+                                  getsOne++;
+                                  chapterProjects.add(Container(
+                                    width: SizeConfig.blockSizeHorizontal * 65,
+                                    child: ListTile(
+                                      title: Text(title[i].toString()),
+                                      trailing: Icon(Icons.check, color: Colors.green),
+                                    ),
+                                  ));
                                 }
                                 else {
-                                  clubDates.add(
-                                    Container(
-                                      width: SizeConfig.blockSizeHorizontal * 45,
-                                      child: ListTile(
-                                        title: Text(theResult['date'].toString()),
-                                        trailing: theResult.data['participates'].contains(uid) ? Icon(Icons.check, color: Colors.green) : Icon(Icons.close, color: Colors.red),
-                                      ),
-                                    )
-                                  );
+                                  if(getsOne == 0) {
+                                    chapterProjects.add(
+                                      Text("No Chapter Projects", textAlign: TextAlign.center),
+                                    );
+                                  }
+                                  else {
+
+                                  }
                                 }
                               }
-                            }
-                          }
-                          else {
-                            clubDates.add(
-                              Text("No Club Meetings")
-                            );
-                          }
+                              if(theHours.length == 0) {
+                                chapterProjects.add(
+                                  Text("No Chapter Projects", textAlign: TextAlign.center),
+                                );
+                              }
 
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Club Meeting Attendence"),
-                                content: Container(
-                                  height: SizeConfig.blockSizeVertical * 40,
-                                  child: Column(
-                                    children: clubDates,
-                                  )
-                                ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("Done", style: TextStyle(color: Colors.green),),
-                                  )
-                                ],
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Chapter Projects"),
+                                    content: Container(
+                                      height: SizeConfig.blockSizeVertical * 40,
+                                      child: Column(
+                                        children: chapterProjects,
+                                      )
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Done", style: TextStyle(color: Colors.green),),
+                                      )
+                                    ],
+                                  );
+                                }
                               );
-                            }
-                          );
-                        },
-                        child: Card(
-                          elevation: 8,
-                          child: Container(
-                            height: SizeConfig.blockSizeVertical * 7,
-                            width: SizeConfig.blockSizeHorizontal * 25,
-                              child: Material(
-                                color: Colors.transparent,
-                              child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)),
+                            },
+                            child: Card(
+                              elevation: 8,
+                              child: Container(
+                                height: SizeConfig.blockSizeVertical * 7,
+                                width: SizeConfig.blockSizeHorizontal * 25,
+                                  child: Material(
+                                  color: _chapterProjectColor,
+                                  child: Align(alignment: Alignment.center, child: Text(numOfCommunityServiceEvents.toString() + " Projects", style: TextStyle(fontSize: 20, color: _chapterProjectTextColor), textAlign: TextAlign.center,)),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          )
+                        ],
                       ),
-                      Card(
-                        elevation: 8,
-                        child: Container(
-                          height: SizeConfig.blockSizeVertical * 7,
-                          width: SizeConfig.blockSizeHorizontal * 25,
-                            child: Material(
-                              color: Colors.transparent,
-                            child: Align(alignment: Alignment.center, child: Text(numOfCommunityServiceEvents.toString() + " Projects", style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)),
-                          ),
-                        ),
-                      )
-                    ],
-                    ),
               Padding(padding: EdgeInsets.all(5),),
               Material(
-                color: Colors.transparent,
-                child: Text("Recent Activity", 
-                style: TextStyle(fontSize: 20),
-                ),)
+                    color: Colors.transparent,
+                    child: Text("Recent Activity", 
+                    style: TextStyle(fontSize: 20),
+                    ),)
               ,
               Container(
-                height: SizeConfig.blockSizeVertical * 27,
-                  child: FutureBuilder(
-                    future: getQuarterHours(),
-                    builder: (_, quarterHours) {
-                      if(quarterHours.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(Colors.green),
-                        ));
-                      }
-                      else {
-                        for(int i = 0; i < quarterHours.data.length; i++) {
-                          if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Start of School") {
-                            startOfSchool = secondFormat.parse(quarterHours.data[i].data['date']);
+                    height: SizeConfig.blockSizeVertical * 27,
+                      child: FutureBuilder(
+                        future: getQuarterHours(),
+                        builder: (_, quarterHours) {
+                          if(quarterHours.connectionState == ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.green),
+                            ));
                           }
-                          if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "First") {
-                            firstQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                          else {
+                            for(int i = 0; i < quarterHours.data.length; i++) {
+                              if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Start of School") {
+                                startOfSchool = secondFormat.parse(quarterHours.data[i].data['date']);
+                              }
+                              if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "First") {
+                                firstQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                              }
+                              if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Second") {
+                                secondQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                              }
+                              if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Third") {
+                                thirdQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                              }
+                              if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Fourth") {
+                                forthQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                              }
+                            }
                           }
-                          if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Second") {
-                            secondQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
+                          if(title.length == 0) {
+                            return Center(
+                              child: Text("NO EVENTS", style: TextStyle(color: Colors.green, fontSize: 40)),
+                            );
                           }
-                          if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Third") {
-                            thirdQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
-                          }
-                          if(quarterHours.data[i].data['type'] == "endOfQuarter" && quarterHours.data[i].data['quarter'] == "Fourth") {
-                            forthQuarter = secondFormat.parse(quarterHours.data[i].data['date']);
-                          }
-                        }
-                      }
-                      if(title.length == 0) {
-                        return Center(
-                          child: Text("NO EVENTS", style: TextStyle(color: Colors.green, fontSize: 40)),
-                        );
-                      }
-                      else {
-                        return ListView.builder(
-                          itemCount: title.length,
-                          itemBuilder: (_, index) {
-                            if(thenewDate[index].isAfter(startOfSchool) && thenewDate[index].isBefore(firstQuarter)) {
-                              if(thefirstQuarter == true) {
-                                return Column(
-                                  children: <Widget>[
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
+                          else {
+                            return ListView.builder(
+                              itemCount: title.length,
+                              itemBuilder: (_, index) {
+                                if(thenewDate[index].isAfter(startOfSchool) && thenewDate[index].isBefore(firstQuarter)) {
+                                  if(thefirstQuarter == true) {
+                                    return Column(
+                                      children: <Widget>[
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                              editing: editing,
+                                              index: index
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  else {
+                                    thefirstQuarter = true;
+                                    return Column(
+                                      children: <Widget>[
+                                        quarterPages("First"),
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
                                           editing: editing,
                                           index: index
-                                    ),
-                                  ],
-                                );
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }
+                                if(thenewDate[index].isAfter(firstQuarter) && thenewDate[index].isBefore(secondQuarter)) {
+                                  if(thesecondQuarter == true) {
+                                    return Column(
+                                      children: <Widget>[
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  else {
+                                    thesecondQuarter = true;
+                                    return Column(
+                                      children: <Widget>[
+                                        quarterPages("Second"),
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }
+                                if(thenewDate[index].isAfter(secondQuarter) && thenewDate[index].isBefore(thirdQuarter)) {
+                                  if(thethirdQuarter == true) {
+                                    return Column(
+                                      children: <Widget>[
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  else {
+                                    thethirdQuarter = true;
+                                    return Column(
+                                      children: <Widget>[
+                                        quarterPages("Third"),
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }
+                                if(thenewDate[index].isAfter(thirdQuarter) && thenewDate[index].isBefore(forthQuarter)) {
+                                  if(theforthQuarter == true) {
+                                    return Column(
+                                      children: <Widget>[
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  else {
+                                    theforthQuarter = true;
+                                    return Column(
+                                      children: <Widget>[
+                                        quarterPages("Fourth"),
+                                        accountProfileCards(
+                                          title: title[index],
+                                          date: date[index].toString().substring(0, 10),
+                                          hours: theHours[index],
+                                          editing: editing,
+                                          index: index
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }
                               }
-                              else {
-                                thefirstQuarter = true;
-                                return Column(
-                                  children: <Widget>[
-                                    quarterPages("First"),
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    )
-                                  ],
-                                );
-                              }
-                            }
-                            print(secondQuarter);
-                            print(thenewDate[index]);
-                            if(thenewDate[index].isAfter(firstQuarter) && thenewDate[index].isBefore(secondQuarter)) {
-                              if(thesecondQuarter == true) {
-                                return Column(
-                                  children: <Widget>[
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    ),
-                                  ],
-                                );
-                              }
-                              else {
-                                thesecondQuarter = true;
-                                return Column(
-                                  children: <Widget>[
-                                    quarterPages("Second"),
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    )
-                                  ],
-                                );
-                              }
-                            }
-                            if(thenewDate[index].isAfter(secondQuarter) && thenewDate[index].isBefore(thirdQuarter)) {
-                              if(thethirdQuarter == true) {
-                                return Column(
-                                  children: <Widget>[
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    ),
-                                  ],
-                                );
-                              }
-                              else {
-                                thethirdQuarter = true;
-                                return Column(
-                                  children: <Widget>[
-                                    quarterPages("Third"),
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    )
-                                  ],
-                                );
-                              }
-                            }
-                            if(thenewDate[index].isAfter(thirdQuarter) && thenewDate[index].isBefore(forthQuarter)) {
-                              if(theforthQuarter == true) {
-                                return Column(
-                                  children: <Widget>[
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    ),
-                                  ],
-                                );
-                              }
-                              else {
-                                theforthQuarter = true;
-                                return Column(
-                                  children: <Widget>[
-                                    quarterPages("Fourth"),
-                                    accountProfileCards(
-                                      title: title[index],
-                                      date: date[index].toString().substring(0, 10),
-                                      hours: theHours[index],
-                                      editing: editing,
-                                      index: index
-                                    )
-                                  ],
-                                );
-                              }
-                            }
+                            );
                           }
-                        );
-                      }
-                    },
-                  ),  
-                )
+                        },
+                      ),  
+                    )
               ],
             );
+                  }
+                );
             }
           }
           )
