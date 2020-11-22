@@ -36,6 +36,7 @@ class TopHalfLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    
     return Material(
             type: MaterialType.transparency,
             child: Container(
@@ -69,6 +70,8 @@ class TopHalfLoginPage extends StatelessWidget {
 
 class BottonHalfLoginPage extends StatelessWidget {
   BottonHalfLoginPage({Key key}) : super (key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +122,8 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
   String _password;
   String _email;
   final AuthService _auth = AuthService();
+  bool _obscureTextLoginOne = true;
+  bool _obscureTextLoginTwo = true;
 
   @override
   Widget build(BuildContext context) {
@@ -157,17 +162,25 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
                         child: TextFormField(
                           onSaved: (value) => _password = value,
                           validator: (val) => val.length < 6 ? 'Enter a password 6+ characters long': null,
-                        obscureText: true,
-                        style: TextStyle(fontSize: 20),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                          hintText: "Password",
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                    ),
+                          obscureText: _obscureTextLoginOne,
+                          style: TextStyle(fontSize: 20),
+                          keyboardType: TextInputType.visiblePassword,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            hintText: "Password",
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                            fillColor: Colors.white,
+                            filled: true,
+                            suffixIcon: GestureDetector(
+                              onTap: () => _toggleLogin("_obscureTextLoginOne"),
+                              child: Padding(
+                                padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 2.5),
+                                child: Icon(_obscureTextLoginOne ? Icons.visibility_off : Icons.visibility, size: 25, color: Colors.black,),
+                              ),
+                            )
+                          ),
                       ),
+                    ),
                   ),
                   Material(
                     color: Colors.transparent,
@@ -230,7 +243,20 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
         ),
       );
   }
+
+  void _toggleLogin(String boolean) {
+    setState(() {
+      if(boolean == "_obscureTextLoginTwo") {
+        _obscureTextLoginTwo = !_obscureTextLoginTwo;
+      }
+      if(boolean == "_obscureTextLoginOne") {
+        _obscureTextLoginOne = !_obscureTextLoginOne;
+      }
+    });
+  }
 }
+
+
 
   Future resetPassword(BuildContext context) {
     final _theFormKey = GlobalKey<FormState>();

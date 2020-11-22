@@ -20,11 +20,16 @@ import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
 import 'dart:io' show Platform;
 
-class TheOpeningPage extends StatelessWidget {
+class TheOpeningPage extends StatefulWidget {
   TheOpeningPage({Key key, this.userData}) : super (key: key);
 
   final UserData userData;
 
+  @override
+  _TheOpeningPageState createState() => _TheOpeningPageState();
+}
+
+class _TheOpeningPageState extends State<TheOpeningPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -35,7 +40,7 @@ class TheOpeningPage extends StatelessWidget {
         children: <Widget>[
           TopHalfHomePage(),
           Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.10),),
-          MiddleHomePage(userData: userData,),
+          MiddleHomePage(userData: widget.userData,),
           Spacer(),
           BottonHalfHomePage()
         ],
@@ -597,16 +602,16 @@ class _StudentMyEvents extends State<StudentMyEvents> {
             Padding(padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5)),
             Container(
               width: SizeConfig.blockSizeHorizontal * 25,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)
-              ),
               child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
                 color: Colors.white,
-                      elevation: 8,
-                      child: Text("LOGOUT"),
-                      onPressed: () async {
-                        await _auth.logout();
-                      }, 
+                elevation: 8,
+                child: Text("LOGOUT"),
+                onPressed: () async {
+                  await _auth.logout();
+                }, 
               ),
             )
                 ],
@@ -731,6 +736,9 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                           borderRadius: BorderRadius.circular(10)
                         ),
                         child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
                           color: Colors.white,
                                 elevation: 8,
                                 child: FittedBox(fit: BoxFit.fill, child: Text("LOGOUT")),
@@ -825,6 +833,9 @@ class _OfficerMyEvents extends State<OfficerMyEvents> {
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 25,
                       child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
                         color: Colors.white,
                               elevation: 8,
                               child: FittedBox(fit: BoxFit.fill, child: Text("LOGOUT")),

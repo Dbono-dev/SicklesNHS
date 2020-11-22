@@ -600,23 +600,46 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
                                 ));
                             }
                             if(differentSignUp == "Sign Up") {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text("Signing up..."),
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Colors.green,
-                              ));
-                              var participates = widget.post.data['participates'];
-                              var participateDate = widget.post.data['participates dates'];
-                              participates.add(userData.firstName + " " + userData.lastName);
-                              participateDate.add(global.shownDate);
-                              dynamic result = sendEventToDatabases(participates, title, participateDate);
-                              dynamic result2 = sendBugToEmail(title, widget.post);
-                              var eventTitle = userData.eventTitleSignedUp;
-                              eventTitle.add(title);
-                              dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
-                              setState(() {
-                                clicked = true;
-                              });
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Confirmation"),
+                                    content: Text("Are you sure you would like to sign up for this event?"),
+                                    actions: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("CANCEL", style: TextStyle(color: Colors.red),),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          Scaffold.of(context).showSnackBar(SnackBar(
+                                            content: Text("Signing up..."),
+                                            duration: Duration(seconds: 2),
+                                            backgroundColor: Colors.green,
+                                          ));
+                                          var participates = widget.post.data['participates'];
+                                          var participateDate = widget.post.data['participates dates'];
+                                          participates.add(userData.firstName + " " + userData.lastName);
+                                          participateDate.add(global.shownDate);
+                                          dynamic result = sendEventToDatabases(participates, title, participateDate);
+                                          dynamic result2 = sendBugToEmail(title, widget.post);
+                                          var eventTitle = userData.eventTitleSignedUp;
+                                          eventTitle.add(title);
+                                          dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            clicked = true;
+                                          });
+                                        },
+                                        child: Text("CONFIRM", style: TextStyle(color: Colors.green),),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              );
                             }
                           },
                             child: Text(differentSignUp, 
@@ -842,7 +865,44 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                         elevation: 10,
                         child: ListTile(
                           leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20),),
-                          title: Text(participatesList[index])
+                          title: Text(participatesList[index]),
+                          trailing: widget.officerSponsor ? IconButton(
+                            icon: Icon(Icons.remove_circle_outline, color: Colors.red,),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Confirmation"),
+                                    content: Text("Are you sure you would like to remove " + participatesList[index] + " from this event?"),
+                                    actions: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("CANCEL", style: TextStyle(color: Colors.red),),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          var participates = widget.post.data['participates'];
+                                          var participateDate = widget.post.data['participates dates'];
+                                          participates.remove(participatesList[index]);
+                                          participateDate.remove(global.shownDate);
+                                          DatabaseEvent().updateEvent(participates, widget.post["title"], participateDate);
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            
+                                          });
+                                        },
+                                        child: Text("CONFIRM", style: TextStyle(color: Colors.green),),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              );
+                            },
+                          ) : Container(),
                         )
                       ),
                     );
@@ -861,6 +921,43 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                         child: ListTile(
                           leading: Text((index + 1).toString() + ".", style: TextStyle(fontSize: 20)),
                           title: Text(participatesList[index]),
+                          trailing: widget.officerSponsor ? IconButton(
+                            icon: Icon(Icons.remove_circle_outline, color: Colors.red,),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Confirmation"),
+                                    content: Text("Are you sure you would like to remove " + participatesList[index] + " from this event?"),
+                                    actions: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("CANCEL", style: TextStyle(color: Colors.red),),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          var participates = widget.post.data['participates'];
+                                          var participateDate = widget.post.data['participates dates'];
+                                          participates.remove(participatesList[index]);
+                                          participateDate.remove(global.shownDate);
+                                          DatabaseEvent().updateEvent(participates, widget.post["title"], participateDate);
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            
+                                          });
+                                        },
+                                        child: Text("CONFIRM", style: TextStyle(color: Colors.green),),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              );
+                            },
+                          ) : Container(),
                         )
                       ),
                     );
