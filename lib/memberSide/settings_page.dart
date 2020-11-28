@@ -33,99 +33,9 @@ class SettingsPageBody extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          Material(
-            color: Colors.transparent,
-            child: GestureDetector(
-              onTap: () {
-                resetPassword(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 2),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 10,
-                  child: ListTile(title: Text("Reset Password")),
-                ),
-              ),
-            ),
-          ),
+          settingsTiles(context, "Reset Password", resetPassword(context)),
           Padding(padding: EdgeInsets.all(5)),
-          Material(
-            color: Colors.transparent,
-            child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 75, 10, 75),
-                      child: AlertDialog(
-                        elevation: 10,
-                        content: Column(
-                          children: <Widget> [
-                            Text("Report a Bug"),
-                            Form(
-                              key: _formKey,
-                              child: Expanded(
-                                child: TextFormField(
-                                  minLines: 10,
-                                  maxLines: 20,
-                                  onSaved: (val) => _summary = val ,
-                                  decoration: InputDecoration(
-                                    hintText: "Type a summary of the bug you found here...",
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black)
-                                    )
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                FlatButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("CANCEL")
-                                ),
-                                FlatButton(
-                                  onPressed: () async {
-                                    dynamic result;
-                                    _formKey.currentState.save();
-                                    try {
-                                      result = sendBugToDatabase(_summary);
-                                      dynamic result2 = sendBugToEmail(_summary);
-                                    }
-                                    catch (e) {
-                                      print(e);
-                                    }
-                                    if(result != null) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                  child: Text("SUBMIT")
-                                )
-                              ],
-                            )
-                          ]
-                        ),
-                      ),
-                    );
-                  }
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 10,
-                  child: ListTile(title: Text("Report a Bug"))
-                ),
-              ),
-            )
-          ),
+          settingsTiles(context, "Report a Bug", reportBug(context)),
           Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2)),
           Text("Follow Us", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 35, decoration: TextDecoration.underline), textAlign: TextAlign.center,),
           Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1)),
@@ -155,11 +65,102 @@ class SettingsPageBody extends StatelessWidget {
                 color: Color.fromARGB(255, 29, 161, 242),
                 iconSize: 55,
                 onPressed: () => launch('https://twitter.com/SicklesNhs')
+              ),
+              SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 15,
+                height: SizeConfig.blockSizeVertical * 15,
+                child: GestureDetector(
+                  onTap: () => launch('https://sdhc.instructure.com/courses/209936'),
+                  child: Image.asset("CanvasLogo.png")
+                )
               )
             ],
           )
         ],
       ),
+    );
+  }
+
+  Widget settingsTiles(BuildContext context, String text, Future<dynamic> theFuntion) {
+    return Material(
+      color: Colors.transparent,
+      child: GestureDetector(
+        onTap: () {
+          resetPassword(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 2),
+          child: Card(
+            color: Colors.white,
+            elevation: 10,
+            child: ListTile(title: Text("Reset Password")),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future reportBug(BuildContext context) {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(10, 75, 10, 75),
+          child: AlertDialog(
+            elevation: 10,
+            content: Column(
+              children: <Widget> [
+                Text("Report a Bug"),
+                Form(
+                  key: _formKey,
+                  child: Expanded(
+                    child: TextFormField(
+                      minLines: 10,
+                      maxLines: 20,
+                      onSaved: (val) => _summary = val ,
+                      decoration: InputDecoration(
+                        hintText: "Type a summary of the bug you found here...",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)
+                        )
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CANCEL")
+                    ),
+                    FlatButton(
+                      onPressed: () async {
+                        dynamic result;
+                        _formKey.currentState.save();
+                        try {
+                          result = sendBugToDatabase(_summary);
+                          dynamic result2 = sendBugToEmail(_summary);
+                        }
+                        catch (e) {
+                          print(e);
+                        }
+                        if(result != null) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text("SUBMIT")
+                    )
+                  ],
+                )
+              ]
+            ),
+          ),
+        );
+      }
     );
   }
 

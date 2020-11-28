@@ -274,7 +274,7 @@ class _AccountProfileState extends State<AccountProfile> {
           Material(
             color: Colors.transparent,
             child: editing != true ? Text(
-              firstName + " " + lastName, style: TextStyle(fontSize: 35),
+              firstName + " " + lastName, style: TextStyle(fontSize: 35,), textAlign: TextAlign.center,
               ) : SizedBox(
                 height: SizeConfig.blockSizeVertical * 5,
                 width: SizeConfig.blockSizeHorizontal * 65,
@@ -572,18 +572,8 @@ class _AccountProfileState extends State<AccountProfile> {
                                     ),
                                   ));
                                 }
-                                else {
-                                  if(getsOne == 0) {
-                                    chapterProjects.add(
-                                      Text("No Chapter Projects", textAlign: TextAlign.center),
-                                    );
-                                  }
-                                  else {
-
-                                  }
-                                }
                               }
-                              if(theHours.length == 0) {
+                              if(theHours.length == 0 || getsOne == 0) {
                                 chapterProjects.add(
                                   Text("No Chapter Projects", textAlign: TextAlign.center),
                                 );

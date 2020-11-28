@@ -902,7 +902,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                                 }
                               );
                             },
-                          ) : Container(),
+                          ) : Container(width: SizeConfig.blockSizeHorizontal * 5,),
                         )
                       ),
                     );
@@ -957,7 +957,7 @@ class _BottomBottomEventViewPageState extends State<BottomBottomEventViewPage> {
                                 }
                               );
                             },
-                          ) : Container(),
+                          ) : Container(width: SizeConfig.blockSizeHorizontal * 5,),
                         )
                       ),
                     );

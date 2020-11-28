@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/home_page.dart';
 import 'package:sickles_nhs_app/login_screen.dart';
-import 'package:sickles_nhs_app/backend/push_notification.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'dart:io' show Platform;
 

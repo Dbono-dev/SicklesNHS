@@ -18,7 +18,6 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/adminSide/notification_system.dart';
 import 'package:sickles_nhs_app/adminSide/export_data.dart';
 import 'package:intl/intl.dart';
-import 'dart:io' show Platform;
 
 class TheOpeningPage extends StatefulWidget {
   TheOpeningPage({Key key, this.userData}) : super (key: key);
