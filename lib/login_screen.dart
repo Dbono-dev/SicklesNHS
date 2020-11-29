@@ -265,7 +265,8 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
 
     return showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (BuildContext context) {
+        return AlertDialog(
         title: Text("Reset Password"),
         content: Container(
           height: SizeConfig.blockSizeVertical * 17,
@@ -313,6 +314,6 @@ class _MiddlePageLoginScreen extends State<LoginPage> {
               ),
             ],
           )
-        ],)
-      );
+        ],);
+      });
     }

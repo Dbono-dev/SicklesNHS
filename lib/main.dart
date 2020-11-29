@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    PushNotificationsManager().init();
+    //PushNotificationsManager().init();
     return StreamProvider<User>.value(
       value: AuthService().user,
         child: MaterialApp(
