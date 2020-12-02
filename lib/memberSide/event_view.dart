@@ -615,7 +615,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
                                       ),
                                       FlatButton(
                                         onPressed: () {
-                                          Scaffold.of(context).showSnackBar(SnackBar(
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                             content: Text("Signing up..."),
                                             duration: Duration(seconds: 2),
                                             backgroundColor: Colors.green,

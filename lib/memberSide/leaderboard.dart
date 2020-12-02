@@ -64,7 +64,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                         height: SizeConfig.blockSizeVertical * 79,
                         width: SizeConfig.blockSizeHorizontal * 100,
                         child: Card(
-                          elevation: 10,
+                          elevation: 0,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -232,6 +232,20 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
       place = "";
     }
 
+    String hours;
+
+    if(snapshot.data[quarter] is double) {
+      if(snapshot.data[quarter].toString().substring(snapshot.data[quarter].toString().length - 2) == ".0") {
+        hours = snapshot.data[quarter].toString().substring(0, snapshot.data[quarter].toString().length - 2);
+      }
+      else {
+        hours = snapshot.data[quarter].toString();
+      }
+    }
+    else {
+      hours = snapshot.data[quarter].toString();
+    }
+
     return Stack(
       children: <Widget>[
         Container(
@@ -239,7 +253,8 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
             child: Card(
-              elevation: 8,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              elevation: 6,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +273,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Center(child: Text(snapshot.data[quarter].toString(), style: TextStyle(fontSize: SizeConfig.blockSizeVertical * 3.5),)),
+                    child: Center(child: Text(hours, style: TextStyle(fontSize: SizeConfig.blockSizeVertical * 3.5),)),
                   )
                 ]
               )
@@ -276,7 +291,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
       width: 30,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color
+        color: color,
       ),
       child: Center(child: Text(place)),
     );

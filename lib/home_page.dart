@@ -560,6 +560,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
     final AuthService _auth = AuthService();
     int x = 0;
     final user = Provider.of<User>(context);
+    DateFormat format = new DateFormat("MM/dd/yyyy");
 
     int _whithin10Days(DocumentSnapshot snapshot) {
       int _date = Jiffy(DateTime.now()).dayOfYear;
@@ -584,9 +585,9 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.all(15)),
                   Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: SizeConfig.blockSizeHorizontal * 50,
                   child: FittedBox(
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitWidth,
                       child: Text(
                       "My Events", textAlign: TextAlign.center,
                       style: TextStyle(
@@ -632,7 +633,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                     int numOfEvents = snapshot.data.length;
                     for(int i = 0; i < snapshot.data.length; i++) {
                       if(snapshot.data[i].data['type'] == "Service Event") {
-                        if(snapshot.data[i].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+                        if(snapshot.data[i].data["participates"].contains(userData.firstName + " " + userData.lastName) && format.parse(snapshot.data[i].data['date']).isAfter(DateTime.now())) {
 
                         }
                         else {
@@ -664,7 +665,7 @@ class _StudentMyEvents extends State<StudentMyEvents> {
                           }
                           else {
                             if(snapshot.data[index].data['type'] == "Service Event") {
-                              if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName)) {
+                              if(snapshot.data[index].data["participates"].contains(userData.firstName + " " + userData.lastName) && format.parse(snapshot.data[index].data['date']).isAfter(DateTime.now())) {
                                 return BottomPageCards(post: snapshot.data[index]);
                               }
                               else {

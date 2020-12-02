@@ -205,6 +205,22 @@ class _AccountProfileState extends State<AccountProfile> {
 
   Widget middleAcountProfilePage(BuildContext context) {
     final user = Provider.of<User>(context);
+    String fixHours(var theHours) {
+      String hours;
+
+      if(theHours is double) {
+        if(theHours.toString().substring(theHours.toString().length - 2) == ".0") {
+          hours = theHours.toString().substring(0, theHours.toString().length - 2);
+        }
+        else {
+          hours = theHours.toString();
+        }
+      }
+      else {
+        hours = theHours.toString();
+      }
+      return hours;
+    }
 
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
@@ -212,10 +228,20 @@ class _AccountProfileState extends State<AccountProfile> {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
           if(widget.type == "admin") {
-            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), widget.posts['firstQuarter'].toString(), widget.posts['secondQuarter'].toString(), widget.posts['thirdQuarter'].toString(), widget.posts['fourthQuarter'].toString(), widget.posts['numClub'], widget.posts['num of community service events']);
+            String firstQuarter = fixHours(widget.posts['firstQuarter']);
+            String secondQuarter = fixHours(widget.posts['secondQuarter']);
+            String thirdQuarter = fixHours(widget.posts['thirdQuarter']);
+            String fourthQuarter = fixHours(widget.posts['fourthQuarter']);
+
+            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, widget.posts['numClub'], widget.posts['num of community service events']);
           }
           if(widget.type == "student") {
-            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), userData.firstQuarter.toString(), userData.secondQuarter.toString(), userData.thirdQuarter.toString(), userData.fourthQuarter.toString(), userData.numClub, userData.numOfCommunityServiceEvents);
+            String firstQuarter = fixHours(userData.firstQuarter);
+            String secondQuarter = fixHours(userData.secondQuarter);
+            String thirdQuarter = fixHours(userData.thirdQuarter);
+            String fourthQuarter = fixHours(userData.fourthQuarter);
+
+            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, userData.numClub, userData.numOfCommunityServiceEvents);
           }
           else {
             return CircularProgressIndicator();
@@ -552,7 +578,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                 width: SizeConfig.blockSizeHorizontal * 25,
                                   child: Material(
                                     color: Colors.transparent,
-                                  child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)),
+                                    child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)),
                                 ),
                               ),
                             ),
@@ -807,7 +833,7 @@ class _AccountProfileState extends State<AccountProfile> {
         height: SizeConfig.blockSizeVertical * 6,
         width: SizeConfig.blockSizeHorizontal * 90,
         child: Card(
-          elevation: 8,
+          elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)
           ),
@@ -829,9 +855,9 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
         width: SizeConfig.blockSizeHorizontal * 90,
         child: Card(
           color: double.parse(hours) == 0 ? Colors.yellow[400] : Colors.white,
-          elevation: 8,
+          elevation: 4,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)
+            borderRadius: BorderRadius.circular(10)
           ),
             child: Align(
               alignment: Alignment.center,

@@ -39,7 +39,7 @@ class SettingsPageBody extends StatelessWidget {
           settingsTiles(context, "Notifications", notificationsSettings(context), Icons.notifications),
           settingsTiles(context, "Give Feedback", feedbackSettings(context), Icons.feedback),
           Text("FOLLOW US", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 35, decoration: TextDecoration.underline), textAlign: TextAlign.center,),
-          Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1)),
+          Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 0.5)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -194,7 +194,16 @@ class SettingsPageBody extends StatelessWidget {
   }
 
   Widget feedbackSettings(BuildContext context) {
-
+    return AlertDialog(
+      title: Text("Feedback"),
+      content: Text(""),
+      actions: [
+        FlatButton(
+          child: Text("DONE"),
+          onPressed: () => Navigator.of(context).pop(),
+        )
+      ],
+    );
   }
 
   Widget settingsResetPassword(BuildContext context) {

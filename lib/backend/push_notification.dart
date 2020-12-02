@@ -24,8 +24,8 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
      body: jsonEncode(
      <String, dynamic>{
        'notification': <String, dynamic>{
-         'body': title,
-         'title': body,
+         'body': body,
+         'title': title,
        },
        'priority': 'high',
        'data': <String, dynamic>{
