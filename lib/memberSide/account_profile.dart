@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sickles_nhs_app/backend/currentQuarter.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
@@ -53,11 +54,11 @@ class _AccountProfileState extends State<AccountProfile> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
+        color: Colors.green,
         height: SizeConfig.blockSizeVertical * 100,
         child: Column(
           children: <Widget>[
             topHalfOfAccountProfile(context),
-            Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3),),
             middleAcountProfilePage(context)
           ],
         ),
@@ -169,19 +170,8 @@ class _AccountProfileState extends State<AccountProfile> {
   Widget topHalfOfAccountProfile(BuildContext context) {
     return Material(
         child: Container(
-        height: SizeConfig.blockSizeVertical * 20,
+        height: SizeConfig.blockSizeVertical * 17.5,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30)
-          ),
-          boxShadow: [BoxShadow(
-            color: Colors.black,
-            blurRadius: 10.0,
-            spreadRadius: 1.0,
-            offset: Offset(0, 5.0)
-            )
-          ],
           color: Colors.green,
         ),
         child: Row(
@@ -230,7 +220,7 @@ class _AccountProfileState extends State<AccountProfile> {
           if(widget.type == "admin") {
             String firstQuarter = fixHours(widget.posts['firstQuarter']);
             String secondQuarter = fixHours(widget.posts['secondQuarter']);
-            String thirdQuarter = fixHours(widget.posts['thirdQuarter']);
+            String thirdQuarter = fixHours(widget.posts['thirdQuarter']); 
             String fourthQuarter = fixHours(widget.posts['fourthQuarter']);
 
             return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, widget.posts['numClub'], widget.posts['num of community service events']);
@@ -257,7 +247,7 @@ class _AccountProfileState extends State<AccountProfile> {
   Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
-    Color _chapterProjectColor = Colors.transparent;
+    Color _chapterProjectColor = Colors.white;
     Color _chapterProjectTextColor = Colors.black;
 
     List title = new List ();
@@ -279,10 +269,23 @@ class _AccountProfileState extends State<AccountProfile> {
     DateFormat secondFormat = new DateFormat("MM-dd-yyyy");
 
     return Container(
-      height: SizeConfig.blockSizeVertical * 74,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        boxShadow: [
+          BoxShadow(
+            color: Color(000000).withOpacity(0.25),
+            offset: Offset(0, -2),
+            blurRadius: 15,
+            spreadRadius: 5
+          )
+        ]
+      ),
+      height: SizeConfig.blockSizeVertical * 82.5,
       child: Column(
         children: <Widget>[
           Container(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
             width: SizeConfig.blockSizeHorizontal * 25,
             height: SizeConfig.blockSizeVertical * 18,
             child: FloatingActionButton(
@@ -437,42 +440,45 @@ class _AccountProfileState extends State<AccountProfile> {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return Padding(
-                                    padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 10, 0, SizeConfig.blockSizeVertical * 10),
-                                    child: AlertDialog(
-                                      title: Text("Hours"),
-                                      content: Column(
-                                        children: <Widget> [
-                                          ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 0 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
-                                          ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 3 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                          ListTile(title: Text("Quarter 3: " + q3Hours), trailing: double.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                          ListTile(title: Text("Quarter 4: " + q4Hours), trailing: double.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-                                          ListTile(title: Text("Total: " + hours, style: TextStyle(fontWeight: FontWeight.bold)),),
-                                        ]
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("DONE", style: TextStyle(color: Colors.green),),
-                                        )
-                                      ],
-                                    ),
-                                  );
+                                  return hoursPopup(q1Hours, q2Hours, q3Hours, q4Hours, hours);
                                 }
                               );
                             },
-                            child: Card(
-                              elevation: 8,
-                              child: Container(
-                                height: SizeConfig.blockSizeVertical * 7,
-                                width: SizeConfig.blockSizeHorizontal * 25,
-                                  child: Material(
-                                    color: _theColor,
-                                    child: Align(alignment: Alignment.center, child: Text(currentQuarterHours.toString() + " Hours", style: TextStyle(fontSize: 20, color: _theTextColor), textAlign: TextAlign.center,)),
-                                ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _theColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    offset: Offset(2, 4),
+                                    color: Color(000000).withOpacity(0.25)
+                                  )
+                                ]
                               ),
+                              height: SizeConfig.blockSizeVertical * 13.2,
+                              width: SizeConfig.blockSizeHorizontal * 25,
+                                child: CircularPercentIndicator(
+                                  radius: SizeConfig.blockSizeVertical * 12,
+                                  lineWidth: 5,
+                                  startAngle: 180,
+                                  backgroundColor: Colors.white,                               
+                                  percent: (double.parse(hours) / 3),
+                                  center: Text.rich(
+                                    TextSpan(
+                                      text: currentQuarterHours.toString(),
+                                      style: TextStyle(color: _theTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+                                      children: <InlineSpan> [
+                                        TextSpan(
+                                          text: "\nHours",
+                                          style: TextStyle(color: _theTextColor.withOpacity(0.54), fontSize: 14)
+                                        )
+                                      ]
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  progressColor: Colors.green,
+                                ),
                             ),
                           ),
                           GestureDetector(
@@ -571,14 +577,37 @@ class _AccountProfileState extends State<AccountProfile> {
                                 }
                               );
                             },
-                            child: Card(
-                              elevation: 8,
-                              child: Container(
-                                height: SizeConfig.blockSizeVertical * 7,
-                                width: SizeConfig.blockSizeHorizontal * 25,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: Align(alignment: Alignment.center, child: Text(numClub.toString() + " Meetings", style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    offset: Offset(2, 4),
+                                    color: Color(000000).withOpacity(0.25)
+                                  )
+                                ]
+                              ),
+                              height: SizeConfig.blockSizeVertical * 12,
+                              width: SizeConfig.blockSizeHorizontal * 25,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Align(
+                                    alignment: Alignment.center, 
+                                    child: Text.rich(
+                                      TextSpan(
+                                        text: numClub.toString(),
+                                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+                                        children: <InlineSpan> [
+                                          TextSpan(
+                                            text: "\nMeetings",
+                                            style: TextStyle(color: Colors.black.withOpacity(0.54), fontSize: 14)
+                                          )
+                                        ]
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
                                 ),
                               ),
                             ),
@@ -628,29 +657,127 @@ class _AccountProfileState extends State<AccountProfile> {
                                 }
                               );
                             },
-                            child: Card(
-                              elevation: 8,
-                              child: Container(
-                                height: SizeConfig.blockSizeVertical * 7,
-                                width: SizeConfig.blockSizeHorizontal * 25,
-                                  child: Material(
-                                  color: _chapterProjectColor,
-                                  child: Align(alignment: Alignment.center, child: Text(numOfCommunityServiceEvents.toString() + " Projects", style: TextStyle(fontSize: 20, color: _chapterProjectTextColor), textAlign: TextAlign.center,)),
-                                ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _chapterProjectColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    offset: Offset(2, 4),
+                                    color: Color(000000).withOpacity(0.25)
+                                  )
+                                ]
+                              ),
+                              height: SizeConfig.blockSizeVertical * 12,
+                              width: SizeConfig.blockSizeHorizontal * 25,
+                                child: Material(
+                                  color: Colors.transparent,
+                                child: Align(
+                                  alignment: Alignment.center, 
+                                    child: Text.rich(
+                                      TextSpan(
+                                        text: numOfCommunityServiceEvents.toString(),
+                                        style: TextStyle(color: _chapterProjectTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+                                        children: <InlineSpan> [
+                                          TextSpan(
+                                            text: "\nProjects",
+                                            style: TextStyle(color: _chapterProjectTextColor.withOpacity(0.54), fontSize: 14)
+                                          )
+                                        ]
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ),
                               ),
                             ),
                           )
                         ],
                       ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _chapterProjectColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4,
+                                  offset: Offset(2, 4),
+                                  color: Color(000000).withOpacity(0.25)
+                                )
+                              ]
+                            ),
+                            height: SizeConfig.blockSizeVertical * 12,
+                            width: SizeConfig.blockSizeHorizontal * 25,
+                              child: Material(
+                                color: Colors.transparent,
+                              child: Align(
+                                alignment: Alignment.center, 
+                                  child: Text.rich(
+                                    TextSpan(
+                                      text: "\$" + "15",
+                                      style: TextStyle(color: _chapterProjectTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+                                      children: <InlineSpan> [
+                                        TextSpan(
+                                          text: "\nPaid",
+                                          style: TextStyle(color: _chapterProjectTextColor.withOpacity(0.54), fontSize: 14)
+                                        )
+                                      ]
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ),
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 3),),
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _chapterProjectColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4,
+                                  offset: Offset(2, 4),
+                                  color: Color(000000).withOpacity(0.25)
+                                )
+                              ]
+                            ),
+                            height: SizeConfig.blockSizeVertical * 12,
+                            width: SizeConfig.blockSizeHorizontal * 25,
+                              child: Material(
+                                color: Colors.transparent,
+                              child: Align(
+                                alignment: Alignment.center, 
+                                  child: Text.rich(
+                                    TextSpan(
+                                      text: "3",
+                                      style: TextStyle(color: _chapterProjectTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+                                      children: <InlineSpan> [
+                                        TextSpan(
+                                          text: "\nEvents",
+                                          style: TextStyle(color: _chapterProjectTextColor.withOpacity(0.54), fontSize: 14)
+                                        )
+                                      ]
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
               Padding(padding: EdgeInsets.all(5),),
               Material(
-                    color: Colors.transparent,
-                    child: Text("Recent Activity", 
-                    style: TextStyle(fontSize: 20),
-                    ),)
-              ,
+                color: Colors.transparent,
+                child: Text("Recent Activity".toUpperCase(), 
+                  style: TextStyle(fontSize: 20, decoration: TextDecoration.underline, fontWeight: FontWeight.w600),
+                ),
+              ),
               Container(
-                    height: SizeConfig.blockSizeVertical * 27,
+                    height: SizeConfig.blockSizeVertical * 21,
                       child: FutureBuilder(
                         future: getQuarterHours(),
                         builder: (_, quarterHours) {
@@ -686,6 +813,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           else {
                             return ListView.builder(
                               itemCount: title.length,
+                              padding: EdgeInsets.zero,
                               itemBuilder: (_, index) {
                                 if(thenewDate[index].isAfter(startOfSchool) && thenewDate[index].isBefore(firstQuarter)) {
                                   if(thefirstQuarter == true) {
@@ -824,6 +952,31 @@ class _AccountProfileState extends State<AccountProfile> {
       ),
     );
   }
+
+  Widget hoursPopup(String q1Hours, String q2Hours, String q3Hours, String q4Hours, String hours) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeVertical * 10, 0, SizeConfig.blockSizeVertical * 10),
+      child: AlertDialog(
+        title: Text("Hours"),
+        content: Column(
+          children: <Widget> [
+            ListTile(title: Text("Quarter 1: " + q1Hours), trailing: double.parse(q1Hours) >= 0 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,),),
+            ListTile(title: Text("Quarter 2: " + q2Hours), trailing: double.parse(q2Hours) >= 3 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+            ListTile(title: Text("Quarter 3: " + q3Hours), trailing: double.parse(q3Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+            ListTile(title: Text("Quarter 4: " + q4Hours), trailing: double.parse(q4Hours) >= 6 ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+            ListTile(title: Text("Total: " + hours, style: TextStyle(fontWeight: FontWeight.bold)),),
+          ]
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("DONE", style: TextStyle(color: Colors.green),),
+          )
+        ],
+      ),
+    );
 }
 
   Widget quarterPages(String quarter) {
@@ -908,3 +1061,4 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
       );
     }
   }
+}

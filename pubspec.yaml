@@ -50,6 +50,7 @@ dependencies:
   flutter_automation: ^1.4.0
   font_awesome_flutter: ^8.10.0
   url_launcher: ^5.6.0
+  percent_indicator: "^2.1.7+2"
 
 dev_dependencies:
   flutter_test:
