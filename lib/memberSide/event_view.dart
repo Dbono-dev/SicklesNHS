@@ -115,41 +115,44 @@ class TopHalfViewEventsPage extends StatelessWidget {
               child: Container(
               height: SizeConfig.blockSizeVertical * 22.5,
               color: Colors.green,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    color: Colors.white,
-                    iconSize: 60,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 19),
-                  ),
-                  editIcon(),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: Container(
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.grey,
-                        elevation: 8,
-                        onPressed: () {
-                          Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student",)
-                            ));
-                        },
-                        child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30
-                        ),),
-                      ),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      color: Colors.white,
+                      iconSize: 60,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 19),
+                    ),
+                    editIcon(),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Container(
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.grey,
+                          elevation: 8,
+                          onPressed: () {
+                            Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => AccountProfile(type: "student",)
+                              ));
+                          },
+                          child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30
+                          ),),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
       );
