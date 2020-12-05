@@ -14,11 +14,31 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 3)),
-          Expanded(child: SettingsPageBody())
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              height: SizeConfig.blockSizeVertical * 82,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+                child: SettingsPageBody(),
+              ),
+            ),
+          )
         ]
       ),
     );
@@ -32,6 +52,7 @@ class SettingsPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: SizeConfig.blockSizeVertical * 82,
       child: Column(
         children: <Widget>[
           settingsTiles(context, "Reset Password", settingsResetPassword(context), Icons.refresh),

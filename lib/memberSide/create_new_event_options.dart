@@ -15,17 +15,38 @@ class CreateNewHoursOptionsPage extends StatelessWidget {
   final String tile3;
   final String uid;
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-          theTiles(tile1, tile1 == "Create New Scanning Session" ? ScanningPage(uid) : AddNewHours(), context),
-          theTiles(tile2, tile2 == "View Saved Scanning Sessions" ? ViewSavedScanningSessions(uid: uid,) : ViewSavedServiceHourForms(), context),
-          tile3 == "View Submitted Scanning Sessions" ? Container() : theTiles(tile3, SubmittedServiceHourForms(uid: uid), context),
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+              child: Column(
+                children: [
+                  theTiles(tile1, tile1 == "Create New Scanning Session" ? ScanningPage(uid) : AddNewHours(), context),
+                  theTiles(tile2, tile2 == "View Saved Scanning Sessions" ? ViewSavedScanningSessions(uid: uid,) : ViewSavedServiceHourForms(), context),
+                  tile3 == "View Submitted Scanning Sessions" ? Container() : theTiles(tile3, SubmittedServiceHourForms(uid: uid), context),
+                ],
+              ),
+            ),
+          ),
         ]
       ),
     );

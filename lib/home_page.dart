@@ -336,13 +336,13 @@ class MiddleHomePageCards extends StatelessWidget {
                               height: SizeConfig.blockSizeVertical * 16,
                               child: Container(
                                 padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 1, 0, SizeConfig.blockSizeHorizontal * 1, 0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Hero(
-                                    tag: 'eventView' + post.data['title'],
+                                child: Hero(
+                                  tag: 'eventView' + post.data['title'],
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    clipBehavior: Clip.antiAlias,
                                     child: image
-                                  )
+                                  ),
                                 ),
                               ),
                             ),

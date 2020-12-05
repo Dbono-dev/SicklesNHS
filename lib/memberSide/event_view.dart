@@ -26,25 +26,43 @@ class EventPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Stack(
-        children: <Widget>[
-          Container(color: Colors.white,),
-          Container(
-              child: SingleChildScrollView(
+      color: Colors.white,
+        child: SingleChildScrollView(
+          child: Stack(
+          children: <Widget>[
+            TopHalfViewEventsPage(post: post),
+            Padding(
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(000000).withOpacity(0.25),
+                      offset: Offset(0, -2),
+                      blurRadius: 15,
+                      spreadRadius: 5
+                    )
+                  ]
+                ),
                 child: Column(
-                children: <Widget>[
-                  TopHalfViewEventsPage(post: post),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),),
-                  MiddleEventViewPage(post: post,),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-                  BottomEventViewPage(post: post,),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-                  post.data['type'] == "clubDates" ? Container() : BottomBottomEventViewPage(post: post, officerSponsor: officerSponsor)
-        ], ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
+                      child: MiddleEventViewPage(post: post,),
+                    ),
+                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
+                    BottomEventViewPage(post: post,),
+                    Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
+                    post.data['type'] == "clubDates" ? Container() : BottomBottomEventViewPage(post: post, officerSponsor: officerSponsor)
+                  ],
+                ),
               ),
-          )
-          ],
+            ),
+          ], 
         ),
+      ),
     );
   }
 }
@@ -95,21 +113,8 @@ class TopHalfViewEventsPage extends StatelessWidget {
 
             return Material(
               child: Container(
-              height: SizeConfig.blockSizeVertical * 20,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30)
-                ),
-                boxShadow: [BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 10.0,
-                  spreadRadius: 1.0,
-                  offset: Offset(0, 5.0)
-                  )
-                ],
-                color: Colors.green,
-              ),
+              height: SizeConfig.blockSizeVertical * 22.5,
+              color: Colors.green,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -310,7 +315,8 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
     }
 
     return Card(
-      elevation: 8,
+      elevation: 0,
+      color: Colors.transparent,
         child: Material(
         color: Colors.white,
           child: Stack(
@@ -319,7 +325,7 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                 color: Colors.white,
               ),
               Container(
-                height: SizeConfig.blockSizeVertical * 66,
+                height: SizeConfig.blockSizeVertical * 70,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -327,9 +333,10 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                 Text(title, style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-                ),
+                Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1)),
                 widget.post.data['date'].toString().length > 10 ? GestureDetector(
                   onTap: () {
                     showCupertinoModalPopup(
@@ -362,12 +369,16 @@ class _MiddleEventViewPageState extends State<MiddleEventViewPage> {
                     ),
                   )
                 ) : Text(widget.post.data['date']),
+                Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1)),
                 Container(
                   height: SizeConfig.blockSizeVertical * 20,
-                  width: SizeConfig.blockSizeHorizontal * 80,
                   child: Hero(
                     tag: 'eventView' + title,
-                    child: _image
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      clipBehavior: Clip.antiAlias,
+                      child: _image,
+                    ),
                   ),
                 ),
                 Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.5),),

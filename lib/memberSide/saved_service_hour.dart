@@ -21,71 +21,91 @@ class _ViewSavedServiceHourFormsState extends State<ViewSavedServiceHourForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
+      backgroundColor: Colors.transparent,
+      body: Stack(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2)),
-          FutureBuilder(
-            future: getPosts(),
-            builder: (_, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green)),);
-              }
-              else {
-                return Container(
-                  height: SizeConfig.blockSizeVertical * 76,
-                  child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (_, index) {
-                      if(snapshot.data[index].data['save_submit'] == "save") {
-                        return Card(
-                          elevation: 10,
-                          child: ListTile(
-                            title: Text(snapshot.data[index].data['type'], textAlign: TextAlign.center,),
-                            trailing: Container(
-                              width: SizeConfig.blockSizeHorizontal * 49,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: () {
-                                      List fromSaved = new List();
-                                      fromSaved.add(snapshot.data[index].data['type']);
-                                      fromSaved.add(snapshot.data[index].data['location']);
-                                      fromSaved.add(snapshot.data[index].data['date']);
-                                      fromSaved.add(snapshot.data[index].data['hours']);
-                                      fromSaved.add(snapshot.data[index].data['name of supervisor']);
-                                      fromSaved.add(snapshot.data[index].data['supervisor phone number']);
-                                      fromSaved.add(snapshot.data[index].data['supervisor email']);
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewHours(fromSaved: fromSaved,)));
-                                    }, 
-                                    child: Text("Edit", style: TextStyle(color: Colors.green))
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      dynamic result = sendEventToDatabase(snapshot.data[index].data['type']);
-                                      setState(() {
-                                        
-                                      });
-                                    },
-                                    child: Text("Submit", style: TextStyle(color: Colors.green))
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      else {
-                        return Container();
-                      }
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+                child: FutureBuilder(
+                  future: getPosts(),
+                  builder: (_, snapshot) {
+                    if(snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.green)),);
                     }
-                  ),
-                );
-              }
-            }
+                    else {
+                      return Container(
+                        color: Colors.white,
+                        height: SizeConfig.blockSizeVertical * 78,
+                        child: ListView.builder(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (_, index) {
+                            if(snapshot.data[index].data['save_submit'] == "save") {
+                              return Card(
+                                elevation: 10,
+                                child: ListTile(
+                                  title: Text(snapshot.data[index].data['type'], textAlign: TextAlign.center,),
+                                  trailing: Container(
+                                    width: SizeConfig.blockSizeHorizontal * 49,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        FlatButton(
+                                          onPressed: () {
+                                            List fromSaved = new List();
+                                            fromSaved.add(snapshot.data[index].data['type']);
+                                            fromSaved.add(snapshot.data[index].data['location']);
+                                            fromSaved.add(snapshot.data[index].data['date']);
+                                            fromSaved.add(snapshot.data[index].data['hours']);
+                                            fromSaved.add(snapshot.data[index].data['name of supervisor']);
+                                            fromSaved.add(snapshot.data[index].data['supervisor phone number']);
+                                            fromSaved.add(snapshot.data[index].data['supervisor email']);
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewHours(fromSaved: fromSaved,)));
+                                          }, 
+                                          child: Text("Edit", style: TextStyle(color: Colors.green))
+                                        ),
+                                        FlatButton(
+                                          onPressed: () {
+                                            dynamic result = sendEventToDatabase(snapshot.data[index].data['type']);
+                                            setState(() {
+                                              
+                                            });
+                                          },
+                                          child: Text("Submit", style: TextStyle(color: Colors.green))
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            else {
+                              return Container();
+                            }
+                          }
+                        ),
+                      );
+                    }
+                  }
+                ),
+              ),
+            ),
           )
         ]
       ),      

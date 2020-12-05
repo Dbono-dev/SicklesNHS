@@ -19,13 +19,12 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
     // Handle notification message
     final dynamic notification = message['notification'];
   }
-
   // Or do other work.
 }
 
-class Wrapper extends StatelessWidget {
+bool initalized = false;
 
-  bool initalized = false;
+class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +39,11 @@ class Wrapper extends StatelessWidget {
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
           if(snapshot.hasData) {
-            final FirebaseMessaging _fcm = FirebaseMessaging();
-            UserData userData = snapshot.data;
-            global.fcm = _fcm;
             if(!initalized) {
+              print("initalizes variables");
+              final FirebaseMessaging _fcm = FirebaseMessaging();
+              UserData userData = snapshot.data;
+              global.fcm = _fcm;
               if(Platform.isIOS) {
                 _fcm.requestNotificationPermissions(IosNotificationSettings(
                     sound: true, badge: true, alert: true, provisional: false

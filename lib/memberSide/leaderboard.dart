@@ -10,11 +10,29 @@ class Leaderboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(5)),
-          Expanded(child: LeaderBoardTheReal())
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+              child: Expanded(
+                child: LeaderBoardTheReal()
+              )
+            ),
+          )
         ]
       ),
     );
@@ -61,10 +79,11 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        height: SizeConfig.blockSizeVertical * 79,
+                        height: SizeConfig.blockSizeVertical * 82,
                         width: SizeConfig.blockSizeHorizontal * 100,
                         child: Card(
                           elevation: 0,
+                          color: Colors.transparent,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -159,9 +178,8 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
       color: Colors.transparent,
       child: Column(
         children: <Widget> [
-          Padding(padding: EdgeInsets.all(5)),
           Container(
-            height: SizeConfig.blockSizeVertical * 63,
+            height: SizeConfig.blockSizeVertical * 69,
             child: FutureBuilder(
               future: getQuarter(),
               builder: (_, snapshot) {

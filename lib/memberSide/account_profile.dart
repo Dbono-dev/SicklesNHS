@@ -337,7 +337,7 @@ class _AccountProfileState extends State<AccountProfile> {
               ],
             )
           ),
-          Padding(padding: EdgeInsets.all(7),),
+          Padding(padding: EdgeInsets.all(3.5),),
           FutureBuilder(
             future: getCompletedHours(uid),
             builder: (_, snapshot) {
@@ -430,6 +430,7 @@ class _AccountProfileState extends State<AccountProfile> {
                   future: chapterProjectTile(theHours, date, hours),
                   builder: (context, snapshot) {
                     return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -463,7 +464,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                   lineWidth: 5,
                                   startAngle: 180,
                                   backgroundColor: Colors.white,                               
-                                  percent: (double.parse(hours) / 3),
+                                  percent: double.parse(hours) < 3 ? (double.parse(hours) / 3) : 1,
                                   center: Text.rich(
                                     TextSpan(
                                       text: currentQuarterHours.toString(),
@@ -1007,7 +1008,7 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
         height: SizeConfig.blockSizeVertical * 8,
         width: SizeConfig.blockSizeHorizontal * 90,
         child: Card(
-          color: double.parse(hours) == 0 ? Colors.yellow[400] : Colors.white,
+          color: double.parse(hours) == 0 ? Colors.green : Colors.white,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
@@ -1019,10 +1020,10 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
                 children: <Widget>[
                   Container(
                     width: SizeConfig.blockSizeHorizontal * 40,
-                    child: Text(title, style: TextStyle(fontSize: 15), textAlign: TextAlign.center,)
+                    child: Text(title, style: TextStyle(fontSize: 15, color: double.parse(hours) == 0 ? Colors.white : Colors.black), textAlign: TextAlign.center,)
                   ),
                   Padding(padding: EdgeInsets.all(2)),
-                  Text(date, style: TextStyle(fontSize: 20),),
+                  Text(date, style: TextStyle(fontSize: 15, color: double.parse(hours) == 0 ? Colors.white : Colors.black),),
                   endOfHoursCard(editing, hours, index),
                 ],
               ),
@@ -1034,7 +1035,7 @@ Widget accountProfileCards({Key key, String title, String date, String hours, bo
 
   Widget endOfHoursCard(bool editing, String hours, int index) {
     if(double.parse(hours) == 0) {
-      return Icon(Icons.check, color: Colors.green, size: 25,);
+      return Icon(Icons.check, color: Colors.white, size: 25,);
     }
     else if(editing == true) {
       return SizedBox(

@@ -46,55 +46,46 @@ class TopHalfViewStudentsPage extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
-
             return Material(
               child: Container(
-              height: SizeConfig.blockSizeVertical * 20,
+              height: SizeConfig.blockSizeVertical * 22.5,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30)
-                ),
-                boxShadow: [BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 10.0,
-                  spreadRadius: 1.0,
-                  offset: Offset(0, 5.0)
-                  )
-                ],
                 color: Colors.green,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    color: Colors.white,
-                    iconSize: 60,
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TheOpeningPage()));
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 30),
-                  ),
-                  Container(
-                    child: FloatingActionButton(
-                      heroTag: text == null ? "" : text,
-                      backgroundColor: Colors.grey,
-                      elevation: 8,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      color: Colors.white,
+                      iconSize: 60,
                       onPressed: () {
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + " " + userData.lastName, uid: user.uid)
-                          ));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TheOpeningPage()));
                       },
-                      child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30
-                      ),),
                     ),
-                  )
-                ],
+                    /*Padding(
+                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 30),
+                    ),
+                    Container(
+                      child: FloatingActionButton(
+                        heroTag: text == null ? "" : text,
+                        backgroundColor: Colors.grey,
+                        elevation: 8,
+                        onPressed: () {
+                          Navigator.push(context, 
+                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + " " + userData.lastName, uid: user.uid)
+                            ));
+                        },
+                        child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30
+                        ),),
+                      ),
+                    )*/
+                  ],
+                ),
               ),
             ),
       );
