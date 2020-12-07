@@ -8,6 +8,7 @@ import 'package:sickles_nhs_app/adminSide/add_new_event.dart';
 import 'package:sickles_nhs_app/adminSide/approve_hours.dart';
 import 'package:sickles_nhs_app/backend/auth_service.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
+import 'package:sickles_nhs_app/memberSide/additional_opportunities.dart';
 import 'package:sickles_nhs_app/memberSide/create_new_event_options.dart';
 import 'package:sickles_nhs_app/memberSide/event_view.dart';
 import 'package:sickles_nhs_app/adminSide/important_dates.dart';
@@ -75,9 +76,9 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
     final user = Provider.of<User>(context);
 
     return Container(
-      height: SizeConfig.blockSizeVertical * 45,
       color: Colors.transparent,
-      padding: EdgeInsets.all(10),
+      height: SizeConfig.blockSizeVertical * 45,
+      padding: EdgeInsets.only(left: 10, top: 10),
       child: StreamBuilder<UserData>(
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
@@ -138,26 +139,45 @@ class _MiddleHomePageState extends State<MiddleHomePage> {
                     );
                   }
                   else {
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (_, index) {
-                        int numberOfTimesThrough = 0;
-                        int a = 0;
-                        for(int i = a; a < snapshot.data[index].data['date'].toString().length; i + 1) {
-                          numberOfTimesThrough = numberOfTimesThrough + 1;
-                          if(format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isBefore(secondFormat.parse(DateTime.now().toString().substring(0, 10)))) { //&& format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
-                            numberOfTimesThrough--;
-                          }
-                          a = a + 11;
-                        }
-                        if(numberOfTimesThrough > 0) {
-                          return MiddleHomePageCards(post: snapshot.data[index], officerSponsor: userData.permissions == 0 || userData.permissions == 1 ? true : false);
-                        }
-                        else {
-                          return Container();
-                        }
-                      }
+                    return Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdditionalOpportunities()));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("View Additional Opportunities", textAlign: TextAlign.right, style: TextStyle(fontSize: 12, color: Colors.green)),
+                              Icon(Icons.arrow_forward, color: Colors.green, size: 16)
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: SizeConfig.blockSizeVertical * 41,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (_, index) {
+                              int numberOfTimesThrough = 0;
+                              int a = 0;
+                              for(int i = a; a < snapshot.data[index].data['date'].toString().length; i + 1) {
+                                numberOfTimesThrough = numberOfTimesThrough + 1;
+                                if(format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isBefore(secondFormat.parse(DateTime.now().toString().substring(0, 10)))) { //&& format.parse(snapshot.data[index].data['date'].toString().substring(a, a + 10)).isAtSameMomentAs(DateTime.now())) {
+                                  numberOfTimesThrough--;
+                                }
+                                a = a + 11;
+                              }
+                              if(numberOfTimesThrough > 0) {
+                                return MiddleHomePageCards(post: snapshot.data[index], officerSponsor: userData.permissions == 0 || userData.permissions == 1 ? true : false);
+                              }
+                              else {
+                                return Container();
+                              }
+                            }
+                          ),
+                        ),
+                      ],
                     );
                   }
                 }
@@ -214,10 +234,10 @@ class TopHalfHomePage extends StatelessWidget {
                     bottomRight: Radius.circular(30)
                   ),
                   boxShadow: [BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 5.0)
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 4,
+                    spreadRadius: 0,
+                    offset: Offset(0, 4)
                     )
                   ],
                   color: Colors.green,
@@ -314,10 +334,11 @@ class MiddleHomePageCards extends StatelessWidget {
               },
                 child: Container(
                 padding: EdgeInsets.all(3),
-                height: SizeConfig.blockSizeVertical * 40,
+                height: SizeConfig.blockSizeVertical * 39.5,
                 width: SizeConfig.blockSizeHorizontal * 55, 
                 child: Card(
-                  elevation: 8,
+                  elevation: 4,
+                  shadowColor: Colors.black.withOpacity(0.75),
                   color: theColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -408,10 +429,10 @@ class BottonHalfHomePage extends StatelessWidget {
                     ),
                     color: Colors.green,
                     boxShadow: [BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 25.0,
-                      spreadRadius: 2.0,
-                      offset: Offset(0, 10)
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 5,
+                      spreadRadius: 0,
+                      offset: Offset(0, -2)
                       )
                 ],
               ),
@@ -434,10 +455,10 @@ class BottonHalfHomePage extends StatelessWidget {
                     ),
                     color: Colors.green,
                     boxShadow: [BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 25.0,
-                      spreadRadius: 2.0,
-                      offset: Offset(0, 10)
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 5,
+                      spreadRadius: 0,
+                      offset: Offset(0, -2)
                       )
                 ],
               ),
@@ -460,10 +481,10 @@ class BottonHalfHomePage extends StatelessWidget {
                     ),
                     color: Colors.green,
                     boxShadow: [BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 25.0,
-                      spreadRadius: 2.0,
-                      offset: Offset(0, 10)
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 5,
+                      spreadRadius: 0,
+                      offset: Offset(0, -2)
                       )
                 ],
               ),

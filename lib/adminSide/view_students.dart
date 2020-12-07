@@ -17,12 +17,32 @@ class ViewStudents extends StatelessWidget {
           height: SizeConfig.blockSizeVertical * 100,
           child: Scaffold(
               backgroundColor: Colors.white,
-              body: Column(
+              body: Stack(
                 children: <Widget> [
                   TopHalfViewStudentsPage(),
-                  Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 1)),
-                  TopMiddleViewStudentPage(),
-                  MiddleViewStudentsPage(),
+                  Padding(
+                    padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(000000).withOpacity(0.25),
+                            offset: Offset(0, -2),
+                            blurRadius: 15,
+                            spreadRadius: 5
+                          )
+                        ]
+                      ),
+                      child: Column(
+                        children: [
+                          TopMiddleViewStudentPage(),
+                          MiddleViewStudentsPage(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ]
               )
           ),
@@ -65,25 +85,6 @@ class TopHalfViewStudentsPage extends StatelessWidget {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => TheOpeningPage()));
                       },
                     ),
-                    /*Padding(
-                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 30),
-                    ),
-                    Container(
-                      child: FloatingActionButton(
-                        heroTag: text == null ? "" : text,
-                        backgroundColor: Colors.grey,
-                        elevation: 8,
-                        onPressed: () {
-                          Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => AccountProfile(type: "student", name: userData.firstName + " " + userData.lastName, uid: user.uid)
-                            ));
-                        },
-                        child: Text(userData.firstName.substring(0, 1) + userData.lastName.substring(0, 1), style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30
-                        ),),
-                      ),
-                    )*/
                   ],
                 ),
               ),
@@ -145,16 +146,39 @@ class TopMiddleViewStudentPage extends StatelessWidget {
               }
             }
             return Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
               child: Column(
                 children: <Widget>[
-                  Text("Current Status of this Quarter"),
+                  Text("Current Status of this Quarter", style: TextStyle(fontWeight: FontWeight.bold)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Icon(Icons.check, color: Colors.green,),
-                      Text("Completed: " + yes.toString()),
+                      RichText(
+                        text: TextSpan(
+                          text: "Completed: ",
+                          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+                          children: <TextSpan> [
+                            TextSpan(
+                              text: yes.toString(),
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal)
+                            )
+                          ]
+                        ), 
+                      ),
                       Icon(Icons.close, color: Colors.red,),
-                      Text("Not Completed: " + no.toString())
+                      RichText(
+                        text: TextSpan(
+                          text: "Not Completed: ",
+                          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+                          children: <TextSpan> [
+                            TextSpan(
+                              text: no.toString(),
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal)
+                            )
+                          ]
+                        ), 
+                      )
                     ],
                   ),
                 ],
