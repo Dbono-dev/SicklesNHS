@@ -8,7 +8,7 @@ class AdditionalOpportunities extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
+      body: Stack( 
         children: [
           TopHalfViewStudentsPage(),
           Padding(

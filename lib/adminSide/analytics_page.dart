@@ -119,9 +119,30 @@ class AnalyticsPage extends StatelessWidget {
                         ]
                       ),
                     ),
-                    circleText("COMPLETED\nREQUIRED HOURS", double.parse((requiredHours / totalMembers).toStringAsFixed(3))),
-                    circleText("COMPLETED\nCHAPTER PROJECTS", double.parse((completedChapterProjects / totalMembers).toStringAsFixed(3))),
-                    circleText("COMPLETED HOURS +\nCHAPTER PROJECT", double.parse((combination / totalMembers).toStringAsFixed(3))),
+                    Container(
+                      height: SizeConfig.blockSizeVertical * 40,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              justTheText("COMPLETED\nREQUIRED HOURS"),
+                              justTheText("COMPLETED\nCHAPTER PROJECTS"),
+                              justTheText("COMPLETED HOURS +\nCHAPTER PROJECT"),
+                            ]
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              justTheCircle(double.parse((requiredHours / totalMembers).toStringAsFixed(3))),
+                              justTheCircle(double.parse((completedChapterProjects / totalMembers).toStringAsFixed(3))),
+                              justTheCircle(double.parse((combination / totalMembers).toStringAsFixed(3))),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -158,6 +179,25 @@ class AnalyticsPage extends StatelessWidget {
             )
           )
         ],
+      ),
+    );
+  }
+
+  Widget justTheText(String text) {
+    return Text(text, style: TextStyle(fontSize: 16), textAlign: TextAlign.center);
+  }
+
+  Widget justTheCircle(double theDoubleNumber) {
+    return Container(
+      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), offset: Offset(2, 4), blurRadius: 4, spreadRadius: 0)]),
+      child: CircularPercentIndicator(
+        backgroundColor: Colors.white,
+        progressColor: Colors.green,
+        radius: SizeConfig.blockSizeVertical * 12,
+        lineWidth: 5,
+        startAngle: 180,
+        percent: theDoubleNumber,
+        center: Text((theDoubleNumber * 100).toString().substring(0, 4) + "%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeVertical * 2.5),),
       ),
     );
   }

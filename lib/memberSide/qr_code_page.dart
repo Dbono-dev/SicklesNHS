@@ -75,6 +75,7 @@ Widget build(BuildContext context) {
       children: <Widget>[
         Text(
           title,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: SizeConfig.blockSizeHorizontal * 10,

@@ -39,115 +39,137 @@ class _ExportDataPageState extends State<ExportDataPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: <Widget> [
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(7),),
-          Card(
-            elevation: 10,
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: RadioListTile<ExportDataOptions>(
-              title: Text("Specific Event"),
-              value: ExportDataOptions.specificEvent,
-              groupValue: _choice,
-              onChanged: (ExportDataOptions value) {
-                setState(() {
-                  _choice = value;
-                });
-              }
-            ),
-          ),
-          Card(
-            elevation: 10,
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: RadioListTile<ExportDataOptions>(
-              title: Text("Specific Grade Level"),
-              value: ExportDataOptions.specificClass,
-              groupValue: _choice,
-              onChanged: (ExportDataOptions value) {
-                setState(() {
-                  _choice = value;
-                });
-              }
-            ),
-          ),
-          Card(
-            elevation: 10,
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: RadioListTile<ExportDataOptions>(
-              title: Text("Specific Person"),
-              value: ExportDataOptions.specificPerson,
-              groupValue: _choice,
-              onChanged: (ExportDataOptions value) {
-                setState(() {
-                  _choice = value;
-                });
-              }
-            ),
-          ),
-          Card(
-            elevation: 10,
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: RadioListTile<ExportDataOptions>(
-              title: Text("All Students"),
-              value: ExportDataOptions.allStudents,
-              groupValue: _choice,
-              onChanged: (ExportDataOptions value) {
-                setState(() {
-                  _choice = value;
-                });
-              }
-            ),
-          ),
-          Spacer(),
-          Material(
-            type: MaterialType.transparency,
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
             child: Container(
-            height: SizeConfig.blockSizeVertical * 7,
-            decoration: BoxDecoration(
-              boxShadow: [BoxShadow(
-                color: Colors.black,
-                blurRadius: 15.0,
-                spreadRadius: 2.0,
-                offset: Offset(0, 10.0)
-                )
-              ],
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30)
+              width: SizeConfig.blockSizeHorizontal * 100,
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
               ),
-              color: Colors.green,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Builder(
-                  builder: (context) {
-                    return FlatButton(
-                      child: Text("Export Data", style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                      )),
-                      onPressed: ()  {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return exportDataDialog(_choice);
-                          }
-                        );
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 10,
+                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    child: RadioListTile<ExportDataOptions>(
+                      title: Text("Specific Event"),
+                      value: ExportDataOptions.specificEvent,
+                      groupValue: _choice,
+                      onChanged: (ExportDataOptions value) {
+                        setState(() {
+                          _choice = value;
+                        });
                       }
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ),
+                  Card(
+                    elevation: 10,
+                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    child: RadioListTile<ExportDataOptions>(
+                      title: Text("Specific Grade Level"),
+                      value: ExportDataOptions.specificClass,
+                      groupValue: _choice,
+                      onChanged: (ExportDataOptions value) {
+                        setState(() {
+                          _choice = value;
+                        });
+                      }
+                    ),
+                  ),
+                  Card(
+                    elevation: 10,
+                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    child: RadioListTile<ExportDataOptions>(
+                      title: Text("Specific Person"),
+                      value: ExportDataOptions.specificPerson,
+                      groupValue: _choice,
+                      onChanged: (ExportDataOptions value) {
+                        setState(() {
+                          _choice = value;
+                        });
+                      }
+                    ),
+                  ),
+                  Card(
+                    elevation: 10,
+                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    child: RadioListTile<ExportDataOptions>(
+                      title: Text("All Students"),
+                      value: ExportDataOptions.allStudents,
+                      groupValue: _choice,
+                      onChanged: (ExportDataOptions value) {
+                        setState(() {
+                          _choice = value;
+                        });
+                      }
+                    ),
+                  ),
+                  Spacer(),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: Container(
+                    height: SizeConfig.blockSizeVertical * 7,
+                    decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 15.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0, 10.0)
+                        )
+                      ],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)
+                      ),
+                      color: Colors.green,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Builder(
+                          builder: (context) {
+                            return FlatButton(
+                              child: Text("Export Data", style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                              )),
+                              onPressed: ()  {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return exportDataDialog(_choice);
+                                  }
+                                );
+                              }
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  )
+                ],
+              ),
             ),
           ),
-          )
         ]
       ),
     );

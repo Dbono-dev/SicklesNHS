@@ -18,32 +18,48 @@ class ViewImages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: <Widget>[
           TopHalfViewStudentsPage(),
-          Padding(padding: EdgeInsets.all(15)),
-          Center(
-            child: FutureBuilder(
-              future: getPosts(),
-              builder: (context, snapshot) {
-                if(snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              width: SizeConfig.blockSizeHorizontal * 100,
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+            child: Center(
+              child: FutureBuilder(
+                future: getPosts(),
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  else {
+                    return SizedBox(
+                      height: SizeConfig.blockSizeVertical * 76,
+                      child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        itemBuilder: (_, index) {
+                          return imageCards(context, snapshot.data[index]);
+                        }
+                      ),
+                    );
+                  }
                 }
-                else {
-                  return SizedBox(
-                    height: SizeConfig.blockSizeVertical * 74,
-                    child: ListView.builder(
-                      itemCount: snapshot.data.length,
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      itemBuilder: (_, index) {
-                        return imageCards(context, snapshot.data[index]);
-                      }
-                    ),
-                  );
-                }
-              }
+              )
+            ),
             )
           )
         ],

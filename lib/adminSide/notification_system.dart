@@ -12,11 +12,29 @@ class Notifications extends StatelessWidget {
     return Material(
       child: Container(
         height: SizeConfig.blockSizeVertical * 100,
-        child: Column( 
+        child: Stack( 
             children: <Widget> [
               TopHalfViewStudentsPage(),
-              Padding(padding: EdgeInsets.all(10)),
-              MiddlePageNotification(),
+              Padding(
+                padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+                child: Container(
+                  width: SizeConfig.blockSizeHorizontal * 100,
+                  padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(000000).withOpacity(0.25),
+                        offset: Offset(0, -2),
+                        blurRadius: 15,
+                        spreadRadius: 5
+                      )
+                    ]
+                  ),
+                  child: MiddlePageNotification()
+                ),
+              ),
             ]
           ),
       ),
@@ -60,7 +78,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
 
     return SingleChildScrollView( 
       child: Container(
-        height: SizeConfig.blockSizeVertical * 77,
+        height: SizeConfig.blockSizeVertical * 78,
         child: Scaffold(
           body: Form(
             key: _fourthformKey,
@@ -386,7 +404,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                     ]
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 5),),
+                Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 6),),
                 Material(
                   type: MaterialType.transparency,
                   child: Container(
