@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
 import 'package:sickles_nhs_app/backend/database.dart';
 import 'package:sickles_nhs_app/backend/currentQuarter.dart';
+import 'package:sickles_nhs_app/adminSide/analytics_page.dart';
 
 class ViewStudents extends StatelessWidget {
   @override
@@ -145,43 +146,48 @@ class TopMiddleViewStudentPage extends StatelessWidget {
                 }
               }
             }
-            return Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
-              child: Column(
-                children: <Widget>[
-                  Text("Current Status of this Quarter", style: TextStyle(fontWeight: FontWeight.bold)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Icon(Icons.check, color: Colors.green,),
-                      RichText(
-                        text: TextSpan(
-                          text: "Completed: ",
-                          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
-                          children: <TextSpan> [
-                            TextSpan(
-                              text: yes.toString(),
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal)
-                            )
-                          ]
-                        ), 
-                      ),
-                      Icon(Icons.close, color: Colors.red,),
-                      RichText(
-                        text: TextSpan(
-                          text: "Not Completed: ",
-                          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
-                          children: <TextSpan> [
-                            TextSpan(
-                              text: no.toString(),
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal)
-                            )
-                          ]
-                        ), 
-                      )
-                    ],
-                  ),
-                ],
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnalyticsPage(snapshot: snapshot2, currentQuarter: currentQuarter)));
+              },
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                child: Column(
+                  children: <Widget>[
+                    Text("Current Status of this Quarter", style: TextStyle(fontWeight: FontWeight.bold)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Icon(Icons.check, color: Colors.green,),
+                        RichText(
+                          text: TextSpan(
+                            text: "Completed: ",
+                            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
+                            children: <TextSpan> [
+                              TextSpan(
+                                text: yes.toString(),
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)
+                              )
+                            ]
+                          ), 
+                        ),
+                        Icon(Icons.close, color: Colors.red,),
+                        RichText(
+                          text: TextSpan(
+                            text: "Not Completed: ",
+                            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
+                            children: <TextSpan> [
+                              TextSpan(
+                                text: no.toString(),
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)
+                              )
+                            ]
+                          ), 
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           }
