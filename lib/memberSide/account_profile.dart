@@ -255,6 +255,8 @@ class _AccountProfileState extends State<AccountProfile> {
     List theHours = new List ();
     List<DateTime> thenewDate = new List<DateTime>();
     String currentQuarterHours;
+    int numOfEvents = 0;
+    int numOfClubMeetings = 0;
 
     DateTime startOfSchool;
     DateTime firstQuarter;
@@ -371,6 +373,17 @@ class _AccountProfileState extends State<AccountProfile> {
                   }
                 }
 
+                void eventsTile() {
+                  for(int i = 0; i < theHours.length; i++) {
+                    if(theHours[i] == "0") {
+
+                    }
+                    else {
+                      numOfEvents += 1;
+                    }
+                  }
+                }
+
                 Future chapterProjectTile(theHours, date, hours) async {
                   List<DocumentSnapshot> quarterHours = await getQuarterHours();
                   if(theHours.length != 0) {
@@ -418,13 +431,18 @@ class _AccountProfileState extends State<AccountProfile> {
                       }
                     }
                   }
-                  
+                  for(int i = 0; i < quarterHours.length; i++) {
+                    if(quarterHours[i].data['type'] == "clubDates") {
+                      numOfClubMeetings += 1;
+                    }
+                  }
                 }
 
                 hoursTile("firstQuarter", q1Hours, 0);
                 hoursTile("secondQuarter", q2Hours, 3);
                 hoursTile("thirdQuarter", q3Hours, 6);
                 hoursTile("fourthQuarter", q4Hours, 6);
+                eventsTile();
 
                 return FutureBuilder(
                   future: chapterProjectTile(theHours, date, hours),
@@ -581,7 +599,7 @@ class _AccountProfileState extends State<AccountProfile> {
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white,
+                                color: numClub == numOfClubMeetings ? Colors.green : Colors.white,
                                 boxShadow: [
                                   BoxShadow(
                                     blurRadius: 4,
@@ -599,11 +617,11 @@ class _AccountProfileState extends State<AccountProfile> {
                                     child: Text.rich(
                                       TextSpan(
                                         text: numClub.toString(),
-                                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+                                        style: TextStyle(color: numClub == numOfClubMeetings ? Colors.white : Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
                                         children: <InlineSpan> [
                                           TextSpan(
                                             text: "\nMeetings",
-                                            style: TextStyle(color: Colors.black.withOpacity(0.54), fontSize: 14)
+                                            style: TextStyle(color: numClub == numOfClubMeetings ? Colors.white.withOpacity(0.54) : Colors.black.withOpacity(0.54), fontSize: 14)
                                           )
                                         ]
                                       ),
@@ -737,7 +755,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _chapterProjectColor,
+                              color: numOfEvents > 0 ? Colors.green : Colors.white,
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 4,
@@ -754,12 +772,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                 alignment: Alignment.center, 
                                   child: Text.rich(
                                     TextSpan(
-                                      text: "3",
-                                      style: TextStyle(color: _chapterProjectTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+                                      text: numOfEvents.toString(),
+                                      style: TextStyle(color: numOfEvents > 0 ? Colors.white : Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
                                       children: <InlineSpan> [
                                         TextSpan(
                                           text: "\nEvents",
-                                          style: TextStyle(color: _chapterProjectTextColor.withOpacity(0.54), fontSize: 14)
+                                          style: TextStyle(color: numOfEvents > 0 ? Colors.white.withOpacity(0.54) : Colors.black.withOpacity(0.54), fontSize: 14)
                                         )
                                       ]
                                     ),

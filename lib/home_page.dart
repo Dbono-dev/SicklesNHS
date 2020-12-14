@@ -513,7 +513,7 @@ class BottomPageCards extends StatelessWidget {
 
 
   navigateToDetail(DocumentSnapshot post) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => EventPageView(post: post, officerSponsor: false,)));
   }
 
   if(post.data["type"].toString() == "clubDates") {
@@ -771,14 +771,14 @@ class _AdminMyEvents extends State<AdminMyEvents> {
                     ),
                 ],),
               Container(
-                height: SizeConfig.blockSizeVertical * 25,
+                height: SizeConfig.blockSizeVertical * 27,
                 width: SizeConfig.blockSizeHorizontal * 90,
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                   children: <Widget>[
                     adminTags(context, AddNewEvent("new"), Icons.add_circle, "Add New Event"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),
-                    adminTags(context, Notifications(), Icons.notifications, "Send Notification"),
+                    adminTags(context, Notifications(officerSponsor: "sponsor"), Icons.notifications, "Send Notification"),
                     adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions", uid: widget.uid,), Icons.photo_camera, "Start Scanning",),
                     adminTags(context, ApproveHoursPage(), Icons.check_circle, "Approve Hours"),
                     adminTags(context, ViewImages(), Icons.image, "View Images"),
@@ -874,6 +874,7 @@ class _OfficerMyEvents extends State<OfficerMyEvents> {
                   children: <Widget>[
                     adminTags(context, CreateNewHoursOptionsPage(tile1: "Create New Scanning Session", tile2: "View Saved Scanning Sessions", tile3: "View Submitted Scanning Sessions",), Icons.photo_camera, "Start Scanning"),
                     adminTags(context, ViewStudents(), Icons.people, "View Students"),
+                    adminTags(context, Notifications(officerSponsor: "officer"), Icons.notifications, "Send Notification"),
                     adminTags(context, ViewImages(), Icons.image, "View Images"),
                     adminTags(context, ExportDataPage(), Icons.import_export, "Export Data"),
                   ],

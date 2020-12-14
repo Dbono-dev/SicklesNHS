@@ -41,7 +41,7 @@ class CreateNewHoursOptionsPage extends StatelessWidget {
               child: Column(
                 children: [
                   theTiles(tile1, tile1 == "Create New Scanning Session" ? ScanningPage(uid) : AddNewHours(), context),
-                  theTiles(tile2, tile2 == "View Saved Scanning Sessions" ? ViewSavedScanningSessions(uid: uid,) : ViewSavedServiceHourForms(), context),
+                  theTiles(tile2, tile2 == "View Saved Scanning Sessions" ? ViewSavedScanningSessions(uid: uid,) : ViewSavedServiceHourForms(uid: uid,), context),
                   tile3 == "View Submitted Scanning Sessions" ? Container() : theTiles(tile3, SubmittedServiceHourForms(uid: uid), context),
                 ],
               ),

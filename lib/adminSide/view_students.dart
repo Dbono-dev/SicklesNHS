@@ -220,7 +220,7 @@ class _MiddleViewStudentsPageState extends State<MiddleViewStudentsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 69.75,
+      height: SizeConfig.blockSizeVertical * 74,
       child: Column(
         children: <Widget>[
           Container(

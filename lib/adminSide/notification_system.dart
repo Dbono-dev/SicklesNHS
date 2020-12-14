@@ -7,6 +7,11 @@ import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class Notifications extends StatelessWidget {
+
+  Notifications({this.officerSponsor});
+
+  final String officerSponsor;
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -32,7 +37,7 @@ class Notifications extends StatelessWidget {
                       )
                     ]
                   ),
-                  child: MiddlePageNotification()
+                  child: MiddlePageNotification(officerSponsor)
                 ),
               ),
             ]
@@ -47,6 +52,11 @@ class Notifications extends StatelessWidget {
   enum SpecificGroup {members, officers, admin, justToDylan}
 
 class MiddlePageNotification extends StatefulWidget {
+
+  MiddlePageNotification(this.officerSponsor);
+
+  final String officerSponsor;
+
   @override
   _MiddlePageNotificationState createState() => _MiddlePageNotificationState();
 }
@@ -118,7 +128,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                   padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
                   child: Column(
                     children: <Widget> [
-                      ListTile(
+                      widget.officerSponsor == "sponsor" ? ListTile(
                         title: const Text('All'),
                         leading: Radio(
                           value: Options.all,
@@ -128,7 +138,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                             setState(() { _character = value; });
                           },
                         ),
-                      ),
+                      ) : Container(),
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -229,7 +239,7 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                           )
                         ],
                       ),
-                      Row(
+                      widget.officerSponsor == "sponsor" ? Row(
                         children: <Widget>[
                           Expanded(
                             child: ListTile(
@@ -284,8 +294,8 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                             ],
                           )
                         ],
-                      ),
-                      Row(
+                      ) : Container(),
+                      widget.officerSponsor == "sponsor" ? Row(
                         children: <Widget>[
                           Expanded(
                             child: ListTile(
@@ -400,11 +410,11 @@ class _MiddlePageNotificationState extends State<MiddlePageNotification> {
                             ),
                           )
                         ],
-                      ),
+                      ) : Container(),
                     ]
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 6),),
+                Padding(padding: EdgeInsets.only(bottom: widget.officerSponsor == "officer" ? SizeConfig.blockSizeVertical * 31 : SizeConfig.blockSizeVertical * 6),),
                 Material(
                   type: MaterialType.transparency,
                   child: Container(

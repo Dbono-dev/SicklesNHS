@@ -240,7 +240,7 @@ class AnalyticsPage extends StatelessWidget {
               lineWidth: 5,
               startAngle: 180,
               percent: theDoubleNumber,
-              center: Text((theDoubleNumber * 100).toString() + "%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeVertical * 2.5),),
+              center: Text((theDoubleNumber * 100).toString().substring(0, 4) + "%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeVertical * 2.5),),
             ),
           ),
           Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1)),

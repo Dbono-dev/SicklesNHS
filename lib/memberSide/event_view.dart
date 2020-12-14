@@ -578,96 +578,90 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
               if(userData.permissions == 0 || userData.permissions == 1 || clicked == true) {
                 differentSignUp = "";
               }
-              return Material(
-                type: MaterialType.transparency,
-                child: Container(
-                height: SizeConfig.blockSizeVertical * 7.316,
-                decoration: BoxDecoration(
-                  boxShadow: [BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 15.0,
-                    spreadRadius: 2.0,
-                    offset: Offset(0, 10.0)
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)
-                  ),
-                  color: Colors.green,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Builder(
-                      builder: (context) {
-                        return FlatButton(
-                          onPressed: () {
-                            if(differentSignUp == "Check In") { 
-                              Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: widget.post.data['type']),
+              return GestureDetector(
+                onTap: () {
+                  if(differentSignUp == "Check In") { 
+                    Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check In", uid: user.uid, date: theDate, event: widget.post.data['type']),
+                      ));
+                  }
+                  if(differentSignUp == "Check Out") {
+                    Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: widget.post.data['type'])
+                      ));
+                  }
+                  if(differentSignUp == "Sign Up") {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Confirmation"),
+                          content: Text("Are you sure you would like to sign up for this event?"),
+                          actions: [
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("CANCEL", style: TextStyle(color: Colors.red),),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text("Signing up..."),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Colors.green,
                                 ));
-                            }
-                            if(differentSignUp == "Check Out") {
-                              Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => QRCodePage(title: title, name: userData.firstName + userData.lastName, type: "Check Out", uid: user.uid, date: theDate, event: widget.post.data['type'])
-                                ));
-                            }
-                            if(differentSignUp == "Sign Up") {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text("Confirmation"),
-                                    content: Text("Are you sure you would like to sign up for this event?"),
-                                    actions: [
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text("CANCEL", style: TextStyle(color: Colors.red),),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                            content: Text("Signing up..."),
-                                            duration: Duration(seconds: 2),
-                                            backgroundColor: Colors.green,
-                                          ));
-                                          var participates = widget.post.data['participates'];
-                                          var participateDate = widget.post.data['participates dates'];
-                                          participates.add(userData.firstName + " " + userData.lastName);
-                                          participateDate.add(global.shownDate);
-                                          dynamic result = sendEventToDatabases(participates, title, participateDate);
-                                          dynamic result2 = sendBugToEmail(title, widget.post);
-                                          var eventTitle = userData.eventTitleSignedUp;
-                                          eventTitle.add(title);
-                                          dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            clicked = true;
-                                          });
-                                        },
-                                        child: Text("CONFIRM", style: TextStyle(color: Colors.green),),
-                                      ),
-                                    ],
-                                  );
-                                }
-                              );
-                            }
-                          },
-                            child: Text(differentSignUp, 
-                            style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                          )),
+                                var participates = widget.post.data['participates'];
+                                var participateDate = widget.post.data['participates dates'];
+                                participates.add(userData.firstName + " " + userData.lastName);
+                                participateDate.add(global.shownDate);
+                                dynamic result = sendEventToDatabases(participates, title, participateDate);
+                                dynamic result2 = sendBugToEmail(title, widget.post);
+                                var eventTitle = userData.eventTitleSignedUp;
+                                eventTitle.add(title);
+                                dynamic result3 = sendEventToMembersDatabase(eventTitle, user.uid);
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  clicked = true;
+                                });
+                              },
+                              child: Text("CONFIRM", style: TextStyle(color: Colors.green),),
+                            ),
+                          ],
                         );
                       }
+                    );
+                  }
+                },
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Container(
+                    height: SizeConfig.blockSizeVertical * 7.316,
+                    width: SizeConfig.blockSizeHorizontal * 100,
+                    decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 15.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0, 10.0)
+                        )
+                      ],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)
+                      ),
+                      color: Colors.green,
                     ),
-                  ],
+                    child: Text(differentSignUp, 
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                      )
+                    ),
+                  ),
                 ),
-              ),
               );
             }
             return CircularProgressIndicator();
@@ -724,7 +718,7 @@ class _BottomEventViewPageState extends State<BottomEventViewPage> {
     String theStartTime = post.data['start time'].toString() + ":" + theStartTimeMinutes;
     String theEndTime = post.data['end time'].toString() + ":" + theendTimeMinutes;
     String description = post.data['description'];
-    String location = post.data['location'];
+    String location = post.data['address'];
 
     List theMessage = [];
     theMessage.add("<h3>Hello,</h3>");

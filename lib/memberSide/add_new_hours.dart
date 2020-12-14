@@ -94,7 +94,7 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
   }
 
   DateTime startDate = DateTime.now();
-
+ 
   final SignatureController _controller = SignatureController(penStrokeWidth: 3, penColor: Colors.green);
   String _typeOfActivity;
   String _location;
@@ -103,6 +103,8 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
   String _supPhone;
   String _emailSup;
   String _date;
+  String _changeUrl = "new";
+  String _url;
   final _fourthformKey = GlobalKey<FormState>();
   DateTime _newDateTime;
 
@@ -115,10 +117,13 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
       _typeOfActivity = widget.fromSaved[0];
       _location = widget.fromSaved[1];
       startingDate = widget.fromSaved[2];
+      _date = widget.fromSaved[2];
       _hours = widget.fromSaved[3];
       _nameOfSup = widget.fromSaved[4];
       _supPhone = widget.fromSaved[5];
       _emailSup = widget.fromSaved[6];
+      _url = widget.fromSaved[7];
+      _changeUrl != "edit" ? _changeUrl = "image" : _changeUrl = _changeUrl;
     }
 
     return Scaffold(
@@ -233,8 +238,9 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
               ),
               Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0.0, 0.0)),
               Container(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
                 width: SizeConfig.blockSizeHorizontal * 90,
-                decoration: BoxDecoration(
+                decoration: _changeUrl == "image" ? BoxDecoration() : BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                     color: Colors.green,
@@ -256,12 +262,14 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                           onPressed: () {
                             setState(() {
                               _controller.clear();
+                              _changeUrl = "edit";
                             });
                           },
                         )
                       ],
                     ),
-                    Signature(
+                    _changeUrl == "image" ? Image.network(_url, height: SizeConfig.blockSizeVertical * 20,)
+                    : Signature(
                       controller: _controller,
                       height: SizeConfig.blockSizeVertical * 20,
                       width: SizeConfig.blockSizeHorizontal * 90,
@@ -411,14 +419,17 @@ class _AddNewHoursMiddleState extends State<AddNewHoursMiddle> {
                         onTap: () async {
                         final form = _fourthformKey.currentState;
                         form.save();
-                        if(form.validate() && _controller.isNotEmpty && startingDate != "Date") {
+                        if(form.validate() && (_controller.isNotEmpty || _url != null) && startingDate != "Date") {
                           try {
-                            var signture = await _controller.toPngBytes();
-                            final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
-                            final StorageUploadTask task = firebaseStorageRef.putData(signture);
-                            var url = await (await task.onComplete).ref.getDownloadURL();
+                            var url;
+                            if(_url == null) {
+                              var signture = await _controller.toPngBytes();
+                              final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(_typeOfActivity + widget.name + _location + '.jpg');
+                              final StorageUploadTask task = firebaseStorageRef.putData(signture);
+                              url = await (await task.onComplete).ref.getDownloadURL();
+                            } 
 
-                            dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, url, widget.uid, widget.hours, "submit");
+                            dynamic result = sendEventToDatabase(_typeOfActivity, _location, _hours, _nameOfSup, _supPhone, _emailSup, _date, widget.name, _url == null ? url : _url, widget.uid, widget.hours, "submit");
 
                             if(result == null) {
                               print("Fill in all the forms.");

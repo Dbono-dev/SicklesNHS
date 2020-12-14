@@ -7,6 +7,10 @@ import 'package:sickles_nhs_app/memberSide/add_new_hours.dart';
 
 class ViewSavedServiceHourForms extends StatefulWidget {
 
+  ViewSavedServiceHourForms({this.uid});
+
+  final String uid;
+
   @override
   _ViewSavedServiceHourFormsState createState() => _ViewSavedServiceHourFormsState();
 }
@@ -56,7 +60,7 @@ class _ViewSavedServiceHourFormsState extends State<ViewSavedServiceHourForms> {
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           itemCount: snapshot.data.length,
                           itemBuilder: (_, index) {
-                            if(snapshot.data[index].data['save_submit'] == "save") {
+                            if(snapshot.data[index].data['save_submit'] == "save" && widget.uid == snapshot.data[index].data['uid']) {
                               return Card(
                                 elevation: 10,
                                 child: ListTile(
@@ -76,6 +80,7 @@ class _ViewSavedServiceHourFormsState extends State<ViewSavedServiceHourForms> {
                                             fromSaved.add(snapshot.data[index].data['name of supervisor']);
                                             fromSaved.add(snapshot.data[index].data['supervisor phone number']);
                                             fromSaved.add(snapshot.data[index].data['supervisor email']);
+                                            fromSaved.add(snapshot.data[index].data['url']);
                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNewHours(fromSaved: fromSaved,)));
                                           }, 
                                           child: Text("Edit", style: TextStyle(color: Colors.green))
