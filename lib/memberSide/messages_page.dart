@@ -23,97 +23,122 @@ class _MessagesPageState extends State<MessagesPage> {
   Future getNewsLetters() async {
     var firestone = Firestore.instance;
     QuerySnapshot qn = await firestone.collection("newsletter").getDocuments();
-    return qn.documents;
+    return qn.documents; 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: <Widget>[
           TopHalfViewStudentsPage(),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Most Recent Newsletters"),
-                    content: FutureBuilder(
-                      future: getNewsLetters(),
-                      builder: (_, snapshot) {
-                        if(snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.green),
-                            ),
-                          );
-                        }
-                        else {
-                          String pathPDF = "";
-                          String pdfUrl = "";
-
-                          return Container(
-                            height: SizeConfig.blockSizeVertical * 59,
-                            width: SizeConfig.safeBlockHorizontal * 75,
-                            child: ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (_, index) {
-                                DateTime dateTime = DateTime.tryParse(snapshot.data[index].data['dateTime']);
-                                return GestureDetector(
-                                  onTap: () async {
-                                    await LaunchFile.loadFromFirebase(context, snapshot.data[index].data['dateTime']).then((url) => LaunchFile.createFileFromPdfUrl(url, snapshot.data[index].data['dateTime']).then((f) => setState(() {
-                                    if(f is File) {
-                                      pathPDF = f.path;
-                                    } else if(url is Uri) {
-                                      pdfUrl = url.toString();
-                                    }
-                                  })));
-                                  setState(() {
-                                    LaunchFile.launchPDF(context, dateTime.month.toString() + "/" + dateTime.day.toString() + "/" + dateTime.year.toString() + " Newsletter", pathPDF, pdfUrl);
-                                  });
-                                  },
-                                  child: Container(
-                                    width: SizeConfig.safeBlockHorizontal * 75,
-                                    child: Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        title: Text(dateTime.month.toString() + "/" + dateTime.day.toString() + "/" + dateTime.year.toString()),
-                                      ),
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              width: SizeConfig.blockSizeHorizontal * 100,
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+              child: Container(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Most Recent Newsletters"),
+                            content: FutureBuilder(
+                              future: getNewsLetters(),
+                              builder: (_, snapshot) {
+                                if(snapshot.connectionState == ConnectionState.waiting) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation(Colors.green),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
+                                else {
+                                  String pathPDF = "";
+                                  String pdfUrl = "";
+
+                                  return Container(
+                                    height: SizeConfig.blockSizeVertical * 59,
+                                    width: SizeConfig.safeBlockHorizontal * 75,
+                                    child: ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (_, index) {
+                                        DateTime dateTime = DateTime.tryParse(snapshot.data[index].data['dateTime']);
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            await LaunchFile.loadFromFirebase(context, snapshot.data[index].data['dateTime']).then((url) => LaunchFile.createFileFromPdfUrl(url, snapshot.data[index].data['dateTime']).then((f) => setState(() {
+                                            if(f is File) {
+                                              pathPDF = f.path;
+                                            } else if(url is Uri) {
+                                              pdfUrl = url.toString();
+                                            }
+                                          })));
+                                          setState(() {
+                                            LaunchFile.launchPDF(context, dateTime.month.toString() + "/" + dateTime.day.toString() + "/" + dateTime.year.toString() + " Newsletter", pathPDF, pdfUrl);
+                                          });
+                                          },
+                                          child: Container(
+                                            width: SizeConfig.safeBlockHorizontal * 75,
+                                            child: Card(
+                                              elevation: 10,
+                                              child: ListTile(
+                                                title: Text(dateTime.month.toString() + "/" + dateTime.day.toString() + "/" + dateTime.year.toString()),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
                               },
                             ),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("DONE", style: TextStyle(color: Colors.green))
+                              )
+                            ],
                           );
                         }
-                      },
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 15, 10, 5),
+                      child: Card(
+                        elevation: 10,
+                        child: ListTile(
+                          leading: Icon(Icons.assignment),
+                          title: Text("View Newsletters"),
+                        ),
+                      ),
                     ),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("DONE", style: TextStyle(color: Colors.green))
-                      )
-                    ],
-                  );
-                }
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 15, 10, 5),
-              child: Card(
-                elevation: 10,
-                child: ListTile(
-                  leading: Icon(Icons.assignment),
-                  title: Text("View Newsletters"),
+            ),
+            Expanded(child: MessagesMiddlePage())
+                  ],
                 ),
               ),
-            ),
+            )
           ),
-          Expanded(child: MessagesMiddlePage())
         ],
       ),
     );

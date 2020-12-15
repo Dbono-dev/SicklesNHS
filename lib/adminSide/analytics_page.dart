@@ -171,7 +171,7 @@ class AnalyticsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    bottomText(43.toString(), " ONLINE TODAY"),
+                    //bottomText(43.toString(), " ONLINE TODAY"),
                     bottomText(totalMembers.toString(), " TOTAL MEMBERS")
                   ],
                 ),
