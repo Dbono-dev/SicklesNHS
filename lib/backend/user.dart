@@ -19,6 +19,7 @@ class UserData {
   final int numClub;
   var eventTitleSignedUp;
   final int numOfCommunityServiceEvents;
+  var dues;
 
-  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours, this.firstQuarter, this.secondQuarter, this.thirdQuarter, this.fourthQuarter, this.numClub, this.eventTitleSignedUp, this.numOfCommunityServiceEvents});
+  UserData({this.uid, this.firstName, this.lastName, this.grade, this.permissions, this.date, this.hours, this.firstQuarter, this.secondQuarter, this.thirdQuarter, this.fourthQuarter, this.numClub, this.eventTitleSignedUp, this.numOfCommunityServiceEvents, this.dues});
 }

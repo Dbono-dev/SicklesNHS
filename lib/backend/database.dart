@@ -84,6 +84,12 @@ class DatabaseService {
     });
   }
 
+  Future updateDues() async {
+    return await memberCollection.document(uid).updateData({
+      'dues': []
+    });
+  }
+
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: snapshot.data['uid'],
@@ -100,6 +106,7 @@ class DatabaseService {
       numClub: snapshot.data['numClub'],
       eventTitleSignedUp: snapshot.data['signed up event title'],
       numOfCommunityServiceEvents: snapshot.data['num of community service events'],
+      dues: snapshot.data['dues']
     );
   }
 

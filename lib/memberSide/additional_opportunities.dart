@@ -1,8 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdditionalOpportunities extends StatelessWidget {
+
+  Future getOppertunities() async {
+    var firestone = Firestore.instance;
+    QuerySnapshot qn = await firestone.collection("additionalOppertunites").getDocuments();
+    return qn.documents;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +36,29 @@ class AdditionalOpportunities extends StatelessWidget {
                   )
                 ]
               ),
-              child: Column(
-                children: [
-                  theAdditionalOpportunitiesTiles("Virtual Tutoring Opportunity", "Interested in tutoring middle school students in language arts?"),
-                  theAdditionalOpportunitiesTiles("Georgia Runoff Phone Banking", "Volunteer to phone bank for candidates in Georgia's Senate runoff elections in January!")
-                ],
+              child: Container(
+                height: SizeConfig.blockSizeVertical * 76,
+                child: FutureBuilder(
+                  future: getOppertunities(),
+                  builder: (_, snapshot) {
+                    if(snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.green),
+                        ),
+                      );
+                    }
+                    else {
+                      return ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (_, index) {
+                          return theAdditionalOpportunitiesTiles(snapshot.data[index].data['title'], snapshot.data[index].data['description'], snapshot.data[index].data['url']);
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
             ),
           )
@@ -41,7 +67,7 @@ class AdditionalOpportunities extends StatelessWidget {
     );
   }
 
-  Widget theAdditionalOpportunitiesTiles(String title, String description) {
+  Widget theAdditionalOpportunitiesTiles(String title, String description, String url) {
     return Padding(
       padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 1.5),
       child: Container(
@@ -62,7 +88,10 @@ class AdditionalOpportunities extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 1),
-                child: Text("More Details", style: TextStyle(decoration: TextDecoration.underline, color: Colors.green),),
+                child: GestureDetector(
+                  onTap: () => launch(url),
+                  child: Text("More Details", style: TextStyle(decoration: TextDecoration.underline, color: Colors.green),)
+                ),
               )
             ],
           ),

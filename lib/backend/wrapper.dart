@@ -53,12 +53,14 @@ class Wrapper extends StatelessWidget {
               _fcm.subscribeToTopic(userData.firstName + userData.lastName);
               for(int i = 0; i < userData.eventTitleSignedUp.length; i++) {
                 String tempText = "";
+                String anotherTempText = "";
                 for(int a = 0; a < userData.eventTitleSignedUp[i].length; a++) {
                   if(userData.eventTitleSignedUp[i].substring(a, a + 1) != " ") {
                     tempText += userData.eventTitleSignedUp[i].substring(a, a + 1);
                   }
                 }
-                _fcm.subscribeToTopic(tempText);
+                anotherTempText = tempText.replaceAll(RegExp(r'[^\w\s]+'),'');
+                _fcm.subscribeToTopic(anotherTempText);
               }
               if(userData.permissions == 1) {
                 _fcm.subscribeToTopic('members');
@@ -89,7 +91,9 @@ class Wrapper extends StatelessWidget {
               );
               initalized = true;
             }
-            
+            if(snapshot.data.dues == null) {
+              DatabaseService(uid: snapshot.data.uid).updateDues();
+            }
             return TheOpeningPage(userData: snapshot.data);
           }
           else {

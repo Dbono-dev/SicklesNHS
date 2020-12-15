@@ -223,7 +223,7 @@ class _AccountProfileState extends State<AccountProfile> {
             String thirdQuarter = fixHours(widget.posts['thirdQuarter']); 
             String fourthQuarter = fixHours(widget.posts['fourthQuarter']);
 
-            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, widget.posts['numClub'], widget.posts['num of community service events']);
+            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, widget.posts['numClub'], widget.posts['num of community service events'], widget.posts['dues']);
           }
           if(widget.type == "student") {
             String firstQuarter = fixHours(userData.firstQuarter);
@@ -231,7 +231,7 @@ class _AccountProfileState extends State<AccountProfile> {
             String thirdQuarter = fixHours(userData.thirdQuarter);
             String fourthQuarter = fixHours(userData.fourthQuarter);
 
-            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, userData.numClub, userData.numOfCommunityServiceEvents);
+            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, userData.numClub, userData.numOfCommunityServiceEvents, userData.dues);
           }
           else {
             return CircularProgressIndicator();
@@ -244,7 +244,7 @@ class _AccountProfileState extends State<AccountProfile> {
     );
   }
 
-  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents) {
+  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents, var dues) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
     Color _chapterProjectColor = Colors.white;
@@ -257,6 +257,7 @@ class _AccountProfileState extends State<AccountProfile> {
     String currentQuarterHours;
     int numOfEvents = 0;
     int numOfClubMeetings = 0;
+    bool theDues = false;
 
     DateTime startOfSchool;
     DateTime firstQuarter;
@@ -386,48 +387,46 @@ class _AccountProfileState extends State<AccountProfile> {
 
                 Future chapterProjectTile(theHours, date, hours) async {
                   List<DocumentSnapshot> quarterHours = await getQuarterHours();
-                  if(theHours.length != 0) {
-                    for(int i = 0; i < quarterHours.length; i++) {
-                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Start of School") {
-                        startOfSchool = secondFormat.parse(quarterHours[i].data['date']);
-                      }
-                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "First") {
-                        firstQuarter = secondFormat.parse(quarterHours[i].data['date']);
-                      }
-                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Second") {
-                        secondQuarter = secondFormat.parse(quarterHours[i].data['date']);
-                      }
-                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Third") {
-                        thirdQuarter = secondFormat.parse(quarterHours[i].data['date']);
-                      }
-                      if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Fourth") {
-                        forthQuarter = secondFormat.parse(quarterHours[i].data['date']);
-                      }
+                  for(int i = 0; i < quarterHours.length; i++) {
+                    if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Start of School") {
+                      startOfSchool = secondFormat.parse(quarterHours[i].data['date']);
                     }
-                    bool firstOrSecond;
-                    if(DateTime.now().isBefore(secondQuarter) && DateTime.now().isAfter(startOfSchool)) {
-                      firstOrSecond = true;
+                    if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "First") {
+                      firstQuarter = secondFormat.parse(quarterHours[i].data['date']);
                     }
-                    else if (DateTime.now().isBefore(forthQuarter) && DateTime.now().isAfter(secondQuarter)) {
-                      firstOrSecond = false;
+                    if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Second") {
+                      secondQuarter = secondFormat.parse(quarterHours[i].data['date']);
                     }
-                    else {
+                    if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Third") {
+                      thirdQuarter = secondFormat.parse(quarterHours[i].data['date']);
+                    }
+                    if(quarterHours[i].data['type'] == "endOfQuarter" && quarterHours[i].data['quarter'] == "Fourth") {
+                      forthQuarter = secondFormat.parse(quarterHours[i].data['date']);
+                    }
+                  }
+                  bool firstOrSecond;
+                  if(DateTime.now().isBefore(secondQuarter) && DateTime.now().isAfter(startOfSchool)) {
+                    firstOrSecond = true;
+                  }
+                  else if (DateTime.now().isBefore(forthQuarter) && DateTime.now().isAfter(secondQuarter)) {
+                    firstOrSecond = false;
+                  }
+                  else {
 
-                    }
-                    
-                    for(int i = 0; i < theHours.length; i++) {
-                      if(double.parse(theHours[i]) == 0) {
-                        if(format.parse(date[i]).isBefore(secondQuarter) && format.parse(date[i]).isAfter(startOfSchool) && firstOrSecond == true) {
-                          _chapterProjectColor = Colors.green;
-                          _chapterProjectTextColor = Colors.white;
-                        }
-                        else if(format.parse(date[i]).isBefore(forthQuarter) && format.parse(date[i]).isAfter(secondQuarter) && firstOrSecond == false) {
-                          _chapterProjectColor = Colors.green;
-                          _chapterProjectTextColor = Colors.white;
-                        }
-                        else {
+                  }
+                  
+                  for(int i = 0; i < theHours.length; i++) {
+                    if(double.parse(theHours[i]) == 0) {
+                      if(format.parse(date[i]).isBefore(secondQuarter) && format.parse(date[i]).isAfter(startOfSchool) && firstOrSecond == true) {
+                        _chapterProjectColor = Colors.green;
+                        _chapterProjectTextColor = Colors.white;
+                      }
+                      else if(format.parse(date[i]).isBefore(forthQuarter) && format.parse(date[i]).isAfter(secondQuarter) && firstOrSecond == false) {
+                        _chapterProjectColor = Colors.green;
+                        _chapterProjectTextColor = Colors.white;
+                      }
+                      else {
 
-                        }
                       }
                     }
                   }
@@ -435,6 +434,12 @@ class _AccountProfileState extends State<AccountProfile> {
                     if(quarterHours[i].data['type'] == "clubDates") {
                       numOfClubMeetings += 1;
                     }
+                  }
+
+                  for(int i = 0; i < dues.length; i++) {
+                    if(format.parse(dues[i]).isBefore(secondQuarter)) {
+                      theDues = true;
+                    } 
                   }
                 }
 
@@ -720,7 +725,7 @@ class _AccountProfileState extends State<AccountProfile> {
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _chapterProjectColor,
+                              color: theDues ? Colors.green : Colors.white,
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 4,
@@ -737,12 +742,12 @@ class _AccountProfileState extends State<AccountProfile> {
                                 alignment: Alignment.center, 
                                   child: Text.rich(
                                     TextSpan(
-                                      text: "\$" + "15",
-                                      style: TextStyle(color: _chapterProjectTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+                                      text: theDues ? "\$" + "15" : "\$" + "0",
+                                      style: TextStyle(color: theDues ? Colors.white : Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
                                       children: <InlineSpan> [
                                         TextSpan(
                                           text: "\nPaid",
-                                          style: TextStyle(color: _chapterProjectTextColor.withOpacity(0.54), fontSize: 14)
+                                          style: TextStyle(color: theDues ? Colors.white.withOpacity(0.54) : Colors.black.withOpacity(0.54), fontSize: 14)
                                         )
                                       ]
                                     ),

@@ -145,7 +145,7 @@ class SettingsPageBody extends StatelessWidget {
       builder: (context, setState) {
         return AlertDialog(
           title: Text("Notifications"),
-          content: Column(
+          /*ontent: Column(
             children: [
               SwitchListTile(
                 title: Text("Allow Notifications"),
@@ -200,7 +200,8 @@ class SettingsPageBody extends StatelessWidget {
                 },
               ),
             ],
-          ),
+          ),*/
+          content: Text("Coming Soon"),
           actions: [
             FlatButton(
               child: Text("DONE", style: TextStyle(color: Colors.green),),
@@ -217,7 +218,7 @@ class SettingsPageBody extends StatelessWidget {
   Widget feedbackSettings(BuildContext context) {
     return AlertDialog(
       title: Text("Feedback"),
-      content: Text(""),
+      content: Text("Coming Soon"),
       actions: [
         FlatButton(
           child: Text("DONE"),
