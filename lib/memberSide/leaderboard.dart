@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sickles_nhs_app/backend/custom_painter.dart';
+import 'package:sickles_nhs_app/backend/leaderboard_painter.dart';
 import 'package:sickles_nhs_app/backend/size_config.dart';
 import 'package:sickles_nhs_app/adminSide/view_students.dart';
 import 'package:sickles_nhs_app/backend/currentQuarter.dart';
@@ -28,9 +28,7 @@ class Leaderboard extends StatelessWidget {
                   )
                 ]
               ),
-              child: Expanded(
-                child: LeaderBoardTheReal()
-              )
+              child: LeaderBoardTheReal()
             ),
           )
         ]
@@ -91,34 +89,36 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                                 padding: const EdgeInsets.only(top: 20),
                                 child: _buildMenuBar(context)
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: PageView(
-                                  controller: _pageController,
-                                  onPageChanged: (i) {
-                                    if(i == 0) {
-                                      setState(() {
-                                        right = Colors.white;
-                                        left = Colors.black;
-                                      });
-                                    }
-                                    else if(i == 1) {
-                                      setState(() {
-                                        right = Colors.black;
-                                        left = Colors.white;
-                                      });
-                                    }
-                                  },
-                                  children: <Widget> [
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints.expand(),
-                                      child: theLeaderBoard("quarter"),
-                                    ),
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints.expand(),
-                                      child: theLeaderBoard("hours"),
-                                    )
-                                  ],
+                              Container(
+                                child: Expanded(
+                                  flex: 2,
+                                  child: PageView(
+                                    controller: _pageController,
+                                    onPageChanged: (i) {
+                                      if(i == 0) {
+                                        setState(() {
+                                          right = Colors.white;
+                                          left = Colors.black;
+                                        });
+                                      }
+                                      else if(i == 1) {
+                                        setState(() {
+                                          right = Colors.black;
+                                          left = Colors.white;
+                                        });
+                                      }
+                                    },
+                                    children: <Widget> [
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints.expand(),
+                                        child: theLeaderBoard("quarter"),
+                                      ),
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints.expand(),
+                                        child: theLeaderBoard("hours"),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -149,7 +149,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
         color: Colors.green
       ),
       child: CustomPaint(
-        painter: TabIndicationPainter(pageController: _pageController),
+        painter: LeaderBoardPainter(pageController: _pageController),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -291,7 +291,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Center(child: Text(hours, style: TextStyle(fontSize: SizeConfig.blockSizeVertical * 3.5),)),
+                    child: Center(child: Text(hours, style: TextStyle(fontSize: SizeConfig.blockSizeVertical * 2.5),)),
                   )
                 ]
               )

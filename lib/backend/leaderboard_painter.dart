@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math';
 
-class TabIndicationPainter extends CustomPainter {
+class LeaderBoardPainter extends CustomPainter {
   Paint painter;
   final double dxTarget;
   final double dxEntry;
@@ -11,9 +11,9 @@ class TabIndicationPainter extends CustomPainter {
 
   final PageController pageController;
 
-  TabIndicationPainter({
-    this.dxTarget = 110.0,
-    this.dxEntry = 35.0,
+  LeaderBoardPainter({
+    this.dxTarget = 125.0,
+    this.dxEntry = 25.0,
     this.radius = 21.0,
     this.dy = 25, this.pageController}) : super(repaint: pageController) {
       painter = new Paint()
@@ -25,10 +25,9 @@ class TabIndicationPainter extends CustomPainter {
     void paint(Canvas canvas, Size size) {
       final pos = pageController.position;
       double fullExtent = (pos.maxScrollExtent - pos.minScrollExtent + pos.viewportDimension);
-      fullExtent = 1400;
-  
+
       double pageOffset = pos.extentBefore / fullExtent;
-      
+
       bool left2right = dxEntry < dxTarget;
       Offset entry = new Offset(left2right ? dxEntry: dxTarget, dy);
       Offset target = new Offset(left2right ? dxTarget: dxEntry, dy);
@@ -44,5 +43,5 @@ class TabIndicationPainter extends CustomPainter {
     }
 
     @override
-    bool shouldRepaint(TabIndicationPainter oldDelegate) => true;
+    bool shouldRepaint(LeaderBoardPainter oldDelegate) => true;
 }
