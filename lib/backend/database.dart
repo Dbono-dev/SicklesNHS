@@ -336,3 +336,16 @@ class NewsLetterData {
     });
   }
 }
+
+class FeedbackDatabase {
+  final CollectionReference feedback = Firestore.instance.collection('feedback');
+
+  Future addFeedback(String theFeedback, String name) async {
+    DateTime dateTime = DateTime.now();
+    return await feedback.document(theFeedback).setData({
+      'dateTime': dateTime,
+      'feedback': theFeedback,
+      'name': name
+    });
+  }
+}

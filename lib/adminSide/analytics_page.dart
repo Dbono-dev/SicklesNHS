@@ -330,6 +330,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget justTheCircle(double theDoubleNumber) {
+    String theText;
+    try {
+      theText = (theDoubleNumber * 100).toString().substring(0, 4);
+    }
+    catch (e) {
+      theText = (theDoubleNumber * 100).toString().substring(0, 3);
+    }
     return Container(
       decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), offset: Offset(2, 4), blurRadius: 4, spreadRadius: 0)]),
       child: CircularPercentIndicator(
@@ -339,7 +346,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         lineWidth: 5,
         startAngle: 180,
         percent: theDoubleNumber,
-        center: Text((theDoubleNumber * 100).toString().substring(0, 4) + "%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeVertical * 2.5),),
+        center: Text(theText + "%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.blockSizeVertical * 2.5),),
       ),
     );
   }

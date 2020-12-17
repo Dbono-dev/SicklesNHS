@@ -10,6 +10,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:sickles_nhs_app/backend/globals.dart' as global;
 
 class SettingsPage extends StatelessWidget {
+
+  SettingsPage({this.name});
+
+  final String name;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +40,7 @@ class SettingsPage extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
-                child: SettingsPageBody(),
+                child: SettingsPageBody(name: name,),
               ),
             ),
           )
@@ -49,6 +54,10 @@ class SettingsPageBody extends StatelessWidget {
   String _summary;
   final _formKey = GlobalKey<FormState>();
 
+  SettingsPageBody({this.name});
+
+  final String name;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +67,7 @@ class SettingsPageBody extends StatelessWidget {
           settingsTiles(context, "Reset Password", settingsResetPassword(context), Icons.refresh),
           settingsTiles(context, "Report a Bug", reportBug(context), Icons.bug_report),
           settingsTiles(context, "Notifications", notificationsSettings(context), Icons.notifications),
-          settingsTiles(context, "Give Feedback", feedbackSettings(context), Icons.feedback),
+          settingsTiles(context, "Give Feedback", feedbackSettings(context, name), Icons.feedback),
           Text("FOLLOW US", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 35, decoration: TextDecoration.underline), textAlign: TextAlign.center,),
           Padding(padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 0.5)),
           Row(
@@ -215,14 +224,57 @@ class SettingsPageBody extends StatelessWidget {
     );
   }
 
-  Widget feedbackSettings(BuildContext context) {
+  Widget feedbackSettings(BuildContext context, String name) {
     return AlertDialog(
       title: Text("Feedback"),
-      content: Text("Coming Soon"),
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
+          minLines: 10,
+          maxLines: 20,
+          onSaved: (val) => _summary = val ,
+          decoration: InputDecoration(
+            hintText: "Want to see something change or have an idea for a new feature? Let me know with this form!",
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
+            )
+          ),
+        ),
+      ),
       actions: [
         FlatButton(
-          child: Text("DONE"),
           onPressed: () => Navigator.of(context).pop(),
+          child: Text("Cancel", style: TextStyle(color: Colors.green),),
+        ),
+        FlatButton(
+          onPressed: () async {
+            _formKey.currentState.save();
+            if(_formKey.currentState.validate()) {
+              try {
+                await FeedbackDatabase().addFeedback(_summary, name);
+                Navigator.of(context).pop();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('THANK YOU'),
+                      content: Text("Thank you so much for submitting feedback, I will carefully consider this suggestion", textAlign: TextAlign.center),
+                      actions: [
+                        FlatButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("Return", style: TextStyle(color: Colors.green)),
+                        )
+                      ],
+                    );
+                  }
+                );
+              }
+              catch (e) {
+                print(e);
+              }
+            }
+          },
+          child: Text("Submit", style: TextStyle(color: Colors.green),),
         )
       ],
     );

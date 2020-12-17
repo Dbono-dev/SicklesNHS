@@ -142,7 +142,7 @@ class _AccountProfileState extends State<AccountProfile> {
           iconsForTopAccountProfile(Icons.format_list_numbered, Leaderboard()),
           iconsForTopAccountProfile(Icons.image, SendImages(name: widget.name,)),
           iconsForTopAccountProfile(Icons.inbox, MessagesPage()),
-          iconsForTopAccountProfile(Icons.settings, SettingsPage())
+          iconsForTopAccountProfile(Icons.settings, SettingsPage(name: widget.name,))
         ],
       );
     }

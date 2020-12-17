@@ -60,42 +60,30 @@ class TopHalfViewStudentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
-      builder: (context, snapshot) {
-        if(snapshot.hasData) {
-          UserData userData = snapshot.data;
-            return Material(
-              child: Container(
-              height: SizeConfig.blockSizeVertical * 22.5,
-              decoration: BoxDecoration(
-                color: Colors.green,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      color: Colors.white,
-                      iconSize: 60,
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => TheOpeningPage()));
-                      },
-                    ),
-                  ],
-                ),
-              ),
+    return Material(
+      child: Container(
+      height: SizeConfig.blockSizeVertical * 22.5,
+      decoration: BoxDecoration(
+        color: Colors.green,
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              color: Colors.white,
+              iconSize: 60,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-      );
-        }
-        else {
-          return Container();
-        }
-      });
+          ],
+        ),
+      ),
+    ),
+    );
   }
 }
 

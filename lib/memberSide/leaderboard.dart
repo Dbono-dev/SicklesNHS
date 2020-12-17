@@ -211,6 +211,7 @@ class _LeaderBoardTheRealState extends State<LeaderBoardTheReal> {
                           height: SizeConfig.blockSizeVertical * 75,
                           child: ListView.builder(
                             itemCount: notTheSnapshot.data.length,
+                            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 1),
                             itemBuilder: (_, index) {
                               return viewStudentsCard(notTheSnapshot.data[index], index, currentQuarter);
                             }
