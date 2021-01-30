@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sickles_nhs_app/backend/auth_service.dart';
-import 'package:sickles_nhs_app/backend/push_notifications_manager.dart';
 import 'package:sickles_nhs_app/backend/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:sickles_nhs_app/backend/user.dart';
@@ -16,7 +15,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    //PushNotificationsManager().init();
     return StreamProvider<User>.value(
       value: AuthService().user,
         child: MaterialApp(

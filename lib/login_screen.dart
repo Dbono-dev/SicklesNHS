@@ -44,8 +44,8 @@ class TopHalfLoginPage extends StatelessWidget {
             height: SizeConfig.blockSizeVertical * 20,
             decoration: BoxDecoration(
               boxShadow: [BoxShadow(
-                color: Colors.black,
-                blurRadius: 25.0,
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 50.0,
                 spreadRadius: 2.0,
                 offset: Offset(0, 10.0)
                 )
@@ -82,7 +82,7 @@ class BottonHalfLoginPage extends StatelessWidget {
             height: SizeConfig.blockSizeVertical * 7,
             decoration: BoxDecoration(
               boxShadow: [BoxShadow(
-                color: Colors.black,
+                color: Colors.black.withOpacity(0.3),
                 blurRadius: 25.0,
                 spreadRadius: 2.0,
                 offset: Offset(0, -5.0)

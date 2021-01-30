@@ -14,7 +14,7 @@ class AddNewEvent extends StatefulWidget {
   AddNewEvent(this.type, {this.event});
 
  final Event event; 
- final String type;
+ final String type; 
 
   @override
   _AddNewEventState createState() => _AddNewEventState();
@@ -23,21 +23,32 @@ class AddNewEvent extends StatefulWidget {
 class _AddNewEventState extends State<AddNewEvent> {
   @override
   Widget build(BuildContext context) {
-    return Stack (
-      children: <Widget>[
-        Container(
-          height: SizeConfig.blockSizeVertical * 100,
-          width: SizeConfig.blockSizeHorizontal * 100,
-          color: Colors.white,
-        ),
-        Column(
-          children: <Widget> [
-            TopHalfViewStudentsPage(text: "addEvent"),
-            Padding(padding: EdgeInsets.fromLTRB(0.0, SizeConfig.blockSizeVertical * 2, 0, 0)),
-            MiddleNewEventPage(widget.type, event: widget.event),
-          ]
-        )
-      ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: <Widget> [
+          TopHalfViewStudentsPage(text: "addEvent"),
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 18),
+            child: Container(
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(000000).withOpacity(0.25),
+                    offset: Offset(0, -2),
+                    blurRadius: 15,
+                    spreadRadius: 5
+                  )
+                ]
+              ),
+              child: MiddleNewEventPage(widget.type, event: widget.event),
+            )
+          )
+        ]
+      ),
     );
   }
 }
@@ -145,7 +156,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
       _bottomText = "Save Event";
     }
     else {
-
+      _bottomText = "Create Event";
     }
 
     if(onDate != null) {
@@ -201,11 +212,12 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
     return SingleChildScrollView(
       child: Container(
         color: Colors.transparent,
-        height: SizeConfig.blockSizeVertical * 77.8,
+        height: SizeConfig.blockSizeVertical * 83,
         child: Scaffold(
           body: Form(
             key: _thirdformKey,
             child: ListView(
+              padding: EdgeInsets.zero,
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -220,7 +232,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         ),
                           onChanged: (val) {
                             _title = (val);
-                            widget.type = "editing";
+                            if(widget.type == 'edit') {
+                              widget.type = "editing";
+                            }
                           } ,
                           textCapitalization: TextCapitalization.sentences,
                           validator: (val) => val.isEmpty ? 'Enter Title' : null,
@@ -242,7 +256,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           maxLines: 6,
                           validator: (val) => val.isEmpty ? 'Enter Description' : null,
                           onChanged: (val) {
-                            widget.type = "editing";
+                            if(widget.type == 'edit') {
+                              widget.type = "editing";
+                            }
                             _description = (val);
                           },
                           initialValue: _description,
@@ -269,7 +285,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                             );
                             setState(() {
                               startingDate = _newDateTime.month.toString() + "/" + _newDateTime.day.toString() + "/" + _newDateTime.year.toString();
-                              widget.type = "editing";
+                              if(widget.type == 'edit') {
+                                widget.type = "editing";
+                              }
                             });
                           },
                         ),
@@ -320,7 +338,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                             _startTimeMinutes = newdate.minute;
                                             theStartTime = _startTime.toString() + ":" + _startTimeMinutes.toString();
                                             setState(() {
-                                              widget.type = "editing";
+                                              if(widget.type == 'edit') {
+                                                widget.type = "editing";
+                                              }
                                             });
                                           },
                                           use24hFormat: false,
@@ -383,7 +403,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                               _endTime = newdate.hour;
                                               _endTimeMinutes = newdate.minute;
                                               theEndTime = _endTime.toString() + ":" + _endTimeMinutes.toString();
-                                              widget.type = "editing";
+                                              if(widget.type == 'edit') {
+                                                widget.type = "editing";
+                                              }
                                             });
                                           },
                                           use24hFormat: false,
@@ -534,7 +556,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           border: OutlineInputBorder()
                       ),
                         onChanged: (val) {
-                          widget.type = "editing";
+                          if(widget.type == 'edit') {
+                            widget.type = "editing";
+                          }
                           _address = val;
                         },
                         textCapitalization: TextCapitalization.sentences,
@@ -547,7 +571,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                       padding: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 4.8, 0, SizeConfig.blockSizeHorizontal * 4.8, 0),
                       child: TextFormField(
                         onChanged: (val) {
-                          widget.type = "editing";
+                          if(widget.type == 'edit') {
+                            widget.type = "editing";
+                          }
                           _max = val;
                         },
                         validator: (val) => val.isEmpty ? 'Enter Max Number of Participates' : null,
@@ -568,7 +594,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                           elevation: 8,
                           onPressed: () async {
                             _photoUrl = await getImage(_title);
-                            widget.type = "editing";
+                            if(widget.type == 'edit') {
+                              widget.type = "editing";
+                            }
                           },
                           child: Icon(
                             Icons.photo_library,
@@ -591,7 +619,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         checkColor: Colors.white,
                         onChanged: (newValue) {
                           setState(() {
-                            serviceEventValue = newValue;                        
+                            serviceEventValue = newValue;  
+                            if(widget.type == 'edit') {
+                              widget.type = "editing";
+                            }                      
                           });
                         }
                       ),
@@ -603,6 +634,9 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                         onChanged: (theNewValue) {
                           setState(() {
                             communityServiceEventValue = theNewValue;
+                            if(widget.type == 'edit') {
+                              widget.type = "editing";
+                            }
                           });
                         }
                       ),
@@ -610,7 +644,7 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                     ]
                   ),
                 ),
-                Padding(padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 0.73),),
+                Padding(padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 7.75)),
                 Material(
                   type: MaterialType.transparency,
                   child: Container(
@@ -747,9 +781,10 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                   keepGoing = false;
                                   await showDialogBox(context, "Please Enter a End Time");
                                 }
+                                print(keepGoing);
                                 if(keepGoing == true) {
                                   try {
-                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes, _bottomText, oldTitle: widget.event.oldTitle);
+                                    dynamic result = sendEventToDatabase(_title, _description, _startTime, _endTime, _date, _photoUrl, _max, _address, _type, _startTimeMinutes, _endTimeMinutes, _bottomText,  oldTitle: widget.type == "new" ? _title : widget.event.oldTitle);
                                     if(result == null) {
                                       print("Fill in all the forms.");
                                     }
@@ -780,9 +815,13 @@ class _MiddleNewEventPageState extends State<MiddleNewEventPage> {
                                     }
                                   }
                                   catch (e) {
+                                    print(e);
                                     return CircularProgressIndicator();
                                   }
                                 }
+                              }
+                              else {
+                                print("failed validation");
                               }
                             } 
                           );

@@ -125,8 +125,8 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                           color: Colors.transparent,
                                           child: Column(
                                             children: <Widget>[
-                                              Text(snapshot.data[index].data['date'],),
-                                              Text(snapshot.data[index].data['hours'] + " hours",)
+                                              snapshot.data[index].data['date'] != null ? Text(snapshot.data[index].data['date'], style: TextStyle(fontSize: 12)) : Container(),
+                                              Text(snapshot.data[index].data['hours'] + " hours", style: TextStyle(fontSize: 12))
                                             ],
                                           ),
                                         ),
@@ -176,7 +176,7 @@ class _ApproveHoursMiddlePageState extends State<ApproveHoursMiddlePage> {
                                         )
                                       ],
                                     ),
-                                    leading: Text(snapshot.data[index].data['name'],),
+                                    leading: Text(snapshot.data[index].data['name'], style: TextStyle(fontSize: 12)),
                                     children: <Widget>[
                                       Column(
                                         children: <Widget>[

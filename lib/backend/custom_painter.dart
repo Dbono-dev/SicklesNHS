@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math';
 
+import 'package:sickles_nhs_app/backend/size_config.dart';
+
 class TabIndicationPainter extends CustomPainter {
   Paint painter;
   final double dxTarget;
@@ -25,7 +27,7 @@ class TabIndicationPainter extends CustomPainter {
     void paint(Canvas canvas, Size size) {
       final pos = pageController.position;
       double fullExtent = (pos.maxScrollExtent - pos.minScrollExtent + pos.viewportDimension);
-      fullExtent = 1400;
+      fullExtent = SizeConfig.blockSizeHorizontal * 330;
   
       double pageOffset = pos.extentBefore / fullExtent;
       

@@ -223,7 +223,7 @@ class _AccountProfileState extends State<AccountProfile> {
             String thirdQuarter = fixHours(widget.posts['thirdQuarter']); 
             String fourthQuarter = fixHours(widget.posts['fourthQuarter']);
 
-            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, widget.posts['numClub'], widget.posts['num of community service events'], widget.posts['dues']);
+            return recentActivity(widget.posts.data['first name'], widget.posts.data['last name'], widget.posts.data['grade'], widget.posts.data['uid'], widget.posts.data['hours'].toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, widget.posts['numClub'], widget.posts['num of community service events'], widget.posts['dues'], widget.posts['permissions']);
           }
           if(widget.type == "student") {
             String firstQuarter = fixHours(userData.firstQuarter);
@@ -231,7 +231,7 @@ class _AccountProfileState extends State<AccountProfile> {
             String thirdQuarter = fixHours(userData.thirdQuarter);
             String fourthQuarter = fixHours(userData.fourthQuarter);
 
-            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, userData.numClub, userData.numOfCommunityServiceEvents, userData.dues);
+            return recentActivity(userData.firstName, userData.lastName, userData.grade, user.uid, userData.hours.toString(), firstQuarter, secondQuarter, thirdQuarter, fourthQuarter, userData.numClub, userData.numOfCommunityServiceEvents, userData.dues, userData.permissions);
           }
           else {
             return CircularProgressIndicator();
@@ -244,7 +244,7 @@ class _AccountProfileState extends State<AccountProfile> {
     );
   }
 
-  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents, var dues) {
+  Widget recentActivity(String firstName, String lastName, String grade, String uid, String hours, String q1Hours, String q2Hours, String q3Hours, String q4Hours, int numClub, int numOfCommunityServiceEvents, var dues, int permissions) {
     Color _theColor = Colors.white;
     Color _theTextColor = Colors.black;
     Color _chapterProjectColor = Colors.white;
@@ -271,6 +271,25 @@ class _AccountProfileState extends State<AccountProfile> {
     DateFormat format = new DateFormat("MM/dd/yyyy");
     DateFormat secondFormat = new DateFormat("MM-dd-yyyy");
 
+    bool onProbation() {
+      if(permissions == 2) {
+        if(double.parse(q2Hours) < 3 || numOfCommunityServiceEvents < 1) {
+          if(double.parse(q3Hours) + double.parse(q2Hours) >= 3) {
+            return false;
+          }
+          else {
+            return true;
+          } 
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -287,8 +306,16 @@ class _AccountProfileState extends State<AccountProfile> {
       height: SizeConfig.blockSizeVertical * 82.5,
       child: Column(
         children: <Widget>[
+          onProbation() == true ? Container(
+            height: SizeConfig.blockSizeVertical * 5,
+            width: SizeConfig.blockSizeHorizontal * 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              color: Colors.red
+            ),
+            child: Center(child: Text("You are on Probation!!", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))),
+          ) : Container(),
           Container(
-            padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
             width: SizeConfig.blockSizeHorizontal * 25,
             height: SizeConfig.blockSizeVertical * 18,
             child: FloatingActionButton(
@@ -302,7 +329,6 @@ class _AccountProfileState extends State<AccountProfile> {
              ),
            ),
           ),
-          Padding(padding: EdgeInsets.all(4),),
           Material(
             color: Colors.transparent,
             child: editing != true ? Text(
@@ -317,7 +343,6 @@ class _AccountProfileState extends State<AccountProfile> {
             ),
               )
           ),
-          Padding(padding: EdgeInsets.all(1),),
           int.tryParse(grade) == null ? Material(
             color: Colors.transparent,
             child: Text(grade, style: TextStyle(fontSize: 20),),)
@@ -487,7 +512,7 @@ class _AccountProfileState extends State<AccountProfile> {
                                   lineWidth: 5,
                                   startAngle: 180,
                                   backgroundColor: Colors.white,                               
-                                  percent: double.parse(hours) < 3 ? (double.parse(hours) / 3) : 1,
+                                  percent: double.parse(currentQuarterHours) < 6 ? (double.parse(currentQuarterHours) / 6) : 1,
                                   center: Text.rich(
                                     TextSpan(
                                       text: currentQuarterHours.toString(),

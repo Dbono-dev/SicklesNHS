@@ -324,7 +324,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   Widget justTheText(String text) {
     return Container(
-      width: SizeConfig.blockSizeHorizontal * 25,
+      width: SizeConfig.blockSizeHorizontal * 30,
       child: Text(text, style: TextStyle(fontSize: 16), textAlign: TextAlign.center)
     );
   }
