@@ -90,6 +90,12 @@ class DatabaseService {
     });
   }
 
+  Future updateVersion() async {
+    return await memberCollection.document(uid).updateData({
+      'version': "1.1.2"
+    });
+  }
+
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: snapshot.data['uid'],
@@ -106,7 +112,8 @@ class DatabaseService {
       numClub: snapshot.data['numClub'],
       eventTitleSignedUp: snapshot.data['signed up event title'],
       numOfCommunityServiceEvents: snapshot.data['num of community service events'],
-      dues: snapshot.data['dues']
+      dues: snapshot.data['dues'],
+      version: snapshot.data['version']
     );
   }
 

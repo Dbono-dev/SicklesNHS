@@ -91,6 +91,9 @@ class Wrapper extends StatelessWidget {
             if(snapshot.data.dues == null) {
               DatabaseService(uid: snapshot.data.uid).updateDues();
             }
+            if(snapshot.data.version == null) {
+              DatabaseService(uid: snapshot.data.uid).updateVersion();
+            }
             return TheOpeningPage(userData: snapshot.data);
           }
           else {
