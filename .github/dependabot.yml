@@ -1,0 +1,38 @@
+version: 2
+
+multi-ecosystem-groups:
+  all-dependencies:
+    schedule:
+      interval: "weekly"
+
+updates:
+  - package-ecosystem: "pub"
+    directory: "/"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    groups:
+      all-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+  - package-ecosystem: "gradle"
+    directory: "/android"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    groups:
+      all-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+  - package-ecosystem: "cocoapods"
+    directory: "/ios"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    groups:
+      all-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"

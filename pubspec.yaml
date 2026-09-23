@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.1.2+4
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -39,7 +39,7 @@ dependencies:
   transparent_image: ^1.0.0
   jiffy: ^3.0.1
   flutter_rounded_date_picker: ^1.0.4
-  http: ^0.12.0+3
+  http: ^0.13.3
   intl: ^0.16.1
   mailer: ^3.0.4
   file_picker: ^1.12.0
@@ -79,6 +79,15 @@ flutter:
     - SicklesNHS.jpg
     - CanvasLogo.png
   #  - images/a_dot_ham.jpeg
+
+dependency_overrides:
+  archive: 3.4.10
+  http: ^0.13.3
+  http_parser: ^4.0.2
+  crypto: 3.0.3
+  pointycastle: 3.7.3
+  convert: 3.0.2
+  xml: 5.4.1
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
