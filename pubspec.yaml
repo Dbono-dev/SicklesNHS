@@ -81,10 +81,13 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
 dependency_overrides:
-  archive: ^3.3.8
+  archive: 3.4.10
   http: ^0.13.3
   http_parser: ^4.0.2
-  crypto: ^3.0.3
+  crypto: 3.0.3
+  pointycastle: 3.7.3
+  convert: 3.0.2
+  xml: 5.4.1
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
